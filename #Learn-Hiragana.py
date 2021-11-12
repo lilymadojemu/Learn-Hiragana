@@ -12,7 +12,7 @@ Behind the Scences Stuff:
 - Figure out how information will be presented using graphics & images
 - Learning Aspect(Focus on reading/Recognition until MVP)
 
-1. Different User Profiles
+1. Different User Profilese
     - Each profile should have a "customized experience" as noted below
 2. Dynamically change information presented based on user's input
 
