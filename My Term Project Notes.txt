@@ -20,5 +20,12 @@ install an use a Japanese keyboard
 4. Add Listening component
 5. Automatically include words based on Frequency in newspaper and every speech
         ^^^ Could be based off a frequency list found online ^^^
-
+6. Audio!!!
 '''
+
+Thoughts:
+can create a dictionary from textfile, using a very large dict though :(
+No direcr try again feature, the incorrecr word will just be added to some bank
+keeping track of what words were right and wrong and will output them later 
+according to that
+No separate review phase (for now)
