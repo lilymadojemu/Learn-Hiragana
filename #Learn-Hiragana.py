@@ -1,6 +1,7 @@
 #Learn-Hiragana
 from cmu_112_graphics import *
-from Populate_Values import *
+#from Populate_Values import *
+from Classes import *
 def appStarted(app):
     app.cy = app.width//2
     app.cx = app.height//2
@@ -13,60 +14,63 @@ def appStarted(app):
     app.cardsToLearn = 5
     #Number of flashcards that will appear in doing stage
     app.cardsToDo = 5
+    app.userProfiles = dict()
 
 #Introduction/Start Stage
 
 
 
 def introScreenRedrawall(app,canvas):
-    canvas.create_text(app.cx//2,app.cy//2,app.cx//4,app.cy//4,
+    canvas.create_text(app.cx,app.cy,
                     font = 'Arial',  text = "Let's Learn Hiragana!", 
                             fill = 'Red')
     #Create a new user profile
 
 def drawUserProfileButton(app,canvas):
     canvas.create_rectangle(app.cx,app.cy,app.cx//2,app.cy//2, fill = 'purple')
-    canvas.create_text(app.cx//2,app.cy//2,app.cx//4,app.cy//4,
+    canvas.create_text(app.cx//2,app.cy//2,
                         font = 'Arial',  text = "newUser", fill = 'Red')
 
 
 ########################################################################
 #Dictionary that will contain all of the users' login information
-userProfiles = dict()
 #Login and store in dictionary, if no text input, will not use
 #Result of drawUserProfileButton
-def userProfile(app,canvas, users):
-    enteredUser = 
-    canvas.create_text(app.cx//2,app.cy//2,app.cx//4,app.cy//4, 
+def userProfile(app,canvas):
+    enteredUser = input
+    canvas.create_text(app.cx//2,app.cy//2,
     font = 'Arial', 
     text = "Please enter Username and Password",
     fill = 'Red')
-    for user in userProfiles:
+    for user in app.userProfiles:
         if enteredUser not in userProfile:
             username = input("Please create your username:")
             password = input("Please create your password:")
-            userProfiles[username] = password
-            canvas.create_text(app.cx//2,app.cy//2,app.cx//4,app.cy//4, 
+            app.userProfiles[username] = password
+            canvas.create_text(app.cx//2,app.cy//2,
                 font = 'Arial', 
                 text = "User Profile has been created, please log in again",
                 fill = 'Red')
-        elif userProfiles[user] == userProfiles[enteredUser]:
-                canvas.create_text(app.cx//2,app.cy//2,app.cx//4,app.cy//4, 
+        elif app.userProfiles[user] == app.userProfiles[enteredUser]:
+                canvas.create_text(app.cx//2,app.cy//2,
                 font = 'Arial', 
                 text = f"Welcome {enteredUser}!, Click",
                 fill = 'Red')
 
 def userProfileRedrawAll(app,canvas):
+    drawUserProfileButton(app,canvas)
+    userProfile(app,canvas)
+    pass
  ########################################################################       
 #Begin Learning Stage
 def drawLetsLearnButton(app,canvas):
     canvas.create_rectangle(app.cx,app.cy,app.cx//2,app.cy//2, fill = 'purple')
-    canvas.create_text(app.cx//2,app.cy//2,app.cx//4,app.cy//4,
+    canvas.create_text(app.cx//2,app.cy//2,
                         font = 'Arial',  text = "Let's learn!", fill = 'Red')
 #Begin Doing Stage
 def drawLetsDoButton(app,canvas):
     canvas.create_rectangle(app.cx,app.cy,app.cx//2,app.cy//2, fill = 'purple')
-    canvas.create_text(app.cx//2,app.cy//2,app.cx//4,app.cy//4,
+    canvas.create_text(app.cx//2,app.cy//2,
                         font = 'Arial',  text = "Let's Try it!", fill = 'Red')
 
 
@@ -75,7 +79,6 @@ def drawLetsDoButton(app,canvas):
 def keyPressed(app,event):
     if (event.key == 'p'):
         app.paused = not app.paused
-    
     pass  
 
 def mousePressed(app,event):
@@ -110,10 +113,11 @@ def drawDoingHiraganaFlashcard(app,canvas):
     #canvas.create_text(  f'{app.characterLevel}, {app.vocabLevel}')    
     #Back, romanji
     #function from another file
-    if isCorrect == False:
-        #don't show back of card
+    # if isCorrect == False:
+    #     #don't show back of card
+    #     pass
 
-def drawDoingHiraganaFlashcard(app,canvas):
+def drawDoingVocabFlashcard(app,canvas):
     #front
     canvas.create_rectangle(app.width-100,app.height//4, app.width-20,
                                     app.height//4+35, fill = 'white')
@@ -128,7 +132,7 @@ def drawCharacter(app,canvas):
 ######################################################################
 #Automatically move on to next flashcard card, Doing stage
 def timerFired(app):
-    if 
+    pass
     
 def redrawAll(app,canvas):
     introScreenRedrawall(app,canvas)
