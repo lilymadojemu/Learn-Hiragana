@@ -26,13 +26,19 @@ def appStarted(app):
     app.cardsToDo = 5
     app.userProfiles = dict()
 
+def userSelect_mousePressed(app,event):
+    #Parameters for learning button to be pressed
+    #if event.y ya know...
+    #app.phase = 'learning'
+    pass
+
 #The redrawAll's of different Screens
 def redrawAll(app,canvas):
     startScreenRedrawall(app,canvas)
     #Set up user profile
-    userProfileRedrawAll(app,canvas)
-    #Go to Learning Mode
-    learningModeRedrawAll(app,canvas)
+    # userProfileRedrawAll(app,canvas)
+    # #Go to Learning Mode
+    # learningModeRedrawAll(app,canvas)
     #Go to Practice Mode
     #practiceModeRedrawAll(app,canvas)
     #Transition
