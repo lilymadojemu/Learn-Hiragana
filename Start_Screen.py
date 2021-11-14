@@ -6,24 +6,26 @@ def introMousePressed(app,event):
     app.cy = event.y
     #Figure out placement of buttons then determine where clicks will be
     #Go to Profile Select Screen
-        app.stage = "profileselect"
+    #app.stage = "profileselect"
     #Go to Settings Screen
-        app.stage = 'settings'
+    #app.stage = 'settings'
 
 
 
 #End will be a button that goes to profile select
 def drawProfileSelectButton(app,canvas):
-    canvas.create_rectangle(app.cx,app.cy,app.cx//2,app.cy//2, fill = 'purple')
+    canvas.create_rectangle(app.cx//6,app.cy//2,
+                            app.cx//2,app.cy//2, fill = 'blue')
     canvas.create_text(app.cx//2,app.cy//2,
-                        font = 'Arial',  text = "newUser", fill = 'sandy brown')
+                        font = 'Arial',  text = "newUser", fill = 'brown')
 
 
 
 #Directly Under the Profile Select Button
 #Where user will be able to edit things, like default number of cards, etc. 
 def drawSettingsButton(app,canvas):
-    canvas.create_rectangle(app.cx,app.cy,app.cx//2,app.cy//2, fill = 'purple')
+    canvas.create_rectangle(app.cx//2,app.cy//2,
+                            app.cx//2,app.cy//2, fill = 'green')
     canvas.create_text(app.cx//2,app.cy//2,
                         font = 'Arial',  text = "Settings", fill = 'grey')
     
