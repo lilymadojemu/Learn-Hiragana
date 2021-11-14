@@ -3,17 +3,30 @@
 '''
 Contains all classes that will be used
 
-Thoughts:
-can create a dictionary from textfile, using a very large dict though :(
-No direcr try again feature, the incorrecr word will just be added to some bank
-keeping track of what words were right and wrong and will output them later 
-according to that
-No separate review phase (for now)
-
-
 '''
 import os, random
 
+class FlashCard(object):
+    def __init__(self, app, canvas):
+        pass
+    # def drawFlashcard(self,app,canvas):
+    #     canvas.create_rectangle(app.width-100,app.height//4, app.width-20,
+    #                                 app.height//4+35, fill = 'white')
+    #     #canvas.create_text(f'{app.characterLevel}, {app.vocabLevel}')  
+    
+    # def flashcard_redrawAll(self, app, canvas):
+    #     drawFlashcard(self,app,canvas)
+
+#Information regarding the choices a user will be able to select for each prob.
+class answerChoices(object):
+    #Possible choices is either a dictionary or a list, most likely a dictionary
+    def __init__(self,possibleChoices):
+        pass
+    def vocabChoices(self,selectedWord):
+        pass
+    def characterChoices(self,selectedWord):
+        pass
+    pass
 #Character class(base hiragana characters)
 
 

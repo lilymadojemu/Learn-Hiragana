@@ -1,11 +1,20 @@
-#Learn-Hiragana
+''' imports '''
 from cmu_112_graphics import *
-#from Populate_Values import *
+from Populate_Values import *
 from Classes import *
+from Start_Screen import *
+from User_Profile_Select_Screen import *
+from Learn_Hiragana_Learning_Mode import *
+from Learn_Hiragana_Practice_Mode import *
 
+'''
+
+Can call classes (like in class notes within functions)
+'''
 def appStarted(app):
-    app.cy = app.width//2
-    app.cx = app.height//2
+    app.phase = "start"
+    app.cx = app.width//2
+    app.cy = app.height//2
     #Level of vocab/ Character knowledge
     app.characterLevel = 0
     app.vocabLevel = 0
@@ -17,57 +26,15 @@ def appStarted(app):
     app.cardsToDo = 5
     app.userProfiles = dict()
 
-#Introduction/Start Stage
-
-
-
-def introScreenRedrawall(app,canvas):
-    canvas.create_text(app.cx,app.cy,
-                    font = 'Arial',  text = "Let's Learn Hiragana!", 
-                            fill = 'Red')
-    #Create a new user profile
-
 def drawUserProfileButton(app,canvas):
     canvas.create_rectangle(app.cx,app.cy,app.cx//2,app.cy//2, fill = 'purple')
     canvas.create_text(app.cx//2,app.cy//2,
                         font = 'Arial',  text = "newUser", fill = 'Red')
-
-
-########################################################################
-#Dictionary that will contain all of the users' login information
-#Login and store in dictionary, if no text input, will not use
-#Result of drawUserProfileButton
-def userProfile(app,canvas):
-    enteredUser = input
-    canvas.create_text(app.cx//2,app.cy//2,
-    font = 'Arial', 
-    text = "Please enter Username and Password",
-    fill = 'Red')
-    for user in app.userProfiles:
-        if enteredUser not in userProfile:
-            username = input("Please create your username:")
-            password = input("Please create your password:")
-            app.userProfiles[username] = password
-            canvas.create_text(app.cx//2,app.cy//2,
-                font = 'Arial', 
-                text = "User Profile has been created, please log in again",
-                fill = 'Red')
-        elif app.userProfiles[user] == app.userProfiles[enteredUser]:
-                canvas.create_text(app.cx//2,app.cy//2,
-                font = 'Arial', 
-                text = f"Welcome {enteredUser}!, Click",
-                fill = 'Red')
-
+    #if clicked
 def userProfileRedrawAll(app,canvas):
     drawUserProfileButton(app,canvas)
-    userProfile(app,canvas)
-    pass
  ########################################################################       
-#Begin Learning Stage
-def drawLetsLearnButton(app,canvas):
-    canvas.create_rectangle(app.cx,app.cy,app.cx//2,app.cy//2, fill = 'purple')
-    canvas.create_text(app.cx//2,app.cy//2,
-                        font = 'Arial',  text = "Let's learn!", fill = 'Red')
+
 #Begin Doing Stage
 def drawLetsDoButton(app,canvas):
     canvas.create_rectangle(app.cx,app.cy,app.cx//2,app.cy//2, fill = 'purple')
@@ -78,9 +45,19 @@ def drawLetsDoButton(app,canvas):
 
 
 def keyPressed(app,event):
+    #Pausing, unpausing in Practice Mode Only
     if (event.key == 'p'):
         app.paused = not app.paused
-    pass  
+    #Flipping cards
+    #front  of flash card to back
+    if event.key == 'Right':
+        #flip card animation
+        pass
+    #back of flashcard to front
+    elif event.key == 'Left':
+        #flip card animation
+        pass
+    
 
 def mousePressed(app,event):
     app.cx = event.x
