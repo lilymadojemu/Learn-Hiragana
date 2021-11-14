@@ -27,7 +27,7 @@ def drawSettingsButton(app,canvas):
     canvas.create_text(app.cx//2,app.cy//2,
                         font = 'Arial',  text = "Settings", fill = 'grey')
     
-def introScreenRedrawall(app,canvas):
+def startScreenRedrawall(app,canvas):
     canvas.create_text(app.cx, 0, font = 'Arial',  
                         text = "Let's Learn Hiragana!", fill = 'Red')
     drawProfileSelectButton(app,canvas)
