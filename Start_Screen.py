@@ -16,6 +16,16 @@ Potential colors: ['medium aquamarine','olive drab','tomato','sandy brown',
 #     #app.phase = "profileselect"
 #     #Go to Settings Screen
 #     #app.phase = 'settings'
+def intro_mousePressed(app,event):
+    #Clicking on the Profile Selct button 
+    #Figure out placement of buttons then determine where clicks will be
+    #Go to learning mdoe 
+    if app.width//4 <= event.x:
+        if app.width//4 <= event.y:
+            app.showMessage('correct Click')
+            app.phase = 'learning'
+    else:
+        app.showMessage("Please click on one of the options.")
 
 #Initiate Learning Mode
 def drawLetsLearnButton(app,canvas):
