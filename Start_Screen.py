@@ -26,6 +26,20 @@ def intro_mousePressed(app,event):
             app.phase = 'learning'
     else:
         app.showMessage("Please click on one of the options.")
+        #Clicking on the Profile Selct button 
+    #Figure out placement of buttons then determine where clicks will be
+    #Go to learning mdoe 
+    # if app.width//4 <= event.x:
+    #     if app.width//4 <= event.y:
+    #         app.showMessage('correct Click')
+    #         app.phase = 'learning'
+    # else:
+    #     app.showMessage("Please click on one of the options.")
+
+    #Go to Profile Select Screen
+    #app.phase = "profileselect"
+    #Go to Settings Screen
+    #app.phase = 'settings'
 
 #Initiate Learning Mode
 def drawLetsLearnButton(app,canvas):

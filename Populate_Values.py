@@ -4,18 +4,38 @@
 Where I will dynamically populate word and character values
 Special case with を
 '''
-import os, re
-#https://www.cs.cmu.edu/~112/notes/notes-strings.html
+import os
+
+characterDictionary = dict()
+vocabularyDictionary = dict()
+#from https://www.cs.cmu.edu/~112/notes/notes-strings.html
 def readFile(path):
     with open(path, "rt") as f:
         return f.read()
-
-strings = []
+hiraganaList = []
+#Adapted from: https://www.youtube.com/watch?v=oEbNWXhS_mk
+#Opens the text file pertaining to Hiragana characters
 with open("Hiragana, romanji, Phonetic Equivalent text file.txt", "r", 
 encoding = "utf8") as f:
+    characterInfo = []
     for line in f:
-        print(line)
-        strings.append(line)
+        characterLines = line
+        strippedCharacters = characterLines.strip('\n')
+        hiraganaList.append(strippedCharacters[0])
+        for character in hiraganaList:
+            characterInfo.append([strippedCharacters[1:]])
+character_dict = dict(zip(hiraganaList, characterInfo))
+print(character_dict)
+
+
+#Opens text file pertaining to Vocabulary
+# with open("Hiragana Vocabulary, Romanji, Translation.txt", "r", 
+# encoding = "utf8") as f:
+#     romanjiTransList = []
+#     for line in f:
+#         vocabLines = line
+#         print(vocabLines)
+        
 
 
 
