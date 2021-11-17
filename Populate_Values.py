@@ -17,13 +17,17 @@ hiraganaList = []
 #Opens the text file pertaining to Hiragana characters
 with open("Hiragana, romanji, Phonetic Equivalent text file.txt", "r", 
 encoding = "utf8") as f:
-    characterInfo = []
+    characterInfo = set()
     for line in f:
         characterLines = line
         strippedCharacters = characterLines.strip('\n')
         hiraganaList.append(strippedCharacters[0])
         for character in hiraganaList:
-            characterInfo.append([strippedCharacters[1:]])
+            #Duplicate values in characterInfo
+            look = strippedCharacters[2:]
+            characterInfo.add(look)
+    characterInformation = list(characterInfo)
+    print(characterInformation)
 character_dict = dict(zip(hiraganaList, characterInfo))
 print(character_dict)
 

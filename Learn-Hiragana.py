@@ -27,7 +27,6 @@ def appStarted(app):
     #Number of flashcards that will appear in doing stage
     app.cardsToDo = 5
     app.userProfiles = dict()
-    #Testing mousePressed
     
 #mousePressed of different phases
 def mousePressed(app,event):
