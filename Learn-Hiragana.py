@@ -13,6 +13,7 @@ import time
 '''
 Can call classes (like in class notes within functions)
 '''
+sensei = SenseiBot("Sensei")
 def appStarted(app):
     app.phase = "start"
     app.cx = app.width//2
