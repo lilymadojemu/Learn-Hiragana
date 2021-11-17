@@ -13,7 +13,7 @@ Get base position and center and ending base position & center
 def letsLearn(app,canvas):
     #FlashCard info.
     while app.phase == 'learning':
-        seenFlashCards = []
+        seenFlashCards = dict()
         prevFlashCard = None
         #Determines if flashcard will be a vocab or character card
         luckyChance = random.randint(1,2)
@@ -37,7 +37,9 @@ def letsLearn(app,canvas):
                     currFlashCard.flip()
                 if app.isContinueKeyPressed == True:
                     currFlashCard = prevFlashCard
-                    prevFlashCard.append(seenFlashCards)
+                    #Add prevFlashCard key-value to seen flashcard
+                    seenFlashCards[prevFlashCard.frontText] =(
+                                                 prevFlashCard.backText )
                 elif app.isBackKeyPressed == True:
                     prevFlashCard.drawFlashCard()
                 luckyChance = random.randint(1,2)
