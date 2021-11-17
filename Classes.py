@@ -11,7 +11,7 @@ class correctWord(object):
             return True
         else:
             return False  
-            
+
 ''' In Learning Phase'''
 class FlashCard(object):
     def __init__(self, frontText, backText, app, canvas):
@@ -60,11 +60,11 @@ def Merge(dict1, dict2):
 #Problemtime - currTime 
 #bot that will hold all the inner processes for learner
 class SenseiBot(object):
-    def __init__(self,botName, possibleChoices, targetAnswer, app, currTime):
+    def __init__(self,botName, currTime):
         self.botName = botName
-        self.possibleChoices = possibleChoices
-        self.targetAnswer = targetAnswer
-        self.app = app
+        # self.possibleChoices = possibleChoices
+        # self.targetAnswer = targetAnswer
+        # self.app = app
         self.currTime = currTime
         pass
     #Information regarding the choices a user will be able to 

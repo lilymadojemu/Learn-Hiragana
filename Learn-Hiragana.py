@@ -1,3 +1,9 @@
+'''
+
+Name: Lily Madojemu
+andrewid: lmadojem
+
+'''
 ''' imports '''
 from cmu_112_graphics import *
 from Populate_Values import *
@@ -8,27 +14,31 @@ from Learn_Hiragana_Learning_Mode import *
 from Learn_Hiragana_Practice_Mode import *
 from Transition_Screen import *
 import time
-
-
-'''
-Can call classes (like in class notes within functions)
-'''
-sensei = SenseiBot("Sensei")
 def appStarted(app):
+    #Initial phase 
     app.phase = "start"
     app.cx = app.width//2
     app.cy = app.height//2
     #Level of vocab/ Character knowledge
     app.characterLevel = 0
     app.vocabLevel = 0
-    #During Learning stage, refers to time limit user is given to select answer
+    #During Practice stage, refers to time limit user is given to select answer
     app.paused = False
     #Number of flashcards that will appear in learning stage
     app.cardsToLearn = 5
-    #Number of flashcards that will appear in doing stage
+    #Number of flashcards that will appear in practice phase
     app.cardsToDo = 5
+    #time alloted to answer each question during practice phase
+    app.baseProblemTime = 700
+    #Checks/Determines if a card has been flipped or not
+    app.isFlipped = False
+    #Checks if a "continue key" right) has been pressed to
+    # move on to next Flashcard
+    app.isContinueKeyPressed = False
+    #Checks if "back key" (left) has been pressed to go to a previous card
+    app.isBackKeyPressed = False
     app.userProfiles = dict()
-    
+    sensei = SenseiBot("Sensei",app.baseProblemTime)
 #mousePressed of different phases
 def mousePressed(app,event):
     if app.phase == 'start':
@@ -50,7 +60,7 @@ def redrawAll(app,canvas):
     if app.phase == 'start':
         startScreenRedrawall(app,canvas)
     elif app.phase == 'learning':
-            # #Go to Learning Mode
+            #Go to Learning Mode
         learningModeRedrawAll(app,canvas)
     elif app.phase == 'practice':
         #Go to Practice Mode

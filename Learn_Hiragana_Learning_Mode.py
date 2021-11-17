@@ -16,7 +16,7 @@ def letsLearn(app,canvas):
         seenFlashCards = []
         prevFlashCard = None
         #Determines if flashcard will be a vocab or character card
-        luckyChance = random.int(1,2)
+        luckyChance = random.randint(1,2)
         if luckyChance == 1:
             for cKey in characterDictionary:
                 currFlashCard = FlashCard(cKey, characterDictionary[cKey])
@@ -28,7 +28,7 @@ def letsLearn(app,canvas):
                     prevFlashCard.append(seenFlashCards)
                 elif app.isBackKeyPressed == True:
                     prevFlashCard.drawFlashCard()
-            luckyChance = random.int(1,2)
+            luckyChance = random.randint(1,2)
         elif luckyChance == 2:
             for vKey in vocabularyDictionary:
                 currFlashCard = FlashCard(vKey, vocabularyDictionary[vKey])
@@ -40,7 +40,7 @@ def letsLearn(app,canvas):
                     prevFlashCard.append(seenFlashCards)
                 elif app.isBackKeyPressed == True:
                     prevFlashCard.drawFlashCard()
-                luckyChance = random.int(1,2)
+                luckyChance = random.randint(1,2)
                     
 def learningMode_keyPressed(app,event):
     #flips front of flash card to back
