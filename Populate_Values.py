@@ -30,6 +30,7 @@ encoding = "utf8") as f:
                 kanaInfo.append(romaPronun)
 character_dict = dict(zip(hiraganaList, kanaInfo))
 
+#Need to Fix
 vocabList = []
 #Opens text file pertaining to Vocabulary
 with open("Hiragana Vocabulary, Romanji, Translation.txt", "r", 
