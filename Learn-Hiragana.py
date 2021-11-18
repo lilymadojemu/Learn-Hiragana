@@ -53,7 +53,7 @@ def mousePressed(app,event):
     elif app.phase == 'learning':
         learningMode_mousePressed(app,event)
     elif app.phase == 'practice':
-        practice_keyPressed(app,event)
+        practice_mousePressed(app,event)
     elif app.phase == 'profileselect':
         userSelect_mousePressed(app,event)
     elif app.phase == 'settings':

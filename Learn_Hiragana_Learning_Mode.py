@@ -102,7 +102,7 @@ def drawLetsTryitButton(app,canvas):
 
 def learningModeRedrawAll(app,canvas):
     if app.makeFlashCard == False:
-        app.startingflashcard.drawFlashcard(canvas,app)
+        app.startingFlashcard.drawFlashcard(canvas,app)
     if app.makeFlashCard == True:
         app.newFlashCard.drawFlashcard(canvas,app)
     if (app.cardsToLearn == 0):

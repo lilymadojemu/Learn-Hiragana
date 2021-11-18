@@ -60,7 +60,7 @@ class FlashCard(object):
             seenHiraganaFlashCards = dict()
             #Currently getting everything instead of one at a time
             for kana in modifiedHiraganaList:
-                #while key in modifiedHiraganaList:
+                if kana not in seenHiraganaFlashCards:
                     self.frontText = kana
                     self.backText = modifiedCharacter_dict[kana]
                     #Front of card
@@ -69,7 +69,6 @@ class FlashCard(object):
                         #The Hiragana Character
                         canvas.create_text(app.cx,app.cy//2,
                                         font = 'Arial',
-                                        fontsize = 12,
                                         text = f"{self.frontText}", 
                                         fill = 'thistle')
                     #Back of card
@@ -85,6 +84,7 @@ class FlashCard(object):
                         #I want to take that key value pair out of characterdict
                         seenHiraganaFlashCards[self.frontText] = self.backText
                         del modifiedCharacter_dict[self.frontText]
+                        continue
                         #Finished with everything
                         if modifiedCharacter_dict == {}:
                             app.showMessage("Empty!")
@@ -110,7 +110,6 @@ class FlashCard(object):
                         #The Vocabulary Word
                         canvas.create_text(app.cx,app.cy//2,
                                         font = 'Arial',
-                                        fontsize = 12,
                                         text = f"{self.frontText}", 
                                         fill = 'thistle')
                     #Back of card
