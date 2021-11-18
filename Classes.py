@@ -13,34 +13,59 @@ class correctWord(object):
             return False  
 
 ''' In Learning Phase'''
+'''
+def appStarted(app):
+    url = 'https://tinyurl.com/great-pitch-gif'
+    app.image1 = app.loadImage(url)
+    app.image2 = app.image1.transpose(Image.FLIP_LEFT_RIGHT)
+
+def redrawAll(app, canvas):
+    canvas.create_image(200, 300, image=ImageTk.PhotoImage(app.image1))
+    canvas.create_image(500, 300, image=ImageTk.PhotoImage(app.image2))
+
+runApp(width=700, height=600)
+'''
 class FlashCard(object):
-    def __init__(self, frontText, backText, app, canvas):
+    def __init__(self, frontText, backText):
+        #Before Flipping
         self.frontText = frontText
         self.backText = backText
+        #After Flipping
         self.newFront = backText
         self.newBack = frontText
-        self.app = app
-        self.canvas = canvas
 
-    def drawFlashcard(self):
-        self.canvas.create_rectangle(self.app.cx*1.5,
-                                self.app.cy//4,
-                                self.app.cx//4,
-                                self.app.cy, 
+    def drawFlashcard(self,canvas, app):
+        canvas.create_rectangle(app.cx*1.5,
+                                app.cy//4,
+                                app.cx//4,
+                                app.cy, 
                                 fill = 'bisque')
-        self.canvas.create_text(self.app.cx//1.5,self.app.cy//3,font = 'Arial',
-    text = f"KanaLevel:{self.app.characterLevel},{self.app.vocabLevel}", 
+        canvas.create_text(app.cx//1.5, app.cy//3,font = 'Arial',
+    text = f"KanaLevel:{app.characterLevel},{app.vocabLevel}", 
                             fill = 'medium aquamarine')
-        for key in characterDictionary:
+        if app.phase == 'learning':
+            canvas.create_text(app.cx//1.5, app.cy,font = 'Arial',
+        text = f"Cards Left:{app.cardsToLearn}", fill = 'medium aquamarine')
+        elif app.phase == 'practice':
+            canvas.create_text(app.cx//1.5, app.cy,font = 'Arial',
+        text = f"Cards Left:{app.cardsToDo}", fill = 'medium aquamarine')
+
+        #Currently getting everything instead of one at a time
+        for key in character_dict:
             self.frontText = key
-            self.backText = characterDictionary[key]
-            self.canvas.create_text(self.app.cx//1.5,self.app.cy//3,
-                            font = 'Arial',
-                            text = f"{self.frontText}", 
-                            fill = 'medium aquamarine')
-            self.canvas.create_text(self.app.cx,self.app.cy//3,font = 'Arial',
-                            text = f"{self.backText}", 
-                            fill = 'medium aquamarine')
+            self.backText = character_dict[key]
+            #Front of card
+            if app.isFlipped == False:
+                #Exact Placement to be changed
+                canvas.create_text(app.cx,app.cy//2,
+                                font = 'Arial',
+                                text = f"{self.frontText}", 
+                                fill = 'thistle')
+            #Back of card
+            elif app.isFlipped == True:
+                canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                                text = f"{self.backText}", 
+                                fill = 'medium aquamarine')
 
     def getMeaning(self, word):
         if word in characterDictionary:

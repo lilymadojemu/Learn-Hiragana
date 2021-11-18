@@ -38,6 +38,8 @@ def appStarted(app):
     #Checks if "back key" (left) has been pressed to go to a previous card
     app.isBackKeyPressed = False
     app.userProfiles = dict()
+    app.makeFlashCard = False
+    app.flashcardTest = FlashCard("Hi", "Bye")
     sensei = SenseiBot("Sensei",app.baseProblemTime)
 #mousePressed of different phases
 def mousePressed(app,event):
@@ -54,6 +56,8 @@ def mousePressed(app,event):
         pass
 
 
+def keyPressed(app,event):
+    learningMode_keyPressed(app,event)
 
 #The redrawAll's of different phases
 def redrawAll(app,canvas):

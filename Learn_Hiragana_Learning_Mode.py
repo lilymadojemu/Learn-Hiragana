@@ -47,21 +47,35 @@ def letsLearn(app,canvas):
 def learningMode_keyPressed(app,event):
     #flips front of flash card to back
     #flips back to front 
+    if event.key == 'q':
+        app.showMessage("All your progress will be lost!")
+        app.phase = 'start'
     if event.key == 'Up' or event.key == 'Down':
         app.isFlipped = not app.isFlipped
-    #Move to new card
+    #Move to new card, populate next card
     if event.key == 'Right':
-        app.cardsToLearn -= 1
+        #move on to next card
         app.isContinueKeyPressed = True
+        app.makeFlashCard = True
+        if app.makeFlashCard == True and app.cardsToLearn > 0:
+            app.cardsToLearn -= 1
+            app.newFlashCard = FlashCard("Me", "Three")
+        elif app.cardsToLearn < 0:
+            app.showMessage("You're Done!")
+        #Reduce amount of cards reader has to learn
     #Move to previous card
     elif event.key == 'Left':
         app.isBackKeyPressed = True
+
+def learning_keyReleased(app, event): 
+    #Once right key is release it defaults
+    pass
 
 
 def learningMode_mousePressed(app,event):
     #Determines whether a card needs to be flip
     if (app.width//2 <= event.x and event.x >= app.width//4 and app.height//4 
-        <= event.y and  event.y >= app.height):
+        <= event.y and event.y >= app.height):
             app.isFlipped = not app.isFlipped
     #Click the Lets Try it Button to go onto Practice Mode
     #Need to fix
@@ -70,16 +84,6 @@ def learningMode_mousePressed(app,event):
         event.y >= app.height//5):
         app.showMessage('Are you ready to practice?')
         app.phase ='practice'
-
-# def drawFlashcard(app,canvas):
-#     canvas.create_rectangle(app.cx*1.5,
-#                             app.cy//4,
-#                             app.cx//4,
-#                             app.cy, 
-#                             fill = 'bisque')
-#     canvas.create_text(app.cx//1.5,app.cy//3,font = 'Arial', 
-#     text = f"Kana Level:{app.characterLevel},Vocab Level:{app.vocabLevel}", 
-#                         fill = 'medium aquamarine')
 
 #Initiate Practice Mode
 #Appears after all learning cards have been done (won't appear before then)
@@ -93,7 +97,9 @@ def drawLetsTryitButton(app,canvas):
                         font = 'Arial',  text = "Let's Try it!", fill = 'black')
 
 def learningModeRedrawAll(app,canvas):
-    letsLearn(app,canvas)
-    #drawFlashcard(app,canvas)
+    if app.makeFlashCard == False:
+        app.flashcardTest.drawFlashcard(canvas,app)
+    if app.makeFlashCard == True:
+        app.newFlashCard.drawFlashcard(canvas,app)
     if (app.cardsToLearn == 0):
         drawLetsTryitButton(app,canvas)

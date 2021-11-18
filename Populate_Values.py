@@ -1,5 +1,3 @@
-#Populate Values
-
 '''
 Where I will dynamically populate word and character values
 Special case with を
@@ -53,17 +51,3 @@ encoding = "utf8") as f:
             #Romanji and Pronunciation
 vocabulary_dict = dict(zip(vocabList, vocabInfo))
 print(vocabulary_dict)
-
-
-# characterRead = 
-# #readFile("Hiragana, romanji, Phonetic Equivalent text file.txt")
-# vocabRead = readFile("Hiragana Vocabulary, Romanji, Translation.txt")
-# def getCharacterDictionary(characterRead):
-#     characterDictionary = dict(characterRead)
-#     vocabDictionary = dict(vocabRead)
-
-# print(characterRead)
-# #Getting Hiragana & romanji
-
-# vocabualryDictionary = dict()
-#Getting JAPN Vocab & Romanji
