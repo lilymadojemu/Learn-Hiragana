@@ -1,3 +1,7 @@
+from Classes import*
+
+#sensei = SenseiBot("Sensei",app.baseProblemTime)
+
 def practiceMode_keyPressed(app,event):
     #Pausing, unpausing in Practice Mode Only
     if (event.key == 'p'):
