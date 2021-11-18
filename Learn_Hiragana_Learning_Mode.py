@@ -59,6 +59,10 @@ def learningMode_keyPressed(app,event):
         app.makeFlashCard = True
         if app.makeFlashCard == True and app.cardsToLearn > 0:
             app.cardsToLearn -= 1
+            #Determine if next card will be hiragana or vocab
+            #app.hiraganaOrVocab = random.randint(1,2)
+            #Testing with just the hiragana cards
+            app.hiraganaOrVocab = 1
             app.newFlashCard = FlashCard("Me", "Three")
         elif app.cardsToLearn < 0:
             app.showMessage("You're Done!")
@@ -98,7 +102,7 @@ def drawLetsTryitButton(app,canvas):
 
 def learningModeRedrawAll(app,canvas):
     if app.makeFlashCard == False:
-        app.flashcardTest.drawFlashcard(canvas,app)
+        app.startingflashcard.drawFlashcard(canvas,app)
     if app.makeFlashCard == True:
         app.newFlashCard.drawFlashcard(canvas,app)
     if (app.cardsToLearn == 0):

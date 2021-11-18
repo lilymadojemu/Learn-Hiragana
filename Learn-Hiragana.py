@@ -13,7 +13,7 @@ from User_Profile_Select_Screen import *
 from Learn_Hiragana_Learning_Mode import *
 from Learn_Hiragana_Practice_Mode import *
 from Transition_Screen import *
-import time
+import time, random
 def appStarted(app):
     #Initial phase 
     app.phase = "start"
@@ -38,8 +38,13 @@ def appStarted(app):
     #Checks if "back key" (left) has been pressed to go to a previous card
     app.isBackKeyPressed = False
     app.userProfiles = dict()
+    #Determines if a new flash card will be shown/made
     app.makeFlashCard = False
-    app.flashcardTest = FlashCard("Hi", "Bye")
+    #defaul flash card
+    app.startingFlashcard= FlashCard("Hi", "Bye")
+    #Decides whether a flashcard appearing will be a 
+    # hiragana card or a vocab card
+    app.hiraganaOrVocab = random.randint(1,2)
     sensei = SenseiBot("Sensei",app.baseProblemTime)
 #mousePressed of different phases
 def mousePressed(app,event):
@@ -55,9 +60,12 @@ def mousePressed(app,event):
         ''' After MVP'''
         pass
 
-
+#Houses the key presses of all phases
 def keyPressed(app,event):
-    learningMode_keyPressed(app,event)
+    if app.phase == 'learning':
+        learningMode_keyPressed(app,event)
+    elif app.phase == 'practice':
+        practiceMode_keyPressed(app,event)
 
 #The redrawAll's of different phases
 def redrawAll(app,canvas):
@@ -70,7 +78,7 @@ def redrawAll(app,canvas):
         #Go to Practice Mode
         practiceModeRedrawAll(app,canvas)
     elif app.phase == 'profileselect':
-        #Set up user profile, if clicked! I want to trigger
+        #Set up user profile
         userProfileRedrawAll(app,canvas)
     elif app.phase == 'settings':
         pass
