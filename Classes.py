@@ -111,7 +111,8 @@ class FlashCard(object):
                 #         #Once this happens, user will only look at incorrect 
                 #         #correct characters/words from what they went 
                 #         # through
-
+    def getBackText(self):
+        return self.backText
 
                         
 
