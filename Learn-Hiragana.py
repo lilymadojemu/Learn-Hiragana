@@ -31,6 +31,8 @@ def appStarted(app):
     app.cardsToLearn = 5
     #Number of flashcards that will appear in practice phase
     app.cardsToDo = 5
+    app.cardsLearned = 0
+    app.cardsPracticed = 0
     #time alloted to answer each question during practice phase
     app.baseProblemTime = 700
     #Checks/Determines if a card has been flipped or not
@@ -61,6 +63,8 @@ def appStarted(app):
     app.characterDictionary = character_dict
     #Overall vocabulary Dictionary
     app.vocabularyDictionary = vocabulary_dict
+    #Overall dictionary with hiragana and vocab 
+    app.bigDictionary = overall_dict
     #Stagnant list of all hiragana characters
     app.hiraganaList = hiraganaList
     #Information of each user
