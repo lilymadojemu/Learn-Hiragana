@@ -42,10 +42,13 @@ def appStarted(app):
     app.makeFlashCard = False
     #defaul flash card
     app.startingFlashcard= FlashCard("Hi", "Bye")
+    #Overall hiragana flashcards user has seen
+    app.seenHiraganaFlashCards = dict()
+    #Overall vocabulary flashcards user has seen
+    app.seenVocabFlashCards = dict()
     #Decides whether a flashcard appearing will be a 
     # hiragana card or a vocab card
     app.hiraganaOrVocab = random.randint(1,2)
-    sensei = SenseiBot("Sensei",app.baseProblemTime)
 #mousePressed of different phases
 def mousePressed(app,event):
     if app.phase == 'start':
