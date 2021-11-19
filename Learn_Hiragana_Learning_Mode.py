@@ -1,4 +1,6 @@
 from Classes import*
+
+from Populate_Values import*
 '''
 Overall Purpose: It is up to the user to read what is on the front and back of 
 the flashcards
@@ -93,55 +95,67 @@ Get base position and center and ending base position & center
                 #         #correct characters/words from what they went 
                 #         # through
                         
-''''
+'''
+
+modifyListOfKeys = list(overall_dict.keys())
+modifiedOverall_dict = copy.deepcopy(overall_dict)
 #not completely off base
 def letsLearn(app,canvas):
     #FlashCard info.
     while app.phase == 'learning':
-        prevFlashCard = None
-        if app.hiraganaOrVocab == 1:
-            for cKey in app.characterDictionary:
-                currFlashCard = FlashCard(cKey, app.characterDictionary[cKey])
+        prevFlashCard = dict()
+        possibleKey = random.choice(modifyListOfKeys)
+        #Hiragana, for tracking sake
+        if possibleKey in hiraganaList and app.hiraganaOrVocab == 1:
+                app.flashCard = FlashCard(possibleKey,
+                                modifiedOverall_dict[possibleKey])
+                currFlashCard = app.flashCard
                 currFlashCard.drawFlashCard(canvas,app)
-                if app.isFlipped == True:
-                    currFlashCard.flip()
+
+                # if app.isFlipped == True:
+                #     currFlashCard.flip()
                 if app.isContinueKeyPressed == True:
-                    currFlashCard = prevFlashCard
-                    prevFlashCard.append(app.seenFlashCards)
+                    characterKey = currFlashCard.frontText
+                    characterValue = currFlashCard.backText
+                    prevFlashCard[characterKey] = characterValue
+                    del modifiedOverall_dict[characterKey]
+                    continue
                 elif app.isBackKeyPressed == True:
-                    prevFlashCard.drawFlashCard()
-        elif app.hiraganaOrVocab == 2:
-            for vKey in app.vocabularyDictionary:
-                currFlashCard = FlashCard(vKey, app.vocabularyDictionary[vKey])
-                currFlashCard.drawFlashCard()
-                if app.isFlipped == True:
-                    currFlashCard.flip()
-                if app.isContinueKeyPressed == True:
-                    currFlashCard = prevFlashCard
-                    #Add prevFlashCard key-value to seen flashcard
-                    app.seenFlashCards[prevFlashCard.frontText] =(
-                                                 prevFlashCard.backText )
-                elif app.isBackKeyPressed == True:
-                    prevFlashCard.drawFlashCard()
-                luckyChance = random.randint(1,2)
-        #Check if able to make more flash cards
-        if app.makeFlashCard == True and app.cardsToLearn > 0:
-            #add exisiting flashcard to seen
-            app.cardsToLearn -= 1
-            app.newFlashCard = FlashCard("Me", "Three")
-            if app.hiraganaOrVocab == 1:
-                oldFlashCard = currFlashCard
-                app.seenHiraganaFlashCard[currFlashCard]
-                currFlashCard = app.newFlashCard
-            elif app.hiraganaOrVocab == 2:
-                oldFlashCard = currFlashCard
-                app.seenVocabularyFlashCard[currFlashCard]
-                currFlashCard = app.newFlashCard
-        elif app.cardsToLearn < 0:
-            app.showMessage("You're Done!")
-        elif app.makeOldFlashCard == True:
-            #Draw flash card based on app.seen (in order)
-            app.newFlashCard.drawFlashcard(canvas,app)
+                    prevFlashCard.drawFlashCard(canvas,app)
+        #vocab
+        elif possibleKey in vocabList and app.hiraganaOrVocab == 2:
+            app.flashCard = FlashCard(possibleKey,
+                                    modifiedOverall_dict[possibleKey])
+            currFlashCard = app.flashCard
+            currFlashCard.drawFlashCard(canvas,app)
+
+            # if app.isFlipped == True:
+            #     currFlashCard.flip()
+            if app.isContinueKeyPressed == True:
+                currFlashCard = prevFlashCard
+                #Add prevFlashCard key-value to seen flashcard
+                app.seenFlashCards[prevFlashCard.frontText] =(
+                                                prevFlashCard.backText )
+            elif app.isBackKeyPressed == True:
+                prevFlashCard.drawFlashCard()
+        # #Check if able to make more flash cards
+        # if app.makeFlashCard == True and app.cardsToLearn > 0:
+        #     #add exisiting flashcard to seen
+        #     app.cardsToLearn -= 1
+        #     app.newFlashCard = FlashCard("Me", "Three")
+        #     if app.hiraganaOrVocab == 1:
+        #         oldFlashCard = currFlashCard
+        #         app.seenHiraganaFlashCard[currFlashCard]
+        #         currFlashCard = app.newFlashCard
+        #     elif app.hiraganaOrVocab == 2:
+        #         oldFlashCard = currFlashCard
+        #         app.seenVocabularyFlashCard[currFlashCard]
+        #         currFlashCard = app.newFlashCard
+        # elif app.cardsToLearn < 0:
+        #     app.showMessage("You're Done!")
+        # elif app.makeOldFlashCard == True:
+        #     #Draw flash card based on app.seen (in order)
+        #     app.newFlashCard.drawFlashcard(canvas,app)
 
 
 ''' call method on current flashcard'''           
@@ -182,7 +196,6 @@ def learningMode_mousePressed(app,event):
         app.phase ='practice'
 
 #Initiate Practice Mode
-#Appears after all learning cards have been done (won't appear before then)
 def drawLetsTryitButton(app,canvas):
     canvas.create_rectangle(app.cx*2,
                             app.cy*1.5,
@@ -194,12 +207,9 @@ def drawLetsTryitButton(app,canvas):
 
 def learningModeRedrawAll(app,canvas):
     if app.makeFlashCard == False:
-        app.startingFlashcard.drawFlashcard(canvas,app)
+        app.flashCard.drawFlashCard(canvas,app)
     if app.makeFlashCard == True:
-        app.newFlashCard = FlashCard("Singto", "Tay")
-        app.newFlashCard.drawFlashcard(canvas,app)
+        letsLearn(app,canvas)
+        app.flashCard.drawFlashCard(canvas,app)
     if (app.cardsToLearn == 0):
         drawLetsTryitButton(app,canvas)
-
-def learn():
-    pass
