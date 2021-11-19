@@ -44,53 +44,59 @@ class FlashCard(object):
         canvas.create_text(app.cx//1.5, app.cy//3,font = 'Arial',
     text = f"KanaLevel:{app.characterLevel},{app.vocabLevel}", 
                             fill = 'medium aquamarine')
+                            
         if app.phase == 'learning':
             canvas.create_text(app.cx//1.5, app.cy,font = 'Arial',
         text = f"Cards Left:{app.cardsToLearn}", fill = 'medium aquamarine')
+
         elif app.phase == 'practice':
             canvas.create_text(app.cx//1.5, app.cy,font = 'Arial',
         text = f"Cards Left:{app.cardsToDo}", fill = 'medium aquamarine')
+
+
+
         #For Hiragana Cards, 1 is Hiragana
         modifiedHiraganaList = copy.deepcopy(hiraganaList)
         modifiedCharacter_dict = copy.deepcopy(character_dict)
         if app.hiraganaOrVocab == 1:
-            #Keeps track of flashcards I have already been through, 
-            #will play big role in keeping track of users' progress
-            # through flashcards
-            seenHiraganaFlashCards = dict()
             #Currently getting everything instead of one at a time
             for kana in modifiedHiraganaList:
-                if kana not in seenHiraganaFlashCards:
-                    self.frontText = kana
-                    self.backText = modifiedCharacter_dict[kana]
+                if (kana not in app.seenHiraganaFlashCards and kana not in 
+                    app.seenFlashCards):
+                    kana = self.frontText
+                    modifiedCharacter_dict[kana] = self.backText 
                     #Front of card
                     if app.isFlipped == False:
                         #Exact Placement to be changed
                         #The Hiragana Character
                         canvas.create_text(app.cx,app.cy//2,
                                         font = 'Arial',
-                                        text = f"{self.frontText}", 
+                                        text = f"{kana}", 
                                         fill = 'thistle')
                     #Back of card
                     elif app.isFlipped == True:
                         #The Pronunciation of Hiragana Character
                         canvas.create_text(app.cx, app.cy//2,font = 'Arial',
-                                        text = f"{self.backText}", 
+                                    text = f"{modifiedCharacter_dict[kana]}", 
                                         fill = 'medium aquamarine')
-                    #Has user gone to the next card
-                    elif(app.isContinueKeyPressed == True and
-                         app.cardsToLearn >= 0):
-                        #puts current card in already seen flashcards
-                        #I want to take that key value pair out of characterdict
-                        seenHiraganaFlashCards[self.frontText] = self.backText
-                        del modifiedCharacter_dict[self.frontText]
-                        continue
-                        #Finished with everything
-                        if modifiedCharacter_dict == {}:
-                            app.showMessage("Empty!")
-                            #Once this happens, user will only look at incorrect 
-                            #correct characters/words from what they went 
-                            # through
+                # #User gone to the next card
+                # if(app.isContinueKeyPressed == True and
+                #      app.cardsToLearn >= 0):
+                #     #puts current card in already seen flashcards
+                #     #I want to take that key value pair out of characterdict
+                #     app.seenHiraganaFlashCards[kana] = (
+                #                                modifiedCharacter_dict[kana])
+                #     #modifiedHiraganaList.remove(kana)                                        
+                #     del modifiedCharacter_dict[kana]
+                #     print(modifiedCharacter_dict)
+
+                #     #Finished with everything
+                #     if modifiedCharacter_dict == {}:
+                #         app.showMessage("Empty!")
+                #         #Once this happens, user will only look at incorrect 
+                #         #correct characters/words from what they went 
+                #         # through
+                    
         #For Vocab Cards, 2 is vocabulary
         modifiedVocabList = copy.deepcopy(vocabList)
         modifiedVocab_dict = copy.deepcopy(vocabulary_dict)
@@ -98,12 +104,11 @@ class FlashCard(object):
             #Keeps track of flashcards I have already been through, 
             #will play big role in keeping track of users' progress
             # through flashcards
-            seenVocabularyFlashCards = dict()
             #Currently getting everything instead of one at a time
             for word in modifiedVocabList:
                 #while key in modifiedHiraganaList:
                     self.frontText = word
-                    self.backText = modifiedCharacter_dict[word]
+                    self.backText = modifiedVocab_dict[word]
                     #Front of card
                     if app.isFlipped == False:
                         #Exact Placement to be changed
@@ -118,27 +123,28 @@ class FlashCard(object):
                         canvas.create_text(app.cx, app.cy//2,font = 'Arial',
                                         text = f"{self.backText}", 
                                         fill = 'medium aquamarine')
-                    #Has user gone to the next card
-                    elif(app.isContinueKeyPressed == True and
-                         app.cardsToLearn >= 0):
-                        seenVocabularyFlashCards[self.frontText] = self.backText
-                        del modifiedVocab_dict[self.frontText]
-                        #Finished with everything
-                        if modifiedVocab_dict == {}:
-                            app.showMessage("Empty!")
-                            #Once this happens, user will only look at incorrect 
-                            #correct characters/words from what they went 
-                            # through
-                            
+                # #Has user gone to the next card
+                # elif(app.isContinueKeyPressed == True and
+                #      app.cardsToLearn >= 0):
+                #     app.seenVocabularyFlashCards[self.frontText] = (
+                #                 self.backText)
+                #     del modifiedVocab_dict[self.frontText]
+                #     #Finished with everything
+                #     if modifiedVocab_dict == {}:
+                #         app.showMessage("Empty!")
+                #         #Once this happens, user will only look at incorrect 
+                #         #correct characters/words from what they went 
+                #         # through
+                        
                 
 
-    def getMeaning(self, word):
-        if word in characterDictionary:
-            return characterDictionary[word]
-        elif word in vocabularyDictionary:
-            return vocabularyDictionary[word]
-        else:
-            self.app.showMessage('Sorry, that word is invalid:(')
+    # def getMeaning(self, word):
+    #     if word in characterDictionary:
+    #         return characterDictionary[word]
+    #     elif word in vocabularyDictionary:
+    #         return vocabularyDictionary[word]
+    #     else:
+    #         self.app.showMessage('Sorry, that word is invalid:(')
     def flip(self):
         if self.app.isFlipped == True:
             self.frontText = self.newFront

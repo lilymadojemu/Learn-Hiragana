@@ -37,23 +37,32 @@ def appStarted(app):
     app.isContinueKeyPressed = False
     #Checks if "back key" (left) has been pressed to go to a previous card
     app.isBackKeyPressed = False
-    app.userProfiles = dict()
     #Determines if a new flash card will be shown/made
     app.makeFlashCard = False
-    #defaul flash card
+
+    app.makeOldFlashCard = False
+    #default flash card
     app.startingFlashcard= FlashCard("Hi", "Bye")
+
+    app.newFlashCard = FlashCard("Singto", "Tay")
     #Overall hiragana flashcards user has seen
     app.seenHiraganaFlashCards = dict()
     #Overall vocabulary flashcards user has seen
     app.seenVocabFlashCards = dict()
+    #Takes in all of the flashcards a user has seen
+    app.seenFlashCards = dict()
     #Decides whether a flashcard appearing will be a 
     # hiragana card or a vocab card
-    app.hiraganaOrVocab = random.randint(1,2)
-    #Overall character and vocab dictionaries
+    app.hiraganaOrVocab = random.randint(2,2)
+    #Overall character dictionary
     app.characterDictionary = character_dict
+    #Overall vocabulary Dictionary
     app.vocabularyDictionary = vocabulary_dict
     #Stagnant list of all hiragana characters
     app.hiraganaList = hiraganaList
+    #Information of each user
+    app.userProfiles = dict()
+
 #mousePressed of different phases
 def mousePressed(app,event):
     if app.phase == 'start':
@@ -62,6 +71,8 @@ def mousePressed(app,event):
         learningMode_mousePressed(app,event)
     elif app.phase == 'practice':
         practice_mousePressed(app,event)
+    elif app.phase == 'transition':
+        transition_mousePressed(app,event)
     elif app.phase == 'profileselect':
         userSelect_mousePressed(app,event)
     elif app.phase == 'settings':
@@ -80,17 +91,21 @@ def redrawAll(app,canvas):
     if app.phase == 'start':
         startScreenRedrawall(app,canvas)
     elif app.phase == 'learning':
-            #Go to Learning Mode
         learningModeRedrawAll(app,canvas)
     elif app.phase == 'practice':
-        #Go to Practice Mode
         practiceModeRedrawAll(app,canvas)
+    elif app.phase == 'transition':
+        transitionScreenRedrawAll(app,canvas)
     elif app.phase == 'profileselect':
-        #Set up user profile
         userProfileRedrawAll(app,canvas)
     elif app.phase == 'settings':
         pass
-    #Transition
-    #transitionScreenRedrawAll(app,canvas)
 
-runApp(width = 800, height = 800)
+def letsLearnHiragana():
+    runApp(width = 800, height = 800)
+
+def main():
+    letsLearnHiragana()
+
+if __name__ == '__main__':
+    main()

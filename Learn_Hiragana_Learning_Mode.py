@@ -9,41 +9,142 @@ be at a base position, want that base position to change when flipped
 Get base position and center and ending base position & center
 
 '''
+'''Goes Somewhere'''
+'''Goes Somewhere
 
+#For Hiragana Cards, 1 is Hiragana
+        modifiedHiraganaList = copy.deepcopy(hiraganaList)
+        modifiedCharacter_dict = copy.deepcopy(character_dict)
+        if app.hiraganaOrVocab == 1:
+            #Currently getting everything instead of one at a time
+            for kana in modifiedHiraganaList:
+                if (kana not in app.seenHiraganaFlashCards and kana not in 
+                    app.seenFlashCards):
+                    kana = self.frontText
+                    modifiedCharacter_dict[kana] = self.backText 
+                    #Front of card
+                    if app.isFlipped == False:
+                        #Exact Placement to be changed
+                        #The Hiragana Character
+                        canvas.create_text(app.cx,app.cy//2,
+                                        font = 'Arial',
+                                        text = f"{kana}", 
+                                        fill = 'thistle')
+                    #Back of card
+                    elif app.isFlipped == True:
+                        #The Pronunciation of Hiragana Character
+                        canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                                    text = f"{modifiedCharacter_dict[kana]}", 
+                                        fill = 'medium aquamarine')
+                # #User gone to the next card
+                # if(app.isContinueKeyPressed == True and
+                #      app.cardsToLearn >= 0):
+                #     #puts current card in already seen flashcards
+                #     #I want to take that key value pair out of characterdict
+                #     app.seenHiraganaFlashCards[kana] = (
+                #                                modifiedCharacter_dict[kana])
+                #     #modifiedHiraganaList.remove(kana)                                        
+                #     del modifiedCharacter_dict[kana]
+                #     print(modifiedCharacter_dict)
+
+                #     #Finished with everything
+                #     if modifiedCharacter_dict == {}:
+                #         app.showMessage("Empty!")
+                #         #Once this happens, user will only look at incorrect 
+                #         #correct characters/words from what they went 
+                #         # through
+                    
+        #For Vocab Cards, 2 is vocabulary
+        modifiedVocabList = copy.deepcopy(vocabList)
+        modifiedVocab_dict = copy.deepcopy(vocabulary_dict)
+        if app.hiraganaOrVocab == 2:
+            #Keeps track of flashcards I have already been through, 
+            #will play big role in keeping track of users' progress
+            # through flashcards
+            #Currently getting everything instead of one at a time
+            for word in modifiedVocabList:
+                #while key in modifiedHiraganaList:
+                    self.frontText = word
+                    self.backText = modifiedVocab_dict[word]
+                    #Front of card
+                    if app.isFlipped == False:
+                        #Exact Placement to be changed
+                        #The Vocabulary Word
+                        canvas.create_text(app.cx,app.cy//2,
+                                        font = 'Arial',
+                                        text = f"{self.frontText}", 
+                                        fill = 'thistle')
+                    #Back of card
+                    elif app.isFlipped == True:
+                        #The Pronunciation of Vocabulary
+                        canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                                        text = f"{self.backText}", 
+                                        fill = 'medium aquamarine')
+                # #Has user gone to the next card
+                # elif(app.isContinueKeyPressed == True and
+                #      app.cardsToLearn >= 0):
+                #     app.seenVocabularyFlashCards[self.frontText] = (
+                #                 self.backText)
+                #     del modifiedVocab_dict[self.frontText]
+                #     #Finished with everything
+                #     if modifiedVocab_dict == {}:
+                #         app.showMessage("Empty!")
+                #         #Once this happens, user will only look at incorrect 
+                #         #correct characters/words from what they went 
+                #         # through
+                        
+''''
+#not completely off base
 def letsLearn(app,canvas):
     #FlashCard info.
     while app.phase == 'learning':
-        seenFlashCards = dict()
         prevFlashCard = None
-        #Determines if flashcard will be a vocab or character card
-        luckyChance = random.randint(1,2)
-        if luckyChance == 1:
-            for cKey in characterDictionary:
-                currFlashCard = FlashCard(cKey, characterDictionary[cKey])
-                currFlashCard.drawFlashCard()
+        if app.hiraganaOrVocab == 1:
+            for cKey in app.characterDictionary:
+                currFlashCard = FlashCard(cKey, app.characterDictionary[cKey])
+                currFlashCard.drawFlashCard(canvas,app)
                 if app.isFlipped == True:
                     currFlashCard.flip()
                 if app.isContinueKeyPressed == True:
                     currFlashCard = prevFlashCard
-                    prevFlashCard.append(seenFlashCards)
+                    prevFlashCard.append(app.seenFlashCards)
                 elif app.isBackKeyPressed == True:
                     prevFlashCard.drawFlashCard()
-            luckyChance = random.randint(1,2)
-        elif luckyChance == 2:
-            for vKey in vocabularyDictionary:
-                currFlashCard = FlashCard(vKey, vocabularyDictionary[vKey])
+        elif app.hiraganaOrVocab == 2:
+            for vKey in app.vocabularyDictionary:
+                currFlashCard = FlashCard(vKey, app.vocabularyDictionary[vKey])
                 currFlashCard.drawFlashCard()
                 if app.isFlipped == True:
                     currFlashCard.flip()
                 if app.isContinueKeyPressed == True:
                     currFlashCard = prevFlashCard
                     #Add prevFlashCard key-value to seen flashcard
-                    seenFlashCards[prevFlashCard.frontText] =(
+                    app.seenFlashCards[prevFlashCard.frontText] =(
                                                  prevFlashCard.backText )
                 elif app.isBackKeyPressed == True:
                     prevFlashCard.drawFlashCard()
                 luckyChance = random.randint(1,2)
-                    
+        #Check if able to make more flash cards
+        if app.makeFlashCard == True and app.cardsToLearn > 0:
+            #add exisiting flashcard to seen
+            app.cardsToLearn -= 1
+            app.newFlashCard = FlashCard("Me", "Three")
+            if app.hiraganaOrVocab == 1:
+                oldFlashCard = currFlashCard
+                app.seenHiraganaFlashCard[currFlashCard]
+                currFlashCard = app.newFlashCard
+            elif app.hiraganaOrVocab == 2:
+                oldFlashCard = currFlashCard
+                app.seenVocabularyFlashCard[currFlashCard]
+                currFlashCard = app.newFlashCard
+        elif app.cardsToLearn < 0:
+            app.showMessage("You're Done!")
+        elif app.makeOldFlashCard == True:
+            #Draw flash card based on app.seen (in order)
+            app.newFlashCard.drawFlashcard(canvas,app)
+
+
+''' call method on current flashcard'''           
 def learningMode_keyPressed(app,event):
     #flips front of flash card to back
     #flips back to front 
@@ -54,23 +155,14 @@ def learningMode_keyPressed(app,event):
         app.isFlipped = not app.isFlipped
     #Move to new card, populate next card
     if event.key == 'Right':
-        #move on to next card
         app.isContinueKeyPressed = True
+        app.cardsToLearn -= 1
         app.makeFlashCard = True
-        if app.makeFlashCard == True and app.cardsToLearn > 0:
-            #add exisiting flashcard to seen
-            app.cardsToLearn -= 1
-            #Determine if next card will be hiragana or vocab
-            #app.hiraganaOrVocab = random.randint(1,2)
-            #Testing with just the hiragana cards
-            app.hiraganaOrVocab = 1
-            app.newFlashCard = FlashCard("Me", "Three")
-        elif app.cardsToLearn < 0:
-            app.showMessage("You're Done!")
-        #Reduce amount of cards reader has to learn
+        app.hiraganaOrVocab =  random.randint(1,2)
     #Move to previous card
     elif event.key == 'Left':
         app.isBackKeyPressed = True
+        app.makeOldFlashCard = True
 
 def learning_keyReleased(app, event): 
     #Once right key is release it defaults
@@ -82,7 +174,6 @@ def learningMode_mousePressed(app,event):
     if (app.width//2 <= event.x and event.x >= app.width//4 and app.height//4 
         <= event.y and event.y >= app.height):
             app.isFlipped = not app.isFlipped
-    #Click the Lets Try it Button to go onto Practice Mode
     #Need to fix
     if (app.cardsToLearn == 0 and app.width//4 <= event.x and 
         event.x >= app.width//6 and app.height//10 <= event.y and 
@@ -105,6 +196,10 @@ def learningModeRedrawAll(app,canvas):
     if app.makeFlashCard == False:
         app.startingFlashcard.drawFlashcard(canvas,app)
     if app.makeFlashCard == True:
+        app.newFlashCard = FlashCard("Singto", "Tay")
         app.newFlashCard.drawFlashcard(canvas,app)
     if (app.cardsToLearn == 0):
         drawLetsTryitButton(app,canvas)
+
+def learn():
+    pass
