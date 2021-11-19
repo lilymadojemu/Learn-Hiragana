@@ -58,6 +58,7 @@ def learningMode_keyPressed(app,event):
         app.isContinueKeyPressed = True
         app.makeFlashCard = True
         if app.makeFlashCard == True and app.cardsToLearn > 0:
+            #add exisiting flashcard to seen
             app.cardsToLearn -= 1
             #Determine if next card will be hiragana or vocab
             #app.hiraganaOrVocab = random.randint(1,2)

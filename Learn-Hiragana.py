@@ -49,6 +49,11 @@ def appStarted(app):
     #Decides whether a flashcard appearing will be a 
     # hiragana card or a vocab card
     app.hiraganaOrVocab = random.randint(1,2)
+    #Overall character and vocab dictionaries
+    app.characterDictionary = character_dict
+    app.vocabularyDictionary = vocabulary_dict
+    #Stagnant list of all hiragana characters
+    app.hiraganaList = hiraganaList
 #mousePressed of different phases
 def mousePressed(app,event):
     if app.phase == 'start':

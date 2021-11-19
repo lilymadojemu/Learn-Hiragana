@@ -1,53 +1,42 @@
 '''
 Where I will dynamically populate word and character values
 Special case with を
+
+#When showing on card, need to look out for this
+print(vocabulary_dict['せんたくをする'])
+
+Finished
 '''
-import os
-
-characterDictionary = dict()
-vocabularyDictionary = dict()
-#from https://www.cs.cmu.edu/~112/notes/notes-strings.html
-def readFile(path):
-    with open(path, "rt") as f:
-        return f.read()
-
+#Opens the text file pertaining to Hiragana characters
 hiraganaList = []
 #Adapted from: https://www.youtube.com/watch?v=oEbNWXhS_mk
-#Opens the text file pertaining to Hiragana characters
 with open("Hiragana, romanji, Phonetic Equivalent text file.txt", "r", 
 encoding = "utf8") as f:
     kanaInfo = []
     for line in f:
         characterLines = line
         strippedCharacters = characterLines.strip('\n')
+        spacedCharacters = strippedCharacters.split()
         hiraganaList.append(strippedCharacters[0])
         for kana in hiraganaList:
             #Romanji and Pronunciation
-            romaPronun = strippedCharacters[2:]
+            romaPronun = spacedCharacters[1:]
             if romaPronun not in kanaInfo:
                 kanaInfo.append(romaPronun)
 character_dict = dict(zip(hiraganaList, kanaInfo))
 
-#Need to Fix
-vocabList = []
 #Opens text file pertaining to Vocabulary
+vocabList = []
 with open("Hiragana Vocabulary, Romanji, Translation.txt", "r", 
 encoding = "utf8") as f:
     vocabInfo = []
     for line in f:
         vocabLines = line
         strippedVocab = vocabLines.strip('\n')
-        stripList = list(strippedVocab)
-        for i in range(len(stripList)):
-            print(i)
-            character = strippedVocab[i] 
-            print(character)
-            if character in hiraganaList:
-                vocabList.append(character)
-                print(vocabList)
-            elif character not in hiraganaList:
-                  vocabInfo.append(character)
-
-            #Romanji and Pronunciation
+        spacedVocab = strippedVocab.split()
+        vocabList.append(spacedVocab[0])
+        for word in vocabList:
+            vocabPronun = spacedVocab[1:]
+            if vocabPronun not in vocabInfo:
+                vocabInfo.append(vocabPronun)
 vocabulary_dict = dict(zip(vocabList, vocabInfo))
-print(vocabulary_dict)
