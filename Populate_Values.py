@@ -40,3 +40,5 @@ encoding = "utf8") as f:
             if vocabPronun not in vocabInfo:
                 vocabInfo.append(vocabPronun)
 vocabulary_dict = dict(zip(vocabList, vocabInfo))
+
+overall_dict= character_dict|vocabulary_dict

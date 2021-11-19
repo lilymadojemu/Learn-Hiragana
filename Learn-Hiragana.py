@@ -14,6 +14,9 @@ from Learn_Hiragana_Learning_Mode import *
 from Learn_Hiragana_Practice_Mode import *
 from Transition_Screen import *
 import time, random
+
+listOfKeys = list(overall_dict.keys())
+possibleKey = random.choice(listOfKeys)
 def appStarted(app):
     #Initial phase 
     app.phase = "start"
@@ -41,10 +44,10 @@ def appStarted(app):
     app.makeFlashCard = False
 
     app.makeOldFlashCard = False
-    #default flash card
-    app.startingFlashcard= FlashCard("Hi", "Bye")
 
-    app.newFlashCard = FlashCard("Singto", "Tay")
+    #default flash card, key value
+    app.flashCard = FlashCard(possibleKey,overall_dict[possibleKey])
+
     #Overall hiragana flashcards user has seen
     app.seenHiraganaFlashCards = dict()
     #Overall vocabulary flashcards user has seen
