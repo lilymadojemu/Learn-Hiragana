@@ -2,6 +2,7 @@
 Contains all classes that will be used
 '''
 from Populate_Values import*
+from cmu_112_graphics import*
 import os, random, time, copy
 class correctWord(object):
     def __init__(self, correctWord):
@@ -34,90 +35,92 @@ class FlashCard(object):
         #After Flipping
         self.newFront = backText
         self.newBack = frontText
+        #Key its based on
+       
 
     def drawFlashCard(self, canvas, app):
-
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy//4,
                                 app.cx//4,
                                 app.cy, 
                                 fill = 'bisque')
-
+        # canvas.create_image(app.cx, app.cy, 
+        #                     image=ImageTk.PhotoImage(app.image1))
         canvas.create_text(app.cx//2, app.cy//5,font = 'Arial',
     text = f"Kana Level:{app.characterLevel},\nVocab Level:{app.vocabLevel}", 
                             fill = 'black')
 
         if app.phase == 'learning':
             canvas.create_text(app.cx, app.cy,font = 'Arial',
-        text = f"Cards Left:{app.cardsToLearn}", fill = 'black')
+            text = f"Cards Left:{app.cardsToLearn}", fill = 'black')
 
         elif app.phase == 'practice':
             canvas.create_text(app.cx//1.5, app.cy,font = 'Arial',
                                 text = f"Cards Left:{app.cardsToDo}", 
                                 fill = 'medium aquamarine')
         #Hiragana
-        if app.hiraganaOrVocab == 1:
-                if app.isFlipped == False:
-                    #Exact Placement to be changed
-                    #The Hiragana Character
-                    canvas.create_text(app.cx,app.cy//2,
-                                    font = 'Arial',
-                                    text = f"{self.frontText}", 
-                                    fill = 'hot pink')
-                #Back of card
-                elif app.isFlipped == True:
-                    romanji = self.backText[0]
-                    pronunciation = self.backText[1]
-                    canvas.create_rectangle(app.cx*1.5,
-                                app.cy//4,
-                                app.cx//4,
-                                app.cy, 
-                                fill = 'olive drab')
-                    #The Pronunciation of Hiragana Character
-                    canvas.create_text(app.cx, app.cy//2,font = 'Arial',
-                                text = f"{romanji}\n{pronunciation}", 
-                                    fill = 'medium aquamarine')
-        #Vocabulary
-        elif app.hiraganaOrVocab == 2:
-                if app.isFlipped == False:
-                    #Exact Placement to be changed
-                    canvas.create_text(app.cx,app.cy//2,
-                                    font = 'Arial',
-                                    text = f"{self.frontText}", 
-                                    fill = 'thistle')
-                #Back of card
-                elif app.isFlipped == True:
-                    if len(self.backText) == 3:
-                        currRomanji = list(self.backText[0])
-                        translation1= self.backText[1]
-                        translation2=self.backText[2]
-                        currRomanji.insert(7," ")
-                        currRomanji.insert(10," ")
-                        threeWordRomanji = ""
-                        for c in range(len(currRomanji)):
-                            threeWordRomanji += currRomanji[c]
+        # if len(self.frontText) == 1:
 
-                        canvas.create_rectangle(app.cx*1.5,
-                                app.cy//4,
-                                app.cx//4,
-                                app.cy, 
-                                fill = 'olive drab')
-                        canvas.create_text(app.cx, app.cy//2,font = 'Arial',
-                    text = f"{threeWordRomanji}\n{translation1}{translation2}", 
-                                    fill = 'medium aquamarine')
-                    else:
-                        wordRomanji = self.backText[0]
-                        translation= self.backText[1]
-                        canvas.create_rectangle(app.cx*1.5,
-                                    app.cy//4,
-                                    app.cx//4,
-                                    app.cy, 
-                                    fill = 'olive drab')
-                        canvas.create_text(app.cx, app.cy//2,font = 'Arial',
-                                    text = f"{wordRomanji}\n{translation}", 
-                                        fill = 'medium aquamarine')
-    def getFrontText(self):
-        return self.frontText
+        #     print(self.frontText)
+        #     if app.isFlipped == False:
+        #         #Exact Placement to be changed
+        #         #The Hiragana Character
+        #         canvas.create_text(app.cx,app.cy//2,
+        #                         font = 'Arial',
+        #                         text = f"{self.frontText}", 
+        #                         fill = 'hot pink')
+        #     #Back of card
+        #     elif app.isFlipped == True:
+        #         romanji = self.backText[0]
+        #         pronunciation = self.backText[1]
+        #         canvas.create_rectangle(app.cx*1.5,
+        #                     app.cy//4,
+        #                     app.cx//4,
+        #                     app.cy, 
+        #                     fill = 'olive drab')
+        #         #The Pronunciation of Hiragana Character
+        #         canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+        #                     text = f"{romanji}\n{pronunciation}", 
+        #                         fill = 'medium aquamarine')
+        # #Vocabulary
+        # elif len(self.frontText) != 1:
+        #         if app.isFlipped == False:
+        #             #Exact Placement to be changed
+        #             canvas.create_text(app.cx,app.cy//2,
+        #                             font = 'Arial',
+        #                             text = f"{self.frontText}", 
+        #                             fill = 'thistle')
+        #         #Back of card
+        #         elif app.isFlipped == True:
+        #             if len(self.backText) == 3:
+        #                 currRomanji = list(self.backText[0])
+        #                 translation1= self.backText[1]
+        #                 translation2=self.backText[2]
+        #                 currRomanji.insert(7," ")
+        #                 currRomanji.insert(10," ")
+        #                 threeWordRomanji = ""
+        #                 for c in range(len(currRomanji)):
+        #                     threeWordRomanji += currRomanji[c]
+
+        #                 canvas.create_rectangle(app.cx*1.5,
+        #                         app.cy//4,
+        #                         app.cx//4,
+        #                         app.cy, 
+        #                         fill = 'olive drab')
+        #                 canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+        #             text = f"{threeWordRomanji}\n{translation1}{translation2}", 
+        #                             fill = 'medium aquamarine')
+        #             else:
+        #                 wordRomanji = self.backText[0]
+        #                 translation= self.backText[1]
+        #                 canvas.create_rectangle(app.cx*1.5,
+        #                             app.cy//4,
+        #                             app.cx//4,
+        #                             app.cy, 
+        #                             fill = 'olive drab')
+        #                 canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+        #                             text = f"{wordRomanji}\n{translation}", 
+        #                                 fill = 'medium aquamarine')
     # def drawTimedFlashCard(self, canvas, app):
     #             canvas.create_rectangle(app.cx*1.5,
     #                             app.cy//4,
@@ -242,16 +245,6 @@ class SenseiBot(object):
     #otherwise, bot will say "incorrect!"
     #Might become its own function
     #Practice Phase
-    def isCorrect(self, answerChoice):
-        correctMessages = ["That's Correct!", "You're the best!"]
-        incorrectMessages = ["Sorry, that's incorrect","Better luck next time!"]
-        if 
-        if answerChoice == self.targetAnswer
-        
-        self.possibleChoice[self.targetAnswer]:
-            self.app.showMessage(random.random(correctMessages))
-        else:
-            self.app.showMessage(random.random(incorrectMessages))
     #How long user has to select/input answer
     #Should time vary depending on if already known or not
     #If varies, need to be based on Assigned time

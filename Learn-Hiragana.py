@@ -69,6 +69,13 @@ def appStarted(app):
     app.hiraganaList = hiraganaList
     #Information of each user
     app.userProfiles = dict()
+    app.wantInput = 'No'
+    app.image1 = app.loadImage('flashcard.jpg')
+    #Determines if user has gotten answers correct from
+    app.streak = False
+    app.startQuestion = False
+    app.finishedQuestion = False
+
 
 #mousePressed of different phases
 def mousePressed(app,event):

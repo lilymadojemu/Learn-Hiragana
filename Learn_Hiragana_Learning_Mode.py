@@ -84,32 +84,30 @@ def getRandomKey():
     randomKey = random.choice(modifyListOfKeys)
     return randomKey
 
-def getHiraganaOrVocab():
-    hiraganaOrVocab = getRandomKey()
+def getHiraganaOrVocab(randomKey):
+    hiraganaOrVocab = randomKey
     if hiraganaOrVocab in hiraganaList:
         hiraganaValue = toBeLearned[hiraganaOrVocab]
         prevFlashCard[hiraganaOrVocab] = hiraganaValue 
         seenHiraganaFlashCards[hiraganaOrVocab] = hiraganaValue 
         seenFlashCards[hiraganaOrVocab] = hiraganaValue 
-        #del toBeLearned[hiraganaOrVocab]      
+        del toBeLearned[hiraganaOrVocab]      
     elif hiraganaOrVocab in vocabList:
         vocabValue = toBeLearned[hiraganaOrVocab]
         prevFlashCard[hiraganaOrVocab] = vocabValue
         seenVocabFlashCards[hiraganaOrVocab] = vocabValue
         seenFlashCards[hiraganaOrVocab] = vocabValue
-        #del toBeLearned[hiraganaOrVocab] 
-    return hiraganaOrVocab 
+        del toBeLearned[hiraganaOrVocab] 
 
 
 def drawNewCard(app,canvas,newKey):
     #FlashCard info.
-    if newKey in bigDictionary and app.makeFlashCard == True:
+    if newKey in bigDictionary:
         
     #Hiragana, for tracking sake
         if (newKey in hiraganaList and newKey in toBeLearned):
-                currFlashCard = FlashCard(newKey, 
-                                            toBeLearned[newKey])
-                currFlashCard.drawFlashCard(canvas,app)
+                currFlashCard = FlashCard(newKey, toBeLearned[newKey])
+                currFlashCard.drawFlashCard(canvas,app, newKey)
                 # if app.isFlipped == True:
                 #     currFlashCard.flip()
 
@@ -133,9 +131,8 @@ def drawNewCard(app,canvas,newKey):
                 #     currFlashCard.flip()
         #Vocabulary
         elif(newKey in vocabList and newKey in toBeLearned):
-                currFlashCard = FlashCard(newKey,
-                                        toBeLearned[newKey])
-                currFlashCard.drawFlashCard(canvas,app)
+                currFlashCard = FlashCard(newKey, toBeLearned[newKey])
+                currFlashCard.drawFlashCard(canvas,app,newKey)
                 # if app.isFlipped == True:
                 #     currFlashCard.flip()
 
@@ -197,18 +194,19 @@ def learningMode_keyPressed(app,event):
         app.isFlipped = not app.isFlipped
     #Move to new card, populate next card
     if event.key == 'Right':
-        isContinueKeyPressed = True
         app.isContinueKeyPressed = True
-        app.newKey = getHiraganaOrVocab()
         if app.cardsToLearn != 0:
             app.cardsToLearn -= 1
         app.cardsLearned += 1
-        app.makeFlashCard = True
-        app.hiraganaOrVocab = random.randint(1,2)
+        #app.makeFlashCard = True
+        #app.hiraganaOrVocab = random.randint(1,2)
     #Move to previous card
     elif event.key == 'Left':
         app.isBackKeyPressed = True
         app.makeOldFlashCard = True
+    elif event.key == 'r':
+        app.phase = 'review'
+
 
 def learning_keyReleased(app, event): 
     if event.key == 'Right':
@@ -250,17 +248,90 @@ def drawLetsTryitButton(app,canvas):
                         font = 'Arial',  text = "Let's Try it!", fill = 'black')
 
 #create a new key before redraw all and use that new key in drawNewCard
-
-
-
+def timerFired(app,newKey):
+    if (app.isContinueKeyPressed == True and toBeLearned != dict()):
+        getHiraganaOrVocab(newKey)
 
 def learningModeRedrawAll(app,canvas):
-    newKey = getHiraganaOrVocab()
+    if toBeLearned == dict():
+        app.showMessage("You have learned everything!")
+        userYesOrNo = app.getUserInput("Want to Review")
+        if userYesOrNo == 'Yes' or userYesOrNo == 'yes':
+            app.showMessage("Press r to Review!")
+        elif userYesOrNo == 'No' or userYesOrNo == 'no':
+            app.showMessage("Press q to Quit!")
+
     if app.isContinueKeyPressed == False and app.cardsToLearn == 5:
         app.flashCard.drawFlashCard(canvas,app)
-    if (app.isContinueKeyPressed == True):
-        
-        drawNewCard(app,canvas,newKey)
+
+    #Requires newKey from outside of redrawAll
+    if (app.isContinueKeyPressed == True and toBeLearned != dict()):
+            newKey = getRandomKey()
+            ''' TimerFired takes care of storing'''
+            currFLashCard = FlashCard(newKey, toBeLearned[newKey])
+            currFLashCard.drawFlashCard(canvas,app)
+            # if len(newKey) == 1:
+
+            #     if app.isFlipped == False:
+            #         #Exact Placement to be changed
+            #         #The Hiragana Character
+            #         canvas.create_text(app.cx,app.cy//2,
+            #                         font = 'Arial',
+            #                         text = f"{newKey}", 
+            #                         fill = 'hot pink')
+            #     #Back of card
+            #     elif app.isFlipped == True:
+            #         romanji = toBeLearned[newKey][0]
+            #         pronunciation = toBeLearned[newKey][1]
+            #         canvas.create_rectangle(app.cx*1.5,
+            #                     app.cy//4,
+            #                     app.cx//4,
+            #                     app.cy, 
+            #                     fill = 'olive drab')
+            #         #The Pronunciation of Hiragana Character
+            #         canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+            #                     text = f"{romanji}\n{pronunciation}", 
+            #                         fill = 'medium aquamarine')
+            # #Vocabulary
+            # elif len(newKey) != 1:
+            #         if app.isFlipped == False:
+            #             #Exact Placement to be changed
+            #             canvas.create_text(app.cx,app.cy//2,
+            #                             font = 'Arial',
+            #                             text = f"{newKey}", 
+            #                             fill = 'thistle')
+            #         #Back of card
+            #         elif app.isFlipped == True:
+            #             if len(toBeLearned[newKey]) == 3:
+            #                 currRomanji = list(toBeLearned[newKey][0])
+            #                 translation1= toBeLearned[newKey][1]
+            #                 translation2=toBeLearned[newKey][2]
+            #                 currRomanji.insert(7," ")
+            #                 currRomanji.insert(10," ")
+            #                 threeWordRomanji = ""
+            #                 for c in range(len(currRomanji)):
+            #                     threeWordRomanji += currRomanji[c]
+
+            #                 canvas.create_rectangle(app.cx*1.5,
+            #                         app.cy//4,
+            #                         app.cx//4,
+            #                         app.cy, 
+            #                         fill = 'olive drab')
+            #                 canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+            #             text = f"{threeWordRomanji}\n{translation1}{translation2}", 
+            #                             fill = 'medium aquamarine')
+            #             else:
+            #                 wordRomanji = toBeLearned[newKey][0]
+            #                 translation= toBeLearned[newKey][1]
+            #                 canvas.create_rectangle(app.cx*1.5,
+            #                             app.cy//4,
+            #                             app.cx//4,
+            #                             app.cy, 
+            #                             fill = 'olive drab')
+            #                 canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+            #                             text = f"{wordRomanji}\n{translation}", 
+            #                                 fill = 'medium aquamarine')
+                
     elif app.isBackKeyPressed == True:
             makePrevCard(app,canvas)
     if app.cardsLearned >= 1:

@@ -13,21 +13,17 @@ def intro_mousePressed(app,event):
         app.phase = 'learning'
     elif (app.width//2 <= event.x and event.x >= app.width//4 and 
             app.height//14 >= event.y):
-            pass
-            #app.showMessage('Profiles')
+            app.showMessage('Profiles')
             #app.phase = 'profileselect'
     elif (app.width//2 <= event.x and event.x >= app.width//4 and 
-        app.height//6 >= event.y):
-            pass
-           # app.showMessage('Settings')
+            app.height//6 >= event.y):
+            app.showMessage('Settings')
             #app.phase = 'settings'
     if (app.width//4 <= event.x and 
         event.x >= app.width//6 and app.height//10 <= event.y and 
         event.y >= app.height//5):
         app.showMessage('Lets Learn Something New Today! ≧◠‿◠≦✌')
         app.phase = 'practice'
-    # else:
-    #     app.showMessage("Please click on one of the options.")
 
 #Initiate Learning Mode
 def drawLetsLearnButton(app,canvas):
@@ -45,7 +41,6 @@ def drawProfileSelectButton(app,canvas):
                         font = 'Arial',  text = "newUser",
                             fill = 'plum')
 
-#Directly Under the Profile Select Button
 #Where user will be able to edit things, like default number of cards, etc. 
 def drawSettingsButton(app,canvas):
     canvas.create_rectangle(app.cx//2,
@@ -55,7 +50,7 @@ def drawSettingsButton(app,canvas):
                             fill = 'pale violet red')
     canvas.create_text(app.cx,app.cy//3,
                         font = 'Arial',  text = "Settings", fill = 'grey')
-   #Initiate Practice Mode
+#Initiate Practice Mode
 def drawLetsTryitButton(app,canvas):
     canvas.create_rectangle(app.cx*2,
                             app.cy*1.5,

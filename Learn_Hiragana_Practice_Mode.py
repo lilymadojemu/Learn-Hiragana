@@ -1,14 +1,14 @@
 from Classes import*
 from Learn_Hiragana_Learning_Mode import*
 
-#sensei = SenseiBot("Sensei",app.baseProblemTime)
-
-incorrectProblems = dict()
-correctProblems = dict()
+correctAnswers = dict()
+incorrectAnswers = dict()
 practiceHiraganaAndVocab = list(overall_dict.keys())
 toBePracticed = copy.deepcopy(overall_dict)
 alreadyPracticed = dict()
-
+#will form basis for review mode
+toBeReview = dict()
+knowledgeable = dict()
 
 
 def getPracticeHiraganaOrVocab():
@@ -20,45 +20,94 @@ def getPracticeHiraganaOrVocab():
         prevFlashCard[hiraganaOrVocab] = hiraganaValue 
         seenHiraganaFlashCards[hiraganaOrVocab] = hiraganaValue 
         seenFlashCards[hiraganaOrVocab] = hiraganaValue 
-        #del toBeLearned[hiraganaOrVocab]      
+        del toBePracticed[hiraganaOrVocab]      
     elif hiraganaOrVocab in vocabList:
         vocabValue = toBeLearned[hiraganaOrVocab]
         prevFlashCard[hiraganaOrVocab] = vocabValue
         seenVocabFlashCards[hiraganaOrVocab] = vocabValue
         seenFlashCards[hiraganaOrVocab] = vocabValue
-        #del toBeLearned[hiraganaOrVocab] 
+        del toBePracticed[hiraganaOrVocab] 
     return hiraganaOrVocab 
 
-practiceKey = getHiraganaOrVocab()
-
-
-
-
-
+practiceKey = getPracticeHiraganaOrVocab()
 def questionCard():
     questionFlashCard = FlashCard(practiceKey,toBePracticed[practiceKey])
     currQuestion = questionFlashCard.drawTimedFlashCard()
     return currQuestion
 
+def isCorrect(app,targetAnswer,answerChoice, questionType, timeDifference):
+    correctMessages = ["That's Correct!", "You're the best!", 
+                            "You're a Hiragana Expert!"]
+    incorrectMessages = ["Sorry, that's incorrect","Better luck next time!"]
+    #may need to be changed for other question types
+    if answerChoice == targetAnswer and app.finsihedQuestion == True:
+        storeCorrectIncorrect(targetAnswer,answerChoice, True, questionType, 
+                                timeDifference)
+        praise = random.choice(correctMessages)
+        app.showMessage(praise)
+    elif answerChoice != targetAnswer and app.finsihedQuestion == True:
+        #defaulQuestionTime - time user takes to answer a question
+        storeCorrectIncorrect(targetAnswer,answerChoice, False, questionType, 
+                            timeDifference)
+        notPraise = random.choice(incorrectMessages)
+        app.showMessage(notPraise)
+
+def storeCorrectIncorrect(targetAnswer, answerChoice, questionCorrect, 
+                        questionType, timeDifference):
+    #Question Type 1
+    if questionType == 1:
+        if questionCorrect == True:
+        #targetAnswer will be hiragana/key 
+        #Want each answer to have a counter 
+            if targetAnswer not in correctAnswers:
+                correctAnswers[targetAnswer] = answerChoice
+            elif (targetAnswer not in correctAnswers and 
+                targetAnswer in incorrectAnswers):
+                #For now a clean slate
+                del incorrectAnswers[targetAnswer]
+                correctAnswers[targetAnswer] = answerChoice
+            elif targetAnswer in correctAnswers:
+                knowledgeable[targetAnswer] = answerChoice
+        elif questionCorrect == False:
+            #User hasn't done question before or gotten it wrong before
+            if targetAnswer not in incorrectAnswers:
+                incorrectAnswers[targetAnswer] = answerChoice
+            #Needs to be reviewed
+            elif targetAnswer in incorrectAnswers:
+                toBeReview[targetAnswer] =  answerChoice
+#Once practice Mode is finished/ on Transition screen, 
+# user will seen what they got wrong and what they got right in the end
+def getSummary():
+
+    pass
 
 def answerQuestion(app,canvas):
+    timeTaken = time.time()
+    defaultTimeLimit = app.baseProblemTime
+    timeDifference = defaultTimeLimit = timeTaken
     questionType = getQuestionType()
     #Kind or Strict
-    sensei = SenseiBot('kind', problemTime,targetAnswer)
     app.showMessage('Please Select/Input the Best Answer!')
     if questionType == 1: #hiragana to romanji
         currCard = questionCard()
-        targetAnswer = currCard.getFrontText()
-        app.message('Press e to Input Your Answer!')
-        if app.wantInput == 'Yes':
-            pass
-        else:
-             #Seleting an answer choice
-            listOfPossibleChoices = random.sample(practiceHiraganaAndVocab, k=4) 
-            if targetAnswer in listOfPossibleChoices:
-                drawAnswerChoices(app,canvas,listOfPossibleChoices)
+        if defaultTimeLimit != 0:
+            targetAnswer = currCard.getFrontText()
+            app.message('Press e to Input Your Answer!')
+            if app.wantInput == 'Yes':
                 pass
-                sensei.isCorrect(1,userInput, targetAnswer)
+            else:
+                #Seleting an answer choice
+                listOfPossibleChoices = random.sample(practiceHiraganaAndVocab, k=4) 
+                if targetAnswer in listOfPossibleChoices:
+                    drawAnswerChoices(app,canvas,listOfPossibleChoices)
+                    #if clicked, that is answerChoice number
+                    userAnswer  = app.answerChoice
+                    isCorrect(targetAnswer,userAnswer)
+                    pass
+        elif defaultTimeLimit <= 0:
+            app.showMessage("Time's Up!")
+            app.showMessage('Please Press Right or Click Next to Continue')
+                
         '''click here if you want to input your answer!, wantInput'''
         pass
     elif questionType == 2: #vocab to romanji
@@ -68,6 +117,7 @@ def answerQuestion(app,canvas):
     
     elif questionType == 4: #romanji to hiragana
         pass
+
     else:
         app.showMessage("There has been an error")
 
@@ -77,13 +127,22 @@ def getQuestionType():
 
 def drawAnswerChoices(app,canvas,listOfChoices):
     #Option 1
-    canvas.create_rectangle()
+    canvas.create_rectangle(app.cx//2,app.cy//12,app.cx*1.5,app.cy//6, 
+                                fill = 'plum')
+    #Baby Button
+    canvas.create_oval(app.cx,app.cy,0,0, fill = 'white')
     #Option 2
-    canvas.create_rectangle()
+    canvas.create_rectangle(app.cx//2,app.cy//12,app.cx*1.5,app.cy//6, 
+                                fill = 'plum')
+    canvas.create_oval(app.cx,app.cy//2,0,0, fill = 'white')
     #Option 3
-    canvas.create_rectangle()
+    canvas.create_rectangle(app.cx//2,app.cy//12,app.cx*1.5,app.cy//6, 
+                                fill = 'plum')
+    canvas.create_oval(app.cx,app.cy//4,0,0, fill = 'white')
     #Option 4
-    canvas.create_rectangle()
+    canvas.create_rectangle(app.cx//2,app.cy//12,app.cx*1.5,app.cy//6, 
+                                fill = 'plum')
+    canvas.create_oval(app.cx,app.cy//6,0,0, fill = 'white')
 
 #keep randomizing list until targetAnswer in list of possible answers
 def practiceMode_keyPressed(app,event):
@@ -93,7 +152,15 @@ def practiceMode_keyPressed(app,event):
     if event.key == 'q':
         app.showMessage("All your progress will be lost!")
         app.phase = 'start'
-
+    if event.key == 'Right':
+        app.makeFlashCard = True
+        app.cardsToDo -= 1
+    if event.key == 's':
+        app.startQuestion = True
+        app.finishedQuestion = False
+    elif event.key == 'd':
+        app.startQuestion = False
+        app.finishedQuestion = True
     elif event.key == 'e':
         app.wantInput = 'Yes'
 
@@ -101,30 +168,19 @@ def practice_mousePressed(app,event):
     if event.key == 'Up':
         app.showMessage("Went up!")
 
-def drawAnswerChoices(app, canvas):
-    pass
-
-#manually underline text? loop over given word, if target letter in word, underline               
-    #canvas.create_text(  f'{app.characterLevel}, {app.vocabLevel}')    
-    #Back, romanji
-    #function from another file
-    # if isCorrect == False:
-    #     #don't show back of card
-    #     pass
-# def practiceCards(selectedWord):
-#     if currCard.getMeaning(selectedWord) == currCard.getMeaning(correctAnswer):
-#         user.isCorrect(selectedWord) 
-#     else:
-#         not user.isCorrect(selectedWord)
 #Automatically move on to next flashcard card, Doing stage
 def timerFired(app):
-    pass
+    if app.paused == False:
+        if app.startQuestion == True:
+            app.baseProblemTime -= 1
+            app.timeTaken += 1
+        
 
 
 def practiceModeRedrawAll(app,canvas):
-    if app.makeFlashCard == False:
-        app.startingFlashcard.drawFlashcard(canvas,app)
-    elif app.makeFlashCard == True:
+    if app.makeFlashCard == False and app.cardsToDo == 5:
+        app.flashCard.drawFlashCard(canvas,app)
+    elif app.makeFlashCard == True and app.cardsToDo >= 0:
         app.newFlashCard.drawFlashcard(canvas,app)
     canvas.create_text(app.cx, app.cy, font = 'Arial', 
     text ="Please Select/Input\nthe Best Answer", fill = 'black')
