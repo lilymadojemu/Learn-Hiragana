@@ -252,13 +252,15 @@ def drawLetsTryitButton(app,canvas):
 #create a new key before redraw all and use that new key in drawNewCard
 
 
-newKey = getHiraganaOrVocab()
+
 
 def learningModeRedrawAll(app,canvas):
+    newKey = getHiraganaOrVocab()
     if app.isContinueKeyPressed == False and app.cardsToLearn == 5:
         app.flashCard.drawFlashCard(canvas,app)
     if (app.isContinueKeyPressed == True):
-            drawNewCard(app,canvas,newKey)
+        
+        drawNewCard(app,canvas,newKey)
     elif app.isBackKeyPressed == True:
             makePrevCard(app,canvas)
     if app.cardsLearned >= 1:

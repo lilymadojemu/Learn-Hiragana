@@ -116,6 +116,8 @@ class FlashCard(object):
                         canvas.create_text(app.cx, app.cy//2,font = 'Arial',
                                     text = f"{wordRomanji}\n{translation}", 
                                         fill = 'medium aquamarine')
+    def getFrontText(self):
+        return self.frontText
     # def drawTimedFlashCard(self, canvas, app):
     #             canvas.create_rectangle(app.cx*1.5,
     #                             app.cy//4,
@@ -218,7 +220,7 @@ def Merge(dict1, dict2):
 #Problemtime - currTime 
 #bot that will hold all the inner processes for learner
 class SenseiBot(object):
-    def __init__(self,botName, currTime, mood, targetAnswer):
+    def __init__(self,botName, currTime, mood, questionType, targetAnswer):
         self.botName = botName
         self.mood = mood
         self.targetAnswer = targetAnswer
@@ -240,10 +242,13 @@ class SenseiBot(object):
     #otherwise, bot will say "incorrect!"
     #Might become its own function
     #Practice Phase
-    def isCorrect(self, otherMood, answerChoice):
+    def isCorrect(self, answerChoice):
         correctMessages = ["That's Correct!", "You're the best!"]
         incorrectMessages = ["Sorry, that's incorrect","Better luck next time!"]
-        if answerChoice == self.possibleChoice[self.targetAnswer]:
+        if 
+        if answerChoice == self.targetAnswer
+        
+        self.possibleChoice[self.targetAnswer]:
             self.app.showMessage(random.random(correctMessages))
         else:
             self.app.showMessage(random.random(incorrectMessages))
