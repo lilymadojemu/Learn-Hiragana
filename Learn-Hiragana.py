@@ -51,20 +51,20 @@ def appStarted(app):
     app.flashCard = FlashCard(possibleKey,overall_dict[possibleKey])
 
     #Overall hiragana flashcards user has seen
-    app.seenHiraganaFlashCards = dict()
-    #Overall vocabulary flashcards user has seen
-    app.seenVocabFlashCards = dict()
-    #Takes in all of the flashcards a user has seen
-    app.seenFlashCards = dict()
+    # app.seenHiraganaFlashCards = dict()
+    # #Overall vocabulary flashcards user has seen
+    # app.seenVocabFlashCards = dict()
+    # #Takes in all of the flashcards a user has seen
+    # app.seenFlashCards = dict()
     #Decides whether a flashcard appearing will be a 
     # hiragana card or a vocab card
-    app.hiraganaOrVocab = random.randint(2,2)
+    app.hiraganaOrVocab = random.randint(1,2)
     #Overall character dictionary
-    app.characterDictionary = character_dict
-    #Overall vocabulary Dictionary
-    app.vocabularyDictionary = vocabulary_dict
-    #Overall dictionary with hiragana and vocab 
-    app.bigDictionary = overall_dict
+    # app.characterDictionary = character_dict
+    # #Overall vocabulary Dictionary
+    # app.vocabularyDictionary = vocabulary_dict
+    # #Overall dictionary with hiragana and vocab 
+    # app.bigDictionary = overall_dict
     #Stagnant list of all hiragana characters
     app.hiraganaList = hiraganaList
     #Information of each user

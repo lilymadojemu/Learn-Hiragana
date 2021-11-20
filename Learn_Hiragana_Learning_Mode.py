@@ -67,21 +67,7 @@ prevFlashCard = dict()
 seenFlashCards = dict()
 seenHiraganaFlashCards = dict()
 seenVocabFlashCards = dict()
-
-
-
-def storeInformation(front,back):
-    pass
-    # if front in hiraganaList:
-    #     prevFlashCard[front] = toBeLearned[front]
-    #     seenHiraganaFlashCards[front] = back
-    #     seenFlashCards[front] = back
-    #     del toBeLearned[front]        
-    # elif front in vocabList:
-    #     prevFlashCard[front] = toBeLearned[front]
-    #     seenVocabFlashCards[front] = back
-    #     seenFlashCards[front] = back
-    #     del toBeLearned[front]   
+isContinueKeyPressed = False
 
 def makePrevCard(app,canvas):
         #FlashCard info.
@@ -94,7 +80,28 @@ def makePrevCard(app,canvas):
                 #       app.makeOldFlashCard == True):
                 #             makePrevCard(app,canvas)
 
-def drawNewCard(app,canvas, newKey):
+def getRandomKey():
+    randomKey = random.choice(modifyListOfKeys)
+    return randomKey
+
+def getHiraganaOrVocab():
+    hiraganaOrVocab = getRandomKey()
+    if hiraganaOrVocab in hiraganaList:
+        hiraganaValue = toBeLearned[hiraganaOrVocab]
+        prevFlashCard[hiraganaOrVocab] = hiraganaValue 
+        seenHiraganaFlashCards[hiraganaOrVocab] = hiraganaValue 
+        seenFlashCards[hiraganaOrVocab] = hiraganaValue 
+        #del toBeLearned[hiraganaOrVocab]      
+    elif hiraganaOrVocab in vocabList:
+        vocabValue = toBeLearned[hiraganaOrVocab]
+        prevFlashCard[hiraganaOrVocab] = vocabValue
+        seenVocabFlashCards[hiraganaOrVocab] = vocabValue
+        seenFlashCards[hiraganaOrVocab] = vocabValue
+        #del toBeLearned[hiraganaOrVocab] 
+    return hiraganaOrVocab 
+
+
+def drawNewCard(app,canvas,newKey):
     #FlashCard info.
     if newKey in bigDictionary and app.makeFlashCard == True:
         
@@ -102,9 +109,13 @@ def drawNewCard(app,canvas, newKey):
         if (newKey in hiraganaList and newKey in toBeLearned):
                 currFlashCard = FlashCard(newKey, 
                                             toBeLearned[newKey])
-                hiragana = currFlashCard.frontText
-                romanji = currFlashCard.backText
-                storeInformation(hiragana,romanji)
+                currFlashCard.drawFlashCard(canvas,app)
+                # if app.isFlipped == True:
+                #     currFlashCard.flip()
+
+                # hiragana = currFlashCard.frontText
+                # romanji = currFlashCard.backText
+                #storeInformation(hiragana,romanji)
                 #cannot store value 
                 # currFlashCard.getInfo()
                 # currFlashCard.storeInfo()
@@ -114,19 +125,23 @@ def drawNewCard(app,canvas, newKey):
             #    seenHiraganaFlashCards[hiragana] = romanji
                 # #Track what flashcards have been seen overall
                # seenFlashCards[hiragana] = romanji
-                # #Delete key value pair from local dictionary of 
-                # # flashcards that have yet to be seen!
-                # del toBeLearned[hiragana]                       
-                currFlashCard.drawFlashCard(canvas,app)
-                # if app.isFlipped == True:
+                # # #Delete key value pair from local dictionary of 
+                # # # flashcards that have yet to be seen!
+                # # del toBeLearned[hiragana]                       
+                # currFlashCard.drawFlashCard(canvas,app)
+                # # if app.isFlipped == True:
                 #     currFlashCard.flip()
         #Vocabulary
         elif(newKey in vocabList and newKey in toBeLearned):
                 currFlashCard = FlashCard(newKey,
                                         toBeLearned[newKey])
-                vocabWord = currFlashCard.frontText
-                wordRomanji= currFlashCard.backText
-                storeInformation(vocabWord,wordRomanji)
+                currFlashCard.drawFlashCard(canvas,app)
+                # if app.isFlipped == True:
+                #     currFlashCard.flip()
+
+                # vocabWord = currFlashCard.frontText
+                # wordRomanji= currFlashCard.backText
+                #storeInformation(vocabWord,wordRomanji)
                 # #Current dictionary of previous flashcards for the user to 
                 # #go back to in one learning session
               #  prevFlashCard[vocabWord] = wordRomanji
@@ -136,8 +151,8 @@ def drawNewCard(app,canvas, newKey):
                # seenFlashCards[vocabWord] = wordRomanji
                 # #Delete key value pair from local dictionary of flashcards 
                 # # that have yet to be seen!
-                # #del toBeLearned[vocabWord]
-                currFlashCard.drawFlashCard(canvas,app)
+                # # #del toBeLearned[vocabWord]
+                # currFlashCard.drawFlashCard(canvas,app)
                 # if app.isFlipped == True:
                 #     currFlashCard.flip()
         else:
@@ -182,7 +197,9 @@ def learningMode_keyPressed(app,event):
         app.isFlipped = not app.isFlipped
     #Move to new card, populate next card
     if event.key == 'Right':
+        isContinueKeyPressed = True
         app.isContinueKeyPressed = True
+        app.newKey = getHiraganaOrVocab()
         if app.cardsToLearn != 0:
             app.cardsToLearn -= 1
         app.cardsLearned += 1
@@ -202,7 +219,6 @@ def learning_keyReleased(app, event):
 
 def learningMode_mousePressed(app,event):
     #Determines whether a card needs to be flip
-
     if (app.width//2 <= event.x and event.x >= app.width//4 and app.height//4 
         <= event.y and event.y >= app.height):
             app.isFlipped = not app.isFlipped
@@ -233,12 +249,16 @@ def drawLetsTryitButton(app,canvas):
     canvas.create_text(app.cx*1.5,app.cy*1.4,
                         font = 'Arial',  text = "Let's Try it!", fill = 'black')
 
+#create a new key before redraw all and use that new key in drawNewCard
+
+
+newKey = getHiraganaOrVocab()
+
 def learningModeRedrawAll(app,canvas):
     if app.isContinueKeyPressed == False and app.cardsToLearn == 5:
         app.flashCard.drawFlashCard(canvas,app)
     if (app.isContinueKeyPressed == True):
-            currKey = random.choice(modifyListOfKeys)
-            drawNewCard(app,canvas, currKey)
+            drawNewCard(app,canvas,newKey)
     elif app.isBackKeyPressed == True:
             makePrevCard(app,canvas)
     if app.cardsLearned >= 1:
