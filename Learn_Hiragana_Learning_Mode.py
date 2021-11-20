@@ -198,6 +198,7 @@ def learningMode_keyPressed(app,event):
         if app.cardsToLearn != 0:
             app.cardsToLearn -= 1
         app.cardsLearned += 1
+        app.cardLearnCount += 1
         #app.makeFlashCard = True
         #app.hiraganaOrVocab = random.randint(1,2)
     #Move to previous card
@@ -260,16 +261,17 @@ def learningModeRedrawAll(app,canvas):
             app.showMessage("Press r to Review!")
         elif userYesOrNo == 'No' or userYesOrNo == 'no':
             app.showMessage("Press q to Quit!")
-
-    if app.isContinueKeyPressed == False and app.cardsToLearn == 5:
+    #Learning Cards
+    if (app.isContinueKeyPressed == False and app.cardsToLearn == 5 and 
+        app.cardLearnCount == 1):
         app.flashCard.drawFlashCard(canvas,app)
-
     #Requires newKey from outside of redrawAll
-    if (app.isContinueKeyPressed == True and toBeLearned != dict()):
-            newKey = getRandomKey()
-            ''' TimerFired takes care of storing'''
-            currFLashCard = FlashCard(newKey, toBeLearned[newKey])
-            currFLashCard.drawFlashCard(canvas,app)
+    elif (app.isContinueKeyPressed == True and toBeLearned != dict() and
+        app.cardLearnCount == 2):
+        newKey = getRandomKey()
+        ''' TimerFired takes care of storing'''
+        currFLashCard = FlashCard(newKey, toBeLearned[newKey])
+        currFLashCard.drawFlashCard(canvas,app)
             # if len(newKey) == 1:
 
             #     if app.isFlipped == False:
