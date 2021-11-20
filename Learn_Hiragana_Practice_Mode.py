@@ -2,6 +2,42 @@ from Classes import*
 
 #sensei = SenseiBot("Sensei",app.baseProblemTime)
 
+incorrectProblems = dict()
+correctProblems = dict()
+practiceHiraganaAndVocab = list(overall_dict.keys())
+toBePracticed = copy.deepcopy(overall_dict)
+
+
+
+def questionCard(app,canvas):
+    questionFlashCard = FlashCard(practiceKey,toBePracticed[practiceKey])
+    questionFlashCard.drawTimedFlashCard()
+    pass
+
+def answerQuestion(app):
+    questionType = getQuestionType()
+    #Kind or Strict
+    sensei = SenseiBot('kind', problemTime,targetAnswer)
+    sensei.isCorrect(userInput)
+    app.showMessage('Please Select/Input the Best Answer!')
+    if questionType == 1:
+        sensei.isCorrect(userInput)
+        pass
+    elif questionType == 2:
+        pass
+    elif questionType == 3:
+        pass
+    
+    elif questionType == 4:
+        pass
+    else:
+        app.showMessage("There has been an error")
+
+def getQuestionType():
+    randomQuestionType = random.randint(1,4)
+    return randomQuestionType
+
+
 def practiceMode_keyPressed(app,event):
     #Pausing, unpausing in Practice Mode Only
     if (event.key == 'p'):
@@ -14,6 +50,8 @@ def practice_mousePressed(app,event):
     if event.key == 'Up':
         app.showMessage("Went up!")
 
+def drawAnswerChoices(app, canvas):
+    pass
 
 #manually underline text? loop over given word, if target letter in word, underline               
     #canvas.create_text(  f'{app.characterLevel}, {app.vocabLevel}')    
@@ -31,5 +69,15 @@ def practice_mousePressed(app,event):
 def timerFired(app):
     pass
 
+
 def practiceModeRedrawAll(app,canvas):
-   pass
+    if app.makeFlashCard == False:
+        app.startingFlashcard.drawFlashcard(canvas,app)
+    elif app.makeFlashCard == True:
+        app.newFlashCard.drawFlashcard(canvas,app)
+    canvas.create_text(app.cx, app.cy, font = 'Arial', 
+    text ="Please Select/Input\nthe Best Answer", fill = 'black')
+    drawAnswerChoices(app,canvas)    
+    if (app.cardsToLearn == 0):
+        app.phase = 'transition'
+   

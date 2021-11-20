@@ -88,6 +88,8 @@ def mousePressed(app,event):
 
 #Houses the key presses of all phases
 def keyPressed(app,event):
+    if event.key == 'Enter':
+        app.phase = 'learning'
     if app.phase == 'learning':
         learningMode_keyPressed(app,event)
     elif app.phase == 'practice':

@@ -43,18 +43,19 @@ class FlashCard(object):
                                 app.cy, 
                                 fill = 'bisque')
 
-        canvas.create_text(app.cx//1.5, app.cy//3,font = 'Arial',
-        text = f"KanaLevel:{app.characterLevel},{app.vocabLevel}", 
-                            fill = 'medium aquamarine')
+        canvas.create_text(app.cx//2, app.cy//5,font = 'Arial',
+    text = f"Kana Level:{app.characterLevel},\nVocab Level:{app.vocabLevel}", 
+                            fill = 'black')
 
         if app.phase == 'learning':
-            canvas.create_text(app.cx//1.5, app.cy,font = 'Arial',
-        text = f"Cards Left:{app.cardsToLearn}", fill = 'medium aquamarine')
+            canvas.create_text(app.cx, app.cy,font = 'Arial',
+        text = f"Cards Left:{app.cardsToLearn}", fill = 'black')
 
         elif app.phase == 'practice':
             canvas.create_text(app.cx//1.5, app.cy,font = 'Arial',
                                 text = f"Cards Left:{app.cardsToDo}", 
                                 fill = 'medium aquamarine')
+        #Hiragana
         if app.hiraganaOrVocab == 1:
                 if app.isFlipped == False:
                     #Exact Placement to be changed
@@ -65,6 +66,8 @@ class FlashCard(object):
                                     fill = 'hot pink')
                 #Back of card
                 elif app.isFlipped == True:
+                    romanji = self.backText[0]
+                    pronunciation = self.backText[1]
                     canvas.create_rectangle(app.cx*1.5,
                                 app.cy//4,
                                 app.cx//4,
@@ -72,18 +75,78 @@ class FlashCard(object):
                                 fill = 'olive drab')
                     #The Pronunciation of Hiragana Character
                     canvas.create_text(app.cx, app.cy//2,font = 'Arial',
-                                text = f"{self.backText}", 
+                                text = f"{romanji}\n{pronunciation}", 
                                     fill = 'medium aquamarine')
+        #Vocabulary
         elif app.hiraganaOrVocab == 2:
                 if app.isFlipped == False:
                     #Exact Placement to be changed
-                    #The Hiragana Character
                     canvas.create_text(app.cx,app.cy//2,
                                     font = 'Arial',
                                     text = f"{self.frontText}", 
                                     fill = 'thistle')
                 #Back of card
                 elif app.isFlipped == True:
+                    if len(self.backText) == 3:
+                        currRomanji = list(self.backText[0])
+                        translation1= self.backText[1]
+                        translation2=self.backText[2]
+                        currRomanji.insert(7," ")
+                        currRomanji.insert(10," ")
+                        threeWordRomanji = ""
+                        for c in range(len(currRomanji)):
+                            threeWordRomanji += currRomanji[c]
+
+                        canvas.create_rectangle(app.cx*1.5,
+                                app.cy//4,
+                                app.cx//4,
+                                app.cy, 
+                                fill = 'olive drab')
+                        canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                    text = f"{threeWordRomanji}\n{translation1}{translation2}", 
+                                    fill = 'medium aquamarine')
+                    else:
+                        wordRomanji = self.backText[0]
+                        translation= self.backText[1]
+                        canvas.create_rectangle(app.cx*1.5,
+                                    app.cy//4,
+                                    app.cx//4,
+                                    app.cy, 
+                                    fill = 'olive drab')
+                        canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                                    text = f"{wordRomanji}\n{translation}", 
+                                        fill = 'medium aquamarine')
+    def drawTimedFlashCard(self, canvas, app):
+                canvas.create_rectangle(app.cx*1.5,
+                                app.cy//4,
+                                app.cx//4,
+                                app.cy, 
+                                fill = 'bisque')
+
+                canvas.create_text(app.cx//2, app.cy//5,font = 'Arial',
+    text = f"Kana Level:{app.characterLevel},\nVocab Level:{app.vocabLevel}", 
+                            fill = 'black')
+        if app.phase == 'learning':
+            canvas.create_text(app.cx, app.cy,font = 'Arial',
+        text = f"Cards Left:{app.cardsToLearn}", fill = 'black')
+
+        elif app.phase == 'practice':
+            canvas.create_text(app.cx//1.5, app.cy,font = 'Arial',
+                                text = f"Cards Left:{app.cardsToDo}", 
+                                fill = 'medium aquamarine')
+        #Hiragana
+        if app.hiraganaOrVocab == 1:
+                if app.isFlipped == False:
+                    #Exact Placement to be changed
+                    #The Hiragana Character
+                    canvas.create_text(app.cx,app.cy//2,
+                                    font = 'Arial',
+                                    text = f"{self.frontText}", 
+                                    fill = 'hot pink')
+                #Back of card
+                elif app.isFlipped == True:
+                    romanji = self.backText[0]
+                    pronunciation = self.backText[1]
                     canvas.create_rectangle(app.cx*1.5,
                                 app.cy//4,
                                 app.cx//4,
@@ -91,33 +154,49 @@ class FlashCard(object):
                                 fill = 'olive drab')
                     #The Pronunciation of Hiragana Character
                     canvas.create_text(app.cx, app.cy//2,font = 'Arial',
-                                text = f"{self.backText}", 
+                                text = f"{romanji}\n{pronunciation}", 
                                     fill = 'medium aquamarine')
-                                        
-                # #User gone to the next card
-                # if(app.isContinueKeyPressed == True and
-                #      app.cardsToLearn >= 0):
-                #     #puts current card in already seen flashcards
-                #     #I want to take that key value pair out of characterdict
-                #     app.seenHiraganaFlashCards[kana] = (
-                #                                modifiedCharacter_dict[kana])
-                #     #modifiedHiraganaList.remove(kana)                                        
-                #     del modifiedCharacter_dict[kana]
-                #     print(modifiedCharacter_dict)
+        #Vocabulary
+        elif app.hiraganaOrVocab == 2:
+                if app.isFlipped == False:
+                    #Exact Placement to be changed
+                    canvas.create_text(app.cx,app.cy//2,
+                                    font = 'Arial',
+                                    text = f"{self.frontText}", 
+                                    fill = 'thistle')
+                #Back of card
+                elif app.isFlipped == True:
+                    if len(self.backText) == 3:
+                        currRomanji = list(self.backText[0])
+                        translation1= self.backText[1]
+                        translation2=self.backText[2]
+                        currRomanji.insert(7," ")
+                        currRomanji.insert(10," ")
+                        threeWordRomanji = ""
+                        for c in range(len(currRomanji)):
+                            threeWordRomanji += currRomanji[c]
 
-                #     #Finished with everything
-                #     if modifiedCharacter_dict == {}:
-                #         app.showMessage("Empty!")
-                #         #Once this happens, user will only look at incorrect 
-                #         #correct characters/words from what they went 
-                #         # through
-    def getBackText(self):
-        return self.backText
+                        canvas.create_rectangle(app.cx*1.5,
+                                app.cy//4,
+                                app.cx//4,
+                                app.cy, 
+                                fill = 'olive drab')
+                        canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                    text = f"{threeWordRomanji}\n{translation1}{translation2}", 
+                                    fill = 'medium aquamarine')
+                    else:
+                        wordRomanji = self.backText[0]
+                        translation= self.backText[1]
+                        canvas.create_rectangle(app.cx*1.5,
+                                    app.cy//4,
+                                    app.cx//4,
+                                    app.cy, 
+                                    fill = 'olive drab')
+                        canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                                    text = f"{wordRomanji}\n{translation}", 
+                                        fill = 'medium aquamarine')
 
-                        
 
-
-        
 
     # def getMeaning(self, word):
     #     if word in characterDictionary:
@@ -139,8 +218,10 @@ def Merge(dict1, dict2):
 #Problemtime - currTime 
 #bot that will hold all the inner processes for learner
 class SenseiBot(object):
-    def __init__(self,botName, currTime):
+    def __init__(self,botName, currTime, mood, targetAnswer):
         self.botName = botName
+        self.mood = mood
+        self.targetAnswer = targetAnswer
         # self.possibleChoices = possibleChoices
         # self.targetAnswer = targetAnswer
         # self.app = app
@@ -159,7 +240,7 @@ class SenseiBot(object):
     #otherwise, bot will say "incorrect!"
     #Might become its own function
     #Practice Phase
-    def isCorrect(self, answerChoice):
+    def isCorrect(self, otherMood, answerChoice):
         correctMessages = ["That's Correct!", "You're the best!"]
         incorrectMessages = ["Sorry, that's incorrect","Better luck next time!"]
         if answerChoice == self.possibleChoice[self.targetAnswer]:
