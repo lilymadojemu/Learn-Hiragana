@@ -10,7 +10,6 @@ flipping cards
 be at a base position, want that base position to change when flipped
 Get base position and center and ending base position & center
 '''
-bigDictionary = copy.copy(overall_dict)
 modifyListOfKeys = list(overall_dict.keys())
 toBeLearned = copy.deepcopy(overall_dict)
 #not completely off base
@@ -51,7 +50,7 @@ def getHiraganaOrVocab(randomKey):
 
 def drawNewCard(app,canvas):
     #FlashCard info.
-    currFlashCard = FlashCard(app.newKey, toBeLearned[app.newKey])
+    currFlashCard = FlashCard(app.newKey, overall_dict[app.newKey])
     currFlashCard.drawFlashCard(canvas,app)
 
 def makePrevCard(app,canvas):
@@ -68,28 +67,15 @@ def blinkSmallerLearning(app):
     #Make app.cx and app.cy smaller until it reaches the center
     # app.cx = app.width//2
     # app.cy = app.height//2
-        #if app.cx < app.width//4 and app.cy < app.height//4:
-    app.cx -= 100
-    app.cy -= 100
-            #self.drawFlashCard.config(app.cx,app.cy, font = 'Arial 15')
-            #self.after(1, self.blinkSmallerLearning(app))
-        #elif app.cx == app.width//4 and app.cy == app.height//4:
-            # self.blinkDefaultLearning(app)
-def blinkDefaultLearning(self,app):
-    if app.cx == app.width//4 and app.cy == app.height//4:
-        app.cx += 1
-        app.cy += 1
-        self.drawFlashCard.config(app.cx,app.cy, font = 'Arial 20')
-        self.after(1,self.blinkDefaultLearning(app))
-
-def animatePractice(self,app):
-    app.cx = app.width//2
-    app.cy = app.height//2
-    if app.cx <= app.width and app.cy <= app.height:
-        app.cx -= 1
-        app.cy -= 1
-        self.drawTimedFlashCard(app.cx,app.cy)
-        self.after(10,self.animatePractice)
+    if app.cardcx < app.width//4 and app.cardcy < app.height//4:
+        app.cardcx -= 100
+        app.cardcy -= 100
+    elif app.cx == app.width//4 and app.cy == app.height//4:
+        blinkDefaultLearning(app)
+def blinkDefaultLearning(app):
+    if app.cardcx != app.width//2 and app.cardcy != app.height//2:
+        app.cardx += 100
+        app.cardcy += 100
 
 def learningMode_keyPressed(app,event):
     #flips front of flash card to back
@@ -161,19 +147,29 @@ def drawLetsTryitButton(app,canvas):
                             fill = 'cadet blue')
     canvas.create_text(app.cx*1.5,app.cy*1.15,
                         font = 'Arial',  text = "Let's Try it!", fill = 'black')
-
-#create a new key before redraw all and use that new key in drawNewCard
+                        
+def decreasingFrontCard(app): pass
+def increasingBackCard(app): pass
 def learning_timerFired(app):
     #"flipping flashCard"
     if app.isFlipped == True:
-        
-        #reducing
-        app.cx -= 100
-        app.cy -= 100
-        # if( app.cx == app.width//2 and app.cy == app.height//2):
-        #     app.cx += 1
-        #     app.cy += 1
-        #     app.isFlipped = False
+        '''
+        Things look smaller and text/icons look zoomed out
+        goes slow but there is then a "jump" to make the card look
+        squeezed in horizontally
+        Once it gets to that point of looking squeezed, there is a change of 
+        what text is on the card and its size and it grows bigger
+
+        Split up flash card (front and back)
+        The front card needs to decrease to a certain point (but not completely)
+        the back card will then be created and overlay whateva went on with 
+        front card
+
+        More of an illusion than actual flipping
+        Only need to decrease once and increase once
+        '''
+        decreasingFrontCard(app)
+        increasingBackCard(app)
     if (app.makeFlashCard == True and toBeLearned != dict()):
         app.newKey = getRandomKey()
         getHiraganaOrVocab(app.newKey)
@@ -197,7 +193,7 @@ def learningModeRedrawAll(app,canvas):
         drawNewCard(app,canvas)             
     elif app.isContinueKeyPressed == False and app.isBackKeyPressed == True:
         makePrevCard(app,canvas)
-    if app.cardsLearned >= 1:
+    if app.cardsLearned >= 1 and app.phase == 'learning':
         drawBackButton(app,canvas)
-    if (app.cardsToLearn == 0):
+    if app.cardsToLearn == 0 and app.phase == 'learning':
         drawLetsTryitButton(app,canvas)

@@ -25,6 +25,12 @@ def appStarted(app):
     app.phase = "start"
     app.cx = app.width//2
     app.cy = app.height//2
+    app.frontcx = app.width//2
+    app.frontcy = app.height//2
+    app.backcx = app.width//2
+    app.backcy = app.height//2
+    app.textcx = app.width//2
+    app.textcy = app.height//2
 
     #Important/Good to have
 
@@ -49,6 +55,7 @@ def appStarted(app):
     #Checks if "back key" (left) has been pressed to go to a previous card
     app.isBackKeyPressed = False
     app.image1 = app.loadImage('flashcard.jpg')
+    app.image2 = app.loadImage('flashcardBack.jpg')
     app.makeOldFlashCard = False 
     app.makeFlashCard = False
     app.firstKey = getRandomKey()   
@@ -174,7 +181,6 @@ def redrawAll(app,canvas):
             canvas.create_image(800, 800, 
                             image=ImageTk.PhotoImage(app.startBackground))
             settings_redrawAll(app,canvas)
-        pass
 
 def mouseMoved(app, event):
     app.messages.append(f'mouseMoved at {(event.x, event.y)}')
@@ -182,6 +188,8 @@ def mouseMoved(app, event):
 def timerFired(app): 
     if app.phase == 'learning':
          learning_timerFired(app)
+    elif app.phase == 'practice':
+        practice_timerFired(app)
 
 def letsLearnHiragana():
     runApp(width = 800, height = 800)

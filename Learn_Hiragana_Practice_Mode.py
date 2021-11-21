@@ -341,7 +341,7 @@ def modifiedAnswerQuestion(app, targetAnswer, listOfPossibleChoices):
         
 
 #Automatically move on to next flashcard card, Doing stage
-def timerFired(app):
+def practice_timerFired(app):
     if app.paused == False:
         app.baseProblemTime -= 1
         app.timeTaken += 1

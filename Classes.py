@@ -26,7 +26,7 @@ class FlashCard(object):
         
         #Key its based on
     def drawFlashCard(self, canvas, app):
-        canvas.create_image(app.cx, app.cy, 
+        canvas.create_image(app.cardcx, app.cardcy, 
                             image=ImageTk.PhotoImage(app.image1))    
         canvas.create_text(app.cx//3, app.cy//5.5,font = 'Arial',
     text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
@@ -39,7 +39,7 @@ class FlashCard(object):
             if app.isFlipped == False:
                 #Exact Placement to be changed
                 #The Hiragana Character
-                canvas.create_text(app.cx,app.cy,
+                canvas.create_text(app.textcx,app.textcy,
                                 font = 'Arial 20',
                                 text = f"{self.frontText}", 
                                 fill = 'dark orchid')
@@ -47,24 +47,25 @@ class FlashCard(object):
             elif app.isFlipped == True:
                 romanji = self.backText[0]
                 pronunciation = self.backText[1]
-                canvas.create_image(app.cx, app.cy, 
-                            image=ImageTk.PhotoImage(app.image1))  
+                canvas.create_image(app.cardcx, app.cardcy, 
+                            image=ImageTk.PhotoImage(app.image2))  
                 #The Pronunciation of Hiragana Character
-                canvas.create_text(app.cx,app.cy,font =('Helvetica','20','bold')
+                canvas.create_text(app.textcx,app.textcy,
+                                    font =('Helvetica','20','bold')
                 , text = f"{romanji}\n as in {pronunciation}", 
                 fill = 'medium aquamarine')
         #Vocabulary
         elif len(self.frontText) != 1:
                 if app.isFlipped == False:
                     #Exact Placement to be changed
-                    canvas.create_text(app.cx,app.cy,
+                    canvas.create_text(app.textcx,app.textcy,
                                 font = 'Arial 20',
                                 text = f"{self.frontText}", 
                                 fill = 'dark orchid')
                 #Back of card
                 elif app.isFlipped == True:
-                    canvas.create_image(app.cx, app.cy, 
-                            image=ImageTk.PhotoImage(app.image1)) 
+                    canvas.create_image(app.cardcx, app.cardcy, 
+                            image=ImageTk.PhotoImage(app.image2)) 
                     if len(self.backText) == 3:
                         currRomanji = list(self.backText[0])
                         translation1= self.backText[1]
@@ -74,19 +75,19 @@ class FlashCard(object):
                         threeWordRomanji = ""
                         for c in range(len(currRomanji)):
                             threeWordRomanji += currRomanji[c]
-                        canvas.create_text(app.cx,app.cy,font = 'Arial',
+                        canvas.create_text(app.textcx,app.textcy,font = 'Arial',
                     text = f"{threeWordRomanji}\n{translation1}{translation2}", 
                                     fill = 'medium aquamarine')
                     else:
                         wordRomanji = self.backText[0]
                         translation= self.backText[1]
-                        canvas.create_text(app.cx,app.cy,font = 'Arial',
+                        canvas.create_text(app.textcx,app.textcy,font = 'Arial',
                                     text = f"{wordRomanji}\n{translation}", 
                                         fill = 'medium aquamarine')
 
     '''Question1 specific'''
     def drawTimedFlashCard1(self, canvas, app):
-        canvas.create_image(app.cx, app.cy, 
+        canvas.create_image(app.cardcx, app.cardcy, 
                             image=ImageTk.PhotoImage(app.image1))               
         canvas.create_text(app.cx//3.3, app.cy//2,font = 'Arial 15',
     text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
@@ -97,7 +98,7 @@ class FlashCard(object):
         canvas.create_text(app.cx, app.cy//3,font = 'Arial 15',
                             text = f"Time Limit:{app.baseProblemTime}", 
                             fill = 'lavender blush')
-        canvas.create_text(app.cx,app.cy,
+        canvas.create_text(app.textcx,app.textcy,
                         font = 'Arial 20',
                         text = f"{self.frontText}", 
                         fill = 'dark orchid')
