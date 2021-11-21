@@ -68,17 +68,6 @@ seenFlashCards = dict()
 seenHiraganaFlashCards = dict()
 seenVocabFlashCards = dict()
 
-def makePrevCard(app,canvas):
-        #FlashCard info.
-    for oldKey in prevFlashCard:
-        currFlashCard = FlashCard(oldKey, prevFlashCard[oldKey])                   
-        currFlashCard.drawFlashCard(canvas,app)
-            # if app.isFlipped == True:
-            #     currFlashCard.flip()
-                #   if (app.isBackKeyPressed == True or
-                #       app.makeOldFlashCard == True):
-                #             makePrevCard(app,canvas)
-
 def getRandomKey():
     randomKey = random.choice(modifyListOfKeys)
     return randomKey
@@ -90,31 +79,37 @@ def getHiraganaOrVocab(randomKey):
         prevFlashCard[hiraganaOrVocab] = hiraganaValue 
         seenHiraganaFlashCards[hiraganaOrVocab] = hiraganaValue 
         seenFlashCards[hiraganaOrVocab] = hiraganaValue 
+        modifyListOfKeys.remove(hiraganaOrVocab)
         del toBeLearned[hiraganaOrVocab]      
     elif hiraganaOrVocab in vocabList:
         vocabValue = toBeLearned[hiraganaOrVocab]
         prevFlashCard[hiraganaOrVocab] = vocabValue
         seenVocabFlashCards[hiraganaOrVocab] = vocabValue
         seenFlashCards[hiraganaOrVocab] = vocabValue
+        modifyListOfKeys.remove(hiraganaOrVocab)
         del toBeLearned[hiraganaOrVocab] 
 
 
-def drawNewCard(app,canvas,newKey):
+def drawNewCard(app,canvas):
     #FlashCard info.
-    currFlashCard = FlashCard(newKey, toBeLearned[newKey])
+    currFlashCard = FlashCard(app.newKey, toBeLearned[app.newKey])
     currFlashCard.drawFlashCard(canvas,app)
                 # if app.isFlipped == True:
                 #     currFlashCard.flip()
                 # # if app.isFlipped == True:
                 #     currFlashCard.flip()
-        #Vocabulary
-                # if app.isFlipped == True:
-                #     currFlashCard.flip()
-                # currFlashCard.drawFlashCard(canvas,app)
-                # if app.isFlipped == True:
-                #     currFlashCard.flip()
-''' call method on current flashcard'''  
 
+def makePrevCard(app,canvas):
+    #FlashCard info.
+    if app.isBackKeyPressed == True:
+        for oldKey in prevFlashCard:
+            currFlashCard = FlashCard(oldKey, prevFlashCard[oldKey])                   
+            currFlashCard.drawFlashCard(canvas, app)
+            # if app.isFlipped == True:
+            #     currFlashCard.flip()
+                #   if (app.isBackKeyPressed == True or
+                #       app.makeOldFlashCard == True):
+                #             makePrevCard(app,canvas)
 
 def learningMode_keyPressed(app,event):
     #flips front of flash card to back
@@ -127,7 +122,7 @@ def learningMode_keyPressed(app,event):
     elif event.key == 'Down':
         app.isFlipped = not app.isFlipped
     #Move to new card, populate next card
-    if event.key == 'Right':
+    elif event.key == 'Right':
         app.isContinueKeyPressed = True
         app.makeNewCard = True
         app.cardsLearned += 1
@@ -138,8 +133,11 @@ def learningMode_keyPressed(app,event):
     #Move to previous card
     elif event.key == 'Left':
         app.isBackKeyPressed = True
+        app.makeOldFlashCard = True
     elif event.key == 'r':
         app.phase = 'review'
+    elif event.key == 'l':
+        app.phase = 'practice'
 
 
 def learning_keyReleased(app, event): 
@@ -165,8 +163,8 @@ def learningMode_mousePressed(app,event):
     elif (app.cardsToLearn == 0 and app.width//4 <= event.x and 
         event.x >= app.width//6 and app.height//10 <= event.y and 
         event.y >= app.height//5):
-        app.showMessage('Are you ready to practice?')
-        app.phase ='practice'
+        app.showMessage('Are you ready to practice?\n Press l to Continue!')
+        
 
 
 #Allows users to go back to the previous flashcard
@@ -198,9 +196,11 @@ def drawLetsTryitButton(app,canvas):
                         font = 'Arial',  text = "Let's Try it!", fill = 'black')
 
 #create a new key before redraw all and use that new key in drawNewCard
-def timerFired(app,newKey):
-    if (app.isContinueKeyPressed == True and toBeLearned != dict()):
-        getHiraganaOrVocab(newKey)
+def timerFired(app):
+    if (app.makeNewCard == True and toBeLearned != dict()):
+        app.newKey = getRandomKey()
+        getHiraganaOrVocab(app.newKey)
+        
 
 def learningModeRedrawAll(app,canvas):
     drawNextButton(app,canvas)
@@ -214,11 +214,8 @@ def learningModeRedrawAll(app,canvas):
     #Learning Cards
     if (app.isContinueKeyPressed == False and app.cardsToLearn == 5):
         app.flashCard.drawFlashCard(canvas,app)
-    #Requires newKey from outside of redrawAll
     elif (app.makeNewCard == True and toBeLearned != dict()):
-        newKey = getRandomKey()
-        ''' TimerFired takes care of storing'''
-        drawNewCard(app,canvas,newKey)             
+        drawNewCard(app,canvas)             
     elif app.isBackKeyPressed == True:
         makePrevCard(app,canvas)
     if app.cardsLearned >= 1:

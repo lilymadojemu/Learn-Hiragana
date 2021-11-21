@@ -15,9 +15,11 @@ from Learn_Hiragana_Practice_Mode import *
 from Transition_Screen import *
 import time, random
 
-listOfKeys = list(overall_dict.keys())
-possibleKey = random.choice(listOfKeys)
 def appStarted(app):
+    listOfKeys = list(overall_dict.keys())
+    possibleKey = random.choice(listOfKeys)
+    listofHiragana = list(character_dict.keys())
+    charaKey = random.choice(listofHiragana)
     #Initial phase 
     app.phase = "start"
     app.cx = app.width//2
@@ -43,11 +45,13 @@ def appStarted(app):
     #Checks if "back key" (left) has been pressed to go to a previous card
     app.isBackKeyPressed = False
     #Determines if a new flash card will be shown/made
-
+    app.makeFlashCard = False
     app.makeOldFlashCard = False
 
     #default flash card, key value
+    getHiraganaOrVocab(possibleKey)
     app.flashCard = FlashCard(possibleKey,overall_dict[possibleKey])
+    app.practiceFlashCard = FlashCard(charaKey, character_dict[charaKey])
 
     #Overall hiragana flashcards user has seen
     # app.seenHiraganaFlashCards = dict()
@@ -58,8 +62,9 @@ def appStarted(app):
     #Decides whether a flashcard appearing will be a 
     # hiragana card or a vocab card
     app.hiraganaOrVocab = random.randint(1,2)
+    app.newKey = getRandomKey()
     #Overall character dictionary
-    # app.characterDictionary = character_dict
+    app.characterDictionary = character_dict
     # #Overall vocabulary Dictionary
     # app.vocabularyDictionary = vocabulary_dict
     # #Overall dictionary with hiragana and vocab 
@@ -74,6 +79,7 @@ def appStarted(app):
     app.streak = False
     app.startQuestion = False
     app.finishedQuestion = False
+    app.startBackground = app.loadImage('background.jpg')
 
 
 #mousePressed of different phases
@@ -96,6 +102,8 @@ def mousePressed(app,event):
 def keyPressed(app,event):
     if event.key == 'Enter':
         app.phase = 'learning'
+    if event.key == 'l':
+        app.phase = 'practice'
     if app.phase == 'learning':
         learningMode_keyPressed(app,event)
     elif app.phase == 'practice':
@@ -106,6 +114,8 @@ def keyRelease(app,event):
 #The redrawAll's of different phases
 def redrawAll(app,canvas):
     if app.phase == 'start':
+        canvas.create_image(800, 800, 
+                            image=ImageTk.PhotoImage(app.startBackground))
         startScreenRedrawall(app,canvas)
     elif app.phase == 'learning':
         learningModeRedrawAll(app,canvas)
