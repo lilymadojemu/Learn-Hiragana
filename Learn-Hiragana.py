@@ -134,11 +134,13 @@ def redrawAll(app,canvas):
         startScreenRedrawall(app,canvas)
     elif app.phase == 'learning':
         learningModeRedrawAll(app,canvas)
+        #I think this continuous state is why answers keep appearing
     elif app.phase == 'practice':
         if app.lightMode == True:
             canvas.create_image(800, 800, 
                         image=ImageTk.PhotoImage(app.lightPracticeBackground))
-            practiceModeRedrawAll(app,canvas)
+            if app.cardsToDo == 5:
+                practiceModeRedrawAll(app,canvas)
         elif app.darkMode == True:
             canvas.create_image(800, 800, 
                         image=ImageTk.PhotoImage(app.darkPracticeBackground))

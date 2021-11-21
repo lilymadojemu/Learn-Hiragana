@@ -5,8 +5,6 @@ correctAnswers = dict()
 isCorrectKey = list()
 incorrectAnswers = dict()
 practiceHiraganaAndVocab = list(overall_dict.keys())
-character_dict
-print(practiceHiraganaAndVocab)
 toBePracticed = copy.deepcopy(overall_dict)
 alreadyPracticed = dict()
 #will form basis for review mode
@@ -261,7 +259,8 @@ def practiceMode_keyPressed(app,event):
         app.wantInput = 'Yes'
 
 def practice_mousePressed(app,event):
-    if app.width == event.x and event.y == app.height*2:
+    if (app.width//4 <= event.x and event.x >= app.width//6 and 
+        app.height//10 <= event.y and event.y >= app.height//5):
         app.showMessage('Clicked')
     # #     app.option1Chosen = True
     # app.finishedQuestion = True
@@ -283,13 +282,13 @@ def modifiedIsCorrect(targetAnswer,answerChoice, app, diff):
     #may need to be changed for other question types
     if (answerChoice == character_dict[targetAnswer] and 
         app.finishedQuestion == True):
-        storeCorrectIncorrect(targetAnswer,answerChoice, True, app, diff)
+        storeCorrectIncorrect(targetAnswer,answerChoice, True, diff, app)
         praise = random.choice(correctMessages)
         app.showMessage(praise)
     elif( answerChoice != character_dict[targetAnswer] and
          app.finishedQuestion == True):
         #defaulQuestionTime - time user takes to answer a question
-        storeCorrectIncorrect(targetAnswer,answerChoice, False,app, diff)
+        storeCorrectIncorrect(targetAnswer,answerChoice, diff, False,app)
         notPraise = random.choice(incorrectMessages)
         app.showMessage(notPraise)
 
@@ -298,8 +297,8 @@ def modifiedAnswerQuestion(app,listOfPossibleChoices):
     defaultTimeLimit = app.baseProblemTime
     #timeDifference = defaultTimeLimit = timeTaken
      #hiragana to romanji
-    if defaultTimeLimit != 0:
-            targetAnswer = app.flashCard.frontText
+    if defaultTimeLimit > 0:
+            targetAnswer = app.practiceflashCard.frontText
             print(targetAnswer)
             #app.showMessage('Press e to Input Your Answer!')
             if app.wantInput == 'Yes':
@@ -333,8 +332,7 @@ def modifiedAnswerQuestion(app,listOfPossibleChoices):
                         diff = endTime - startTime
                         userAnswer = listOfPossibleChoices[3]
                         modifiedIsCorrect(targetAnswer,userAnswer, app, diff)
-    elif defaultTimeLimit <= 0:
-        app.showMessage("Time's Up!")
+    elif defaultTimeLimit == 0:
         app.showMessage('Please Press Right or Click Next to Continue')
         
 
@@ -343,15 +341,29 @@ def timerFired(app):
     if app.paused == False:
         app.baseProblemTime -= 1
         app.timeTaken += 1
-        if app.finishedQuestion == True:
+        if app.baseProblemTime == 0 and app.makeFlashCard == True:
             app.baseProblemTime = 30
             app.timeTaken = 0
-        
+
+def drawNextButton(app,canvas):
+    canvas.create_rectangle(app.cx*3,
+                            app.cy*1.2,
+                            app.cx,
+                            app.cy*1.1, 
+                            fill = 'pale violet red')
+    canvas.create_text(app.cx*1.5,app.cy*1.15,
+                        font = 'Arial',  text = "Next", fill = 'black')
+
 def practiceModeRedrawAll(app,canvas):
-    characterChoices = list(character_dict.values())
-    listOfPossibleChoices =(random.sample(characterChoices, k=4))
-    app.practiceFlashCard.drawTimedFlashCard1(canvas, app)                    
-    drawAnswerChoices(app,canvas,listOfPossibleChoices)                  
+    app.showMessage('Being Called')
+    if app.cardsToDo == 0:
+        characterChoices = list(character_dict.values())
+        listOfPossibleChoices = random.sample(characterChoices, k=4)
+        app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
+        modifiedAnswerQuestion(app,listOfPossibleChoices)
+        drawAnswerChoices(app,canvas,listOfPossibleChoices)       
+    if app.baseProblemTime == 0:
+        drawNextButton(app,canvas)   
     #if app.makeFlashCard == False and app.cardsToDo == 5:
         
         
