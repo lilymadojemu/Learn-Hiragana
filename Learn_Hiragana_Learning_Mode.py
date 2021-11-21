@@ -94,10 +94,8 @@ def drawNewCard(app,canvas):
     #FlashCard info.
     currFlashCard = FlashCard(app.newKey, toBeLearned[app.newKey])
     currFlashCard.drawFlashCard(canvas,app)
-                # if app.isFlipped == True:
-                #     currFlashCard.flip()
-                # # if app.isFlipped == True:
-                #     currFlashCard.flip()
+    if app.isFlipped == True:
+        currFlashCard.blinkSmallerLearning(app)
 
 def makePrevCard(app,canvas):
     #FlashCard info.
@@ -105,11 +103,8 @@ def makePrevCard(app,canvas):
         for oldKey in prevFlashCard:
             currFlashCard = FlashCard(oldKey, prevFlashCard[oldKey])                   
             currFlashCard.drawFlashCard(canvas, app)
-            # if app.isFlipped == True:
-            #     currFlashCard.flip()
-                #   if (app.isBackKeyPressed == True or
-                #       app.makeOldFlashCard == True):
-                #             makePrevCard(app,canvas)
+            if app.isFlipped == True:
+                currFlashCard.blinkSmallerLearning(app)
 
 def learningMode_keyPressed(app,event):
     #flips front of flash card to back
@@ -117,9 +112,7 @@ def learningMode_keyPressed(app,event):
     if event.key == 'q':
         app.showMessage("All your progress will be lost!")
         app.phase = 'start'
-    if event.key == 'Up':
-        app.isFlipped = not app.isFlipped
-    elif event.key == 'Down':
+    if event.key == 'Up' or event.key == 'Down':
         app.isFlipped = not app.isFlipped
     #Move to new card, populate next card
     elif event.key == 'Right':
@@ -197,6 +190,15 @@ def drawLetsTryitButton(app,canvas):
 
 #create a new key before redraw all and use that new key in drawNewCard
 def timerFired(app):
+    #"flipping flashCard"
+    # if app.isFlipped == True:
+    #     #reducing
+    #     app.cx -=1
+    #     app.cy -=1
+    #     if( app.cx == app.width//2 and app.cy == app.height//2):
+    #         app.cx += 1
+    #         app.cy += 1
+    #         app.isFlipped = False
     if (app.makeNewCard == True and toBeLearned != dict()):
         app.newKey = getRandomKey()
         getHiraganaOrVocab(app.newKey)

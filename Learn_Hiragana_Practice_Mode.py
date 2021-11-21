@@ -10,7 +10,13 @@ alreadyPracticed = dict()
 #will form basis for review mode
 toBeReview = dict()
 knowledgeable = dict()
+answerStreak = list()
 
+def hasStreak(answerStreak):
+    for i in range(len(answerStreak)):
+        for j in range (i+1,len(answerStreak)):
+            if answerStreak[i][j] == 1:
+                return True
 
 def getPracticeHiraganaOrVocab():
     hiraganaOrVocab = getRandomKey()
@@ -101,10 +107,10 @@ def answerQuestion(app,canvas):
                 questionFlashCard.drawTimedFlashCard1(canvas, app)
                 print(targetAnswer)
                 app.showMessage('Press e to Input Your Answer!')
-                if app.wantInput == 'Yes':
+                if app.wantInput == True:
                     answer = app.getUserInput('Please Type in Best Answer')
                     if answer == None:
-                        app.wantInput == 'No'
+                        app.wantInput = False
                     else:
                         modifiedIsCorrect(targetAnswer,answer)
                 else:
@@ -240,13 +246,12 @@ def drawAnswerChoices(app,canvas,listOfChoices):
 
 #keep randomizing list until targetAnswer in list of possible answers
 def practiceMode_keyPressed(app,event):
-    #Pausing, unpausing in Practice Mode Only
     if (event.key == 'p'):
         app.paused = not app.paused
-    if event.key == 'q':
+    elif event.key == 'q':
         app.showMessage("All your progress will be lost!")
         app.phase = 'start'
-    if event.key == 'Right':
+    elif event.key == 'Right':
         app.makeFlashCard = True
         if app.cardsToDo != 0:
             app.cardsToDo -= 1
@@ -257,13 +262,13 @@ def practiceMode_keyPressed(app,event):
         app.startQuestion = False
         app.finishedQuestion = True
     elif event.key == 'e':
-        app.wantInput = 'Yes'
+        app.wantInput = True
 
 def practice_mousePressed(app,event):
     if (app.width//4 <= event.x and event.x >= app.width//6 and 
         app.height//10 <= event.y and event.y >= app.height//5):
         app.showMessage('Clicked')
-    # #     app.option1Chosen = True
+        app.option1Chosen = True
     # app.finishedQuestion = True
     # # elif 
     # #     app.option2Chosen = True
@@ -356,6 +361,7 @@ def drawNextButton(app,canvas):
 
 def practiceModeRedrawAll(app,canvas):
     canvas.create_text(app.cx,app.cy, text = 'Press Right to Start!,')
+    #still true
     if app.makeFlashCard == True:
         characterChoices = list(character_dict.values())
         listOfPossibleChoices = random.sample(characterChoices, k=4)
@@ -376,3 +382,5 @@ def practiceModeRedrawAll(app,canvas):
     # elif app.makeFlashCard == True and app.cardsToDo >= 0:
     #     app.newKey = getRandomKey()
     #     drawNewCard(app,canvas)  
+
+    #if answer is correct and in a certain range

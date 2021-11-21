@@ -14,18 +14,6 @@ class correctWord(object):
             return False  
 
 ''' In Learning Phase'''
-'''
-Will use for Flashcard background
-From: https://www.cs.cmu.edu/~112/notes/notes-animations-part4.html
-def appStarted(app):
-    url = 'https://tinyurl.com/great-pitch-gif'
-    app.image1 = app.loadImage(url)
-    app.image2 = app.image1.transpose(Image.FLIP_LEFT_RIGHT)
-
-def redrawAll(app, canvas):
-    canvas.create_image(200, 300, image=ImageTk.PhotoImage(app.image1))
-    canvas.create_image(500, 300, image=ImageTk.PhotoImage(app.image2))
-'''
 
 class FlashCard(object):
     def __init__(self, frontText, backText):
@@ -35,16 +23,12 @@ class FlashCard(object):
         #After Flipping
         self.newFront = backText
         self.newBack = frontText
+        
         #Key its based on
     def drawFlashCard(self, canvas, app):
-        canvas.create_rectangle(app.cx*1.5,
-                                app.cy//4,
-                                app.cx//4,
-                                app.cy, 
-                                fill = 'bisque')
-        # canvas.create_image(app.cx*1.5, app.cy, 
-        #                     image=ImageTk.PhotoImage(app.image1))
-                            
+        global font
+        canvas.create_image(app.cx, app.cy, 
+                            image=ImageTk.PhotoImage(app.image1))    
         canvas.create_text(app.cx//3, app.cy//5.5,font = 'Arial',
     text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
                             fill = 'black')
@@ -52,24 +36,20 @@ class FlashCard(object):
         text = f"Cards Left:{app.cardsToLearn}", fill = 'black')
         #Hiragana
         if len(self.frontText) == 1:
-
             print(self.frontText)
             if app.isFlipped == False:
                 #Exact Placement to be changed
                 #The Hiragana Character
-                canvas.create_text(app.cx,app.cy//2,
-                                font = 'Arial',
+                canvas.create_text(app.cx,app.cy,
+                                font = 'Arial 20',
                                 text = f"{self.frontText}", 
-                                fill = 'hot pink')
+                                fill = 'dark orchid')
             #Back of card
             elif app.isFlipped == True:
                 romanji = self.backText[0]
                 pronunciation = self.backText[1]
-                canvas.create_rectangle(app.cx*1.5,
-                            app.cy//4,
-                            app.cx//4,
-                            app.cy, 
-                            fill = 'olive drab')
+                canvas.create_image(app.cx, app.cy, 
+                            image=ImageTk.PhotoImage(app.image1))  
                 #The Pronunciation of Hiragana Character
                 canvas.create_text(app.cx, app.cy//2,font = 'Arial',
                             text = f"{romanji}\n{pronunciation}", 
@@ -78,12 +58,14 @@ class FlashCard(object):
         elif len(self.frontText) != 1:
                 if app.isFlipped == False:
                     #Exact Placement to be changed
-                    canvas.create_text(app.cx,app.cy//2,
-                                    font = 'Arial',
-                                    text = f"{self.frontText}", 
-                                    fill = 'thistle')
+                    canvas.create_text(app.cx,app.cy,
+                                font = 'Arial 20',
+                                text = f"{self.frontText}", 
+                                fill = 'dark orchid')
                 #Back of card
                 elif app.isFlipped == True:
+                    canvas.create_image(app.cx, app.cy, 
+                            image=ImageTk.PhotoImage(app.image1)) 
                     if len(self.backText) == 3:
                         currRomanji = list(self.backText[0])
                         translation1= self.backText[1]
@@ -93,34 +75,18 @@ class FlashCard(object):
                         threeWordRomanji = ""
                         for c in range(len(currRomanji)):
                             threeWordRomanji += currRomanji[c]
-
-                        canvas.create_rectangle(app.cx*1.5,
-                                app.cy//4,
-                                app.cx//4,
-                                app.cy, 
-                                fill = 'olive drab')
                         canvas.create_text(app.cx, app.cy//2,font = 'Arial',
                     text = f"{threeWordRomanji}\n{translation1}{translation2}", 
                                     fill = 'medium aquamarine')
                     else:
                         wordRomanji = self.backText[0]
                         translation= self.backText[1]
-                        canvas.create_rectangle(app.cx*1.5,
-                                    app.cy//4,
-                                    app.cx//4,
-                                    app.cy, 
-                                    fill = 'olive drab')
                         canvas.create_text(app.cx, app.cy//2,font = 'Arial',
                                     text = f"{wordRomanji}\n{translation}", 
                                         fill = 'medium aquamarine')
 
     '''Question1 specific'''
     def drawTimedFlashCard1(self, canvas, app):
-        # canvas.create_rectangle(app.cx*1.5,
-        #                         app.cy//4,
-        #                         app.cx//4,
-        #                         app.cy, 
-        #                         fill = 'bisque')
         canvas.create_image(app.cx, app.cy, 
                             image=ImageTk.PhotoImage(app.image1))               
         canvas.create_text(app.cx//3.3, app.cy//2,font = 'Arial 15',
@@ -137,6 +103,36 @@ class FlashCard(object):
                         text = f"{self.frontText}", 
                         fill = 'dark orchid')
 
+
+#What is a flip, like a blink/flash, will need another background for back
+#Understanding from https://www.youtube.com/watch?v=kvd6i1mXec8
+#from https://coderedirect.com/questions/124487/simple-animation-using-tkinter
+    def blinkSmallerLearning(self,app):
+        #Make app.cx and app.cy smaller until it reaches the center
+        # app.cx = app.width//2
+        # app.cy = app.height//2
+        if app.cx < app.width//4 and app.cy < app.height//4:
+            app.cx -= 1
+            app.cy -= 1
+            self.drawFlashCard.config(app.cx,app.cy, font = 'Arial 15')
+            self.after(1, self.blinkSmallerLearning(app))
+        elif app.cx == app.width//4 and app.cy == app.height//4:
+            self.blinkDefaultLearning(app)
+    def blinkDefaultLearning(self,app):
+        if app.cx == app.width//4 and app.cy == app.height//4:
+            app.cx += 1
+            app.cy += 1
+            self.drawFlashCard.config(app.cx,app.cy, font = 'Arial 20')
+            self.after(1,self.blinkDefaultLearning(app))
+
+    def animatePractice(self,app):
+        app.cx = app.width//2
+        app.cy = app.height//2
+        if app.cx <= app.width and app.cy <= app.height:
+            app.cx -= 1
+            app.cy -= 1
+            self.drawTimedFlashCard(app.cx,app.cy)
+            self.after(10,self.animatePractice)
     # def getMeaning(self, word, app):
     #     if word in characterDictionary:
     #         return characterDictionary[word]
@@ -144,26 +140,14 @@ class FlashCard(object):
     #         return vocabularyDictionary[word]
     #     else:
     #         app.showMessage('Sorry, we don't have that word')
+    
 
-    #A flip animation
-    # def flip(self, app):
-    #     if app.isFlipped == True:
-    #         self.frontText = self.newFront
-    #         self.backText = self.newBack
-'''
-Each key-value pair, once answered will be assigned an initial time and a time
-where they should go back into circulation based on whether correct or not and
-how many times it is deemed correct or not
-
-I will ultimately need to create a formula that will determine the timings for
-each card/question
-'''
 
 # #Base: what to do with values that are correct
-# #Practice Phase
-# class AssignedTime(object):
-#     def __init__(self):
-#         pass
-# #What to do with vocab & characters that are incorrect
-# class IncorrectAssignedTime(AssignedTime):
-#     pass
+class AssignedTime(object):
+    def __init__(self, app):
+        self.app.baseProblemTime = app.baseProblemTime 
+    def mapTime(self,timeTaken):
+        timeDifference = self.app.baseProblemTime - timeTaken
+        #If in a certain range
+        return timeDifference
