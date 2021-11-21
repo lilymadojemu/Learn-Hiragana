@@ -248,7 +248,8 @@ def practiceMode_keyPressed(app,event):
         app.phase = 'start'
     if event.key == 'Right':
         app.makeFlashCard = True
-        app.cardsToDo -= 1
+        if app.cardsToDo != 0:
+            app.cardsToDo -= 1
     if event.key == 's':
         app.startQuestion = True
         app.finishedQuestion = False
@@ -292,13 +293,12 @@ def modifiedIsCorrect(targetAnswer,answerChoice, app, diff):
         notPraise = random.choice(incorrectMessages)
         app.showMessage(notPraise)
 
-def modifiedAnswerQuestion(app,listOfPossibleChoices):
+def modifiedAnswerQuestion(app, targetAnswer, listOfPossibleChoices):
     startTime = time.time()
     defaultTimeLimit = app.baseProblemTime
     #timeDifference = defaultTimeLimit = timeTaken
      #hiragana to romanji
     if defaultTimeLimit > 0:
-            targetAnswer = app.practiceflashCard.frontText
             print(targetAnswer)
             #app.showMessage('Press e to Input Your Answer!')
             if app.wantInput == 'Yes':
@@ -355,14 +355,18 @@ def drawNextButton(app,canvas):
                         font = 'Arial',  text = "Next", fill = 'black')
 
 def practiceModeRedrawAll(app,canvas):
-    app.showMessage('Being Called')
-    if app.cardsToDo == 0:
+    canvas.create_text(app.cx,app.cy, text = 'Press Right to Start!,')
+    if app.makeFlashCard == True:
         characterChoices = list(character_dict.values())
         listOfPossibleChoices = random.sample(characterChoices, k=4)
         app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
-        modifiedAnswerQuestion(app,listOfPossibleChoices)
-        drawAnswerChoices(app,canvas,listOfPossibleChoices)       
-    if app.baseProblemTime == 0:
+        canvas.create_text(app.cx, app.cy*1.2, font = 'Arial', 
+    text ="Please Select/Input the Best Answer", fill = 'black')
+        targetAnswer = app.practiceFlashCard.frontText
+        drawAnswerChoices(app,canvas,listOfPossibleChoices)  
+        modifiedAnswerQuestion(app,targetAnswer,listOfPossibleChoices)
+             
+    elif app.baseProblemTime == 0 or app.cardsToDo == 0:
         drawNextButton(app,canvas)   
     #if app.makeFlashCard == False and app.cardsToDo == 5:
         
@@ -372,8 +376,3 @@ def practiceModeRedrawAll(app,canvas):
     # elif app.makeFlashCard == True and app.cardsToDo >= 0:
     #     app.newKey = getRandomKey()
     #     drawNewCard(app,canvas)  
-    canvas.create_text(app.cx, app.cy*1.2, font = 'Arial', 
-    text ="Please Select/Input the Best Answer", fill = 'black')
-    if (app.cardsToLearn == 0):
-        app.phase = 'transition'
-   

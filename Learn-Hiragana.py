@@ -139,12 +139,13 @@ def redrawAll(app,canvas):
         if app.lightMode == True:
             canvas.create_image(800, 800, 
                         image=ImageTk.PhotoImage(app.lightPracticeBackground))
-            if app.cardsToDo == 5:
+            if app.makeFlashCard == True:
                 practiceModeRedrawAll(app,canvas)
         elif app.darkMode == True:
             canvas.create_image(800, 800, 
                         image=ImageTk.PhotoImage(app.darkPracticeBackground))
-            practiceModeRedrawAll(app,canvas)
+            if app.makeFlashCard == True:
+                practiceModeRedrawAll(app,canvas)
     elif app.phase == 'transition':
         if app.lightMode == True:
             canvas.create_image(800, 800, 
