@@ -2,6 +2,7 @@
 Contains all classes that will be used
 '''
 from Populate_Values import*
+from cmu_112_graphics import*
 import os, random, time, copy
 class correctWord(object):
     def __init__(self, correctWord):
@@ -34,146 +35,121 @@ class FlashCard(object):
         #After Flipping
         self.newFront = backText
         self.newBack = frontText
-
+        #Key its based on
     def drawFlashCard(self, canvas, app):
-
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy//4,
                                 app.cx//4,
                                 app.cy, 
                                 fill = 'bisque')
+        # canvas.create_image(app.cx*1.5, app.cy, 
+        #                     image=ImageTk.PhotoImage(app.image1))
+                            
+        canvas.create_text(app.cx//3, app.cy//5.5,font = 'Arial',
+    text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
+                            fill = 'black')
+        canvas.create_text(app.cx*1.3, app.cy//6,font = 'Arial',
+        text = f"Cards Left:{app.cardsToLearn}", fill = 'black')
+        #Hiragana
+        if len(self.frontText) == 1:
 
-        canvas.create_text(app.cx//1.5, app.cy//3,font = 'Arial',
-        text = f"KanaLevel:{app.characterLevel},{app.vocabLevel}", 
-                            fill = 'medium aquamarine')
-
-        if app.phase == 'learning':
-            canvas.create_text(app.cx//1.5, app.cy,font = 'Arial',
-        text = f"Cards Left:{app.cardsToLearn}", fill = 'medium aquamarine')
-
-        elif app.phase == 'practice':
-            canvas.create_text(app.cx//1.5, app.cy,font = 'Arial',
-                                text = f"Cards Left:{app.cardsToDo}", 
+            print(self.frontText)
+            if app.isFlipped == False:
+                #Exact Placement to be changed
+                #The Hiragana Character
+                canvas.create_text(app.cx,app.cy//2,
+                                font = 'Arial',
+                                text = f"{self.frontText}", 
+                                fill = 'hot pink')
+            #Back of card
+            elif app.isFlipped == True:
+                romanji = self.backText[0]
+                pronunciation = self.backText[1]
+                canvas.create_rectangle(app.cx*1.5,
+                            app.cy//4,
+                            app.cx//4,
+                            app.cy, 
+                            fill = 'olive drab')
+                #The Pronunciation of Hiragana Character
+                canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                            text = f"{romanji}\n{pronunciation}", 
                                 fill = 'medium aquamarine')
-        if app.hiraganaOrVocab == 1:
+        #Vocabulary
+        elif len(self.frontText) != 1:
                 if app.isFlipped == False:
                     #Exact Placement to be changed
-                    #The Hiragana Character
-                    canvas.create_text(app.cx,app.cy//2,
-                                    font = 'Arial',
-                                    text = f"{self.frontText}", 
-                                    fill = 'hot pink')
-                #Back of card
-                elif app.isFlipped == True:
-                    canvas.create_rectangle(app.cx*1.5,
-                                app.cy//4,
-                                app.cx//4,
-                                app.cy, 
-                                fill = 'olive drab')
-                    #The Pronunciation of Hiragana Character
-                    canvas.create_text(app.cx, app.cy//2,font = 'Arial',
-                                text = f"{self.backText}", 
-                                    fill = 'medium aquamarine')
-        elif app.hiraganaOrVocab == 2:
-                if app.isFlipped == False:
-                    #Exact Placement to be changed
-                    #The Hiragana Character
                     canvas.create_text(app.cx,app.cy//2,
                                     font = 'Arial',
                                     text = f"{self.frontText}", 
                                     fill = 'thistle')
                 #Back of card
                 elif app.isFlipped == True:
-                    canvas.create_rectangle(app.cx*1.5,
+                    if len(self.backText) == 3:
+                        currRomanji = list(self.backText[0])
+                        translation1= self.backText[1]
+                        translation2=self.backText[2]
+                        currRomanji.insert(7," ")
+                        currRomanji.insert(10," ")
+                        threeWordRomanji = ""
+                        for c in range(len(currRomanji)):
+                            threeWordRomanji += currRomanji[c]
+
+                        canvas.create_rectangle(app.cx*1.5,
                                 app.cy//4,
                                 app.cx//4,
                                 app.cy, 
                                 fill = 'olive drab')
-                    #The Pronunciation of Hiragana Character
-                    canvas.create_text(app.cx, app.cy//2,font = 'Arial',
-                                text = f"{self.backText}", 
+                        canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                    text = f"{threeWordRomanji}\n{translation1}{translation2}", 
                                     fill = 'medium aquamarine')
-                                        
-                # #User gone to the next card
-                # if(app.isContinueKeyPressed == True and
-                #      app.cardsToLearn >= 0):
-                #     #puts current card in already seen flashcards
-                #     #I want to take that key value pair out of characterdict
-                #     app.seenHiraganaFlashCards[kana] = (
-                #                                modifiedCharacter_dict[kana])
-                #     #modifiedHiraganaList.remove(kana)                                        
-                #     del modifiedCharacter_dict[kana]
-                #     print(modifiedCharacter_dict)
+                    else:
+                        wordRomanji = self.backText[0]
+                        translation= self.backText[1]
+                        canvas.create_rectangle(app.cx*1.5,
+                                    app.cy//4,
+                                    app.cx//4,
+                                    app.cy, 
+                                    fill = 'olive drab')
+                        canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                                    text = f"{wordRomanji}\n{translation}", 
+                                        fill = 'medium aquamarine')
 
-                #     #Finished with everything
-                #     if modifiedCharacter_dict == {}:
-                #         app.showMessage("Empty!")
-                #         #Once this happens, user will only look at incorrect 
-                #         #correct characters/words from what they went 
-                #         # through
-    def getBackText(self):
-        return self.backText
+    '''Question1 specific'''
+    def drawTimedFlashCard1(self, canvas, app):
+        # canvas.create_rectangle(app.cx*1.5,
+        #                         app.cy//4,
+        #                         app.cx//4,
+        #                         app.cy, 
+        #                         fill = 'bisque')
+        canvas.create_image(app.cx, app.cy, 
+                            image=ImageTk.PhotoImage(app.image1))               
+        canvas.create_text(app.cx//3.3, app.cy//2,font = 'Arial 15',
+    text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
+                            fill = 'lavender blush')
+        canvas.create_text(app.cx*1.5, app.cy//2,font = 'Arial 15 ',
+                            text = f"Cards Left:{app.cardsToDo}", 
+                            fill = 'lavender blush')
+        canvas.create_text(app.cx, app.cy//3,font = 'Arial 15',
+                            text = f"Time Limit:{app.baseProblemTime}", 
+                            fill = 'lavender blush')
+        canvas.create_text(app.cx,app.cy,
+                        font = 'Arial 20',
+                        text = f"{self.frontText}", 
+                        fill = 'dark orchid')
 
-                        
-
-
-        
-
-    # def getMeaning(self, word):
+    # def getMeaning(self, word, app):
     #     if word in characterDictionary:
     #         return characterDictionary[word]
     #     elif word in vocabularyDictionary:
     #         return vocabularyDictionary[word]
     #     else:
-    #         self.app.showMessage('Sorry, that word is invalid:(')
+    #         app.showMessage('Sorry, we don't have that word')
 
     #A flip animation
     # def flip(self, app):
     #     if app.isFlipped == True:
     #         self.frontText = self.newFront
     #         self.backText = self.newBack
-
-def Merge(dict1, dict2):
-    res = {**dict1, **dict2}
-    return res
-#Problemtime - currTime 
-#bot that will hold all the inner processes for learner
-class SenseiBot(object):
-    def __init__(self,botName, currTime):
-        self.botName = botName
-        # self.possibleChoices = possibleChoices
-        # self.targetAnswer = targetAnswer
-        # self.app = app
-        self.currTime = currTime
-        pass
-    #Information regarding the choices a user will be able to 
-    # select for each prob.
-    #Mainy applies in Practice Phase
-    def answerChoices(self):
-        self.possibleChoices = Merge(self.characterDictionary, 
-                                    self.vocabularyDictionary)
-        random.random(self.possibleChoices)
-        pass
-    #Determines whether or not an answer is correct or not,
-    #If correct, bot will say "correct!"
-    #otherwise, bot will say "incorrect!"
-    #Might become its own function
-    #Practice Phase
-    def isCorrect(self, answerChoice):
-        correctMessages = ["That's Correct!", "You're the best!"]
-        incorrectMessages = ["Sorry, that's incorrect","Better luck next time!"]
-        if answerChoice == self.possibleChoice[self.targetAnswer]:
-            self.app.showMessage(random.random(correctMessages))
-        else:
-            self.app.showMessage(random.random(incorrectMessages))
-    #How long user has to select/input answer
-    #Should time vary depending on if already known or not
-    #If varies, need to be based on Assigned time
-    #Practice Phase
-    def InternalProblemTimer(self,app,time):
-        if self.app.baseProblemTime - self.curr.time:
-            pass
-
 '''
 Each key-value pair, once answered will be assigned an initial time and a time
 where they should go back into circulation based on whether correct or not and
