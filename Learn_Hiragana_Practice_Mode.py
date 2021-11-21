@@ -94,7 +94,6 @@ def questionCard(app,canvas,questionType):
 def answerQuestion(app,canvas):
     startTime = time.time()
     defaultTimeLimit = app.baseProblemTime
-    #timeDifference = defaultTimeLimit = timeTaken
     questionType = getQuestionType()
     if questionType == 1: #hiragana to romanji
         questionFlashCard = FlashCard(app.newKey,toBePracticed[app.newKey])
@@ -141,49 +140,105 @@ def getQuestionType():
 
 def drawAnswerChoices(app,canvas,listOfChoices):
     #Option 1
-    randomChoice1 = listOfChoices[0]
-    randomChoice2 = listOfChoices[1]
-    randomChoice3 = listOfChoices[2]
-    randomChoice4 = listOfChoices[3]
-
-    canvas.create_rectangle(app.cx*1.3,
-                            app.cy*1.3,
-                            app.cx//2,
-                            app.cy*1.4, 
-                            fill = 'pale violet red')
-    canvas.create_text(app.cx//2,app.cy//12,text = f'{randomChoice1}', 
-    fill ='black' )
-    #canvas.create_oval(app.cx,app.cy,0,0, fill = 'navajo white')
-    #Option 2
+    randomChoice1 = listOfChoices[0][0]
+    randomChoice2 = listOfChoices[1][0]
+    randomChoice3 = listOfChoices[2][0]
+    randomChoice4 = listOfChoices[3][0]
+    if app.lightMode == True:
+        canvas.create_rectangle(app.cx*1.5,
+                                app.cy*1.3,
+                                app.cx//2,
+                                app.cy*1.4, 
+                                fill = 'light goldenrod')
+        canvas.create_text(app.cx,app.cy*1.35,text = f'1 {randomChoice1}', 
+        fill ='black' )
+        #canvas.create_oval(app.cx,app.cy,0,0, fill = 'navajo white')
+        #Option 2
+        
+        canvas.create_rectangle(app.cx*1.5,
+                                app.cy*1.4,
+                                app.cx//2,
+                                app.cy*1.5, 
+                                fill = 'plum')
+        canvas.create_text(app.cx,app.cy*1.45,text = f'2 {randomChoice2}', 
+        fill ='black' )
+        #canvas.create_oval(app.cx,app.cy//2,0,0, fill = 'navajo white')
+        #Option 3
     
-    canvas.create_rectangle(app.cx*1.3,
-                            app.cy*1.4,
-                            app.cx//2,
-                            app.cy*1.5, 
-                            fill = 'plum')
-    canvas.create_text(app.cx//2,app.cy//12,text = f'{randomChoice2}', 
-    fill ='black' )
-    #canvas.create_oval(app.cx,app.cy//2,0,0, fill = 'navajo white')
-    #Option 3
-   
-    canvas.create_rectangle(app.cx*1.3,
-                            app.cy*1.5,
-                            app.cx//2,
-                            app.cy*1.6,
-                            fill = 'red')
-    canvas.create_text(app.cx//2,app.cy//12,text = f'{randomChoice3}', 
-    fill ='black' )
-    #canvas.create_oval(app.cx,app.cy//4,0,0, fill = 'navajo white')
-    #Option 4
+        canvas.create_rectangle(app.cx*1.5,
+                                app.cy*1.5,
+                                app.cx//2,
+                                app.cy*1.6,
+                                fill = 'lemon chiffon')
+        canvas.create_text(app.cx,app.cy*1.55, text = f'3 {randomChoice3}', 
+        fill ='black' )
+        #canvas.create_oval(app.cx,app.cy//4,0,0, fill = 'navajo white')
+        #Option 4
+        
+        canvas.create_rectangle(app.cx*1.5,
+                                app.cy*1.6,
+                                app.cx//2,
+                                app.cy*1.7,
+                                fill = 'honeydew2')
+        canvas.create_text(app.cx,app.cy*1.65, text = f'4 {randomChoice4}', 
+        fill ='black')
+        #canvas.create_oval(app.cx,app.cy//6,0,0, fill = 'navajo white')
+        canvas.create_rectangle(app.cx*1.5,
+                                app.cy*1.7,
+                                app.cx//2,
+                                app.cy*1.8,
+                                fill = 'snow')
+        canvas.create_text(app.cx,app.cy*1.75,
+                             text = 'Press e to Input Your Answer', 
+                            fill ='black')
+        #canvas.create_oval(app.cx,app.cy//6,0,0, fill = 'navajo white')
+    elif app.darkMode == True:
+        canvas.create_rectangle(app.cx*1.5,
+                                app.cy*1.3,
+                                app.cx//2,
+                                app.cy*1.4, 
+                                fill = 'pale violet red')
+        canvas.create_text(app.cx,app.cy//12,text = f'{randomChoice1}', 
+        fill ='black' )
+        #canvas.create_oval(app.cx,app.cy,0,0, fill = 'navajo white')
+        #Option 2
+        
+        canvas.create_rectangle(app.cx*1.5,
+                                app.cy*1.4,
+                                app.cx//2,
+                                app.cy*1.5, 
+                                fill = 'dark orange')
+        canvas.create_text(app.cx//2,app.cy//12,text = f'{randomChoice2}', 
+        fill ='black' )
+        #canvas.create_oval(app.cx,app.cy//2,0,0, fill = 'navajo white')
+        #Option 3
     
-    canvas.create_rectangle(app.cx*1.3,
-                            app.cy*1.6,
-                            app.cx//2,
-                            app.cy*1.7,
-                            fill = 'sandy brown')
-    canvas.create_text(app.cx//2,app.cy//12, text = f'{randomChoice4}', 
-    fill ='black')
-    #canvas.create_oval(app.cx,app.cy//6,0,0, fill = 'navajo white')
+        canvas.create_rectangle(app.cx*1.5,
+                                app.cy*1.5,
+                                app.cx//2,
+                                app.cy*1.6,
+                                fill = 'maroon')
+        canvas.create_text(app.cx//2,app.cy//12,text = f'{randomChoice3}', 
+        fill ='black' )
+        #canvas.create_oval(app.cx,app.cy//4,0,0, fill = 'navajo white')
+        #Option 4
+        
+        canvas.create_rectangle(app.cx*1.5,
+                                app.cy*1.6,
+                                app.cx//2,
+                                app.cy*1.7,
+                                fill = 'dark goldenrod')
+        canvas.create_text(app.cx//2,app.cy//12, text = f'{randomChoice4}', 
+        fill ='black')
+        #canvas.create_oval(app.cx,app.cy//6,0,0, fill = 'navajo white')
+        canvas.create_rectangle(app.cx*1.5,
+                                app.cy*1.7,
+                                app.cx//2,
+                                app.cy*1.8,
+                                fill = 'rosy brown')
+        canvas.create_text(app.cx,app.cy*1.75,
+                             text = 'Press e to Input Your Answer', 
+                            fill ='black')
 
 #keep randomizing list until targetAnswer in list of possible answers
 def practiceMode_keyPressed(app,event):
@@ -206,31 +261,35 @@ def practiceMode_keyPressed(app,event):
         app.wantInput = 'Yes'
 
 def practice_mousePressed(app,event):
-    pass
-    # if 
-    #     app.option1Chosen = True
-    # elif 
-    #     app.option2Chosen = True
-    # elif 
-    #     app.option3Chosen = True
-    # elif 
-    #     app.option4Chosen = True
+    if app.width == event.x and event.y == app.height*2:
+        app.showMessage('Clicked')
+    # #     app.option1Chosen = True
+    # app.finishedQuestion = True
+    # # elif 
+    # #     app.option2Chosen = True
+    #         app.finishedQuestion = True
+    # # elif 
+    # #     app.option3Chosen = True
+    # app.finishedQuestion = True
+    # # elif 
+    # #     app.option4Chosen = True
+    # app.finishedQuestion = True
     
 
-def modifiedIsCorrect(targetAnswer,answerChoice, app):
+def modifiedIsCorrect(targetAnswer,answerChoice, app, diff):
     correctMessages = ["That's Correct!", "You're the best!", 
                             "You're a Hiragana Expert!"]
     incorrectMessages = ["Sorry, that's incorrect","Better luck next time!"]
     #may need to be changed for other question types
     if (answerChoice == character_dict[targetAnswer] and 
         app.finishedQuestion == True):
-        storeCorrectIncorrect(targetAnswer,answerChoice, True, app)
+        storeCorrectIncorrect(targetAnswer,answerChoice, True, app, diff)
         praise = random.choice(correctMessages)
         app.showMessage(praise)
     elif( answerChoice != character_dict[targetAnswer] and
          app.finishedQuestion == True):
         #defaulQuestionTime - time user takes to answer a question
-        storeCorrectIncorrect(targetAnswer,answerChoice, False,app)
+        storeCorrectIncorrect(targetAnswer,answerChoice, False,app, diff)
         notPraise = random.choice(incorrectMessages)
         app.showMessage(notPraise)
 
@@ -248,46 +307,51 @@ def modifiedAnswerQuestion(app,listOfPossibleChoices):
                 if answer == None:
                     app.wantInput == 'No'
                 else:
-                    app.finishedQuestion = True
-                    modifiedIsCorrect(targetAnswer,answer, app)
+                    endTime = time.time()
+                    diff = endTime = startTime
+                    modifiedIsCorrect(targetAnswer,answer, app, diff)
             else:
                 #Seleting an answer choice
                 if targetAnswer in listOfPossibleChoices:
-                    #if clicked, that is answerChoice number
                     if app.option1Chosen == True:
+                        endTime = time.time()
+                        diff = endTime - startTime
                         userAnswer  = listOfPossibleChoices[0]
-                        app.finishedQuestion = True
-                        modifiedIsCorrect(targetAnswer,userAnswer, app)
+                        modifiedIsCorrect(targetAnswer,userAnswer, app, diff)
                     elif app.option2Chosen == True:
+                        endTime = time.time()
+                        diff = endTime - startTime
                         userAnswer = listOfPossibleChoices[1]
-                        app.finishedQuestion = True
-                        modifiedIsCorrect(targetAnswer,userAnswer, app)
+                        modifiedIsCorrect(targetAnswer,userAnswer, app, diff)
                     elif app.option3Chosen == True:
+                        endTime = time.time()
+                        diff = endTime - startTime
                         userAnswer = listOfPossibleChoices[2]
-                        app.finishedQuestion = True
-                        modifiedIsCorrect(targetAnswer,userAnswer, app)
+                        modifiedIsCorrect(targetAnswer,userAnswer, app, diff)
                     elif app.option4Chosen == True:
+                        endTime = time.time()
+                        diff = endTime - startTime
                         userAnswer = listOfPossibleChoices[3]
-                        app.finishedQuestion = True
-                        modifiedIsCorrect(targetAnswer,userAnswer, app)
-
+                        modifiedIsCorrect(targetAnswer,userAnswer, app, diff)
     elif defaultTimeLimit <= 0:
         app.showMessage("Time's Up!")
         app.showMessage('Please Press Right or Click Next to Continue')
+        
 
 #Automatically move on to next flashcard card, Doing stage
 def timerFired(app):
     if app.paused == False:
-        if app.startQuestion == True:
-            app.baseProblemTime -= 1
-            app.timeTaken += 1
+        app.baseProblemTime -= 1
+        app.timeTaken += 1
+        if app.finishedQuestion == True:
+            app.baseProblemTime = 30
+            app.timeTaken = 0
         
 def practiceModeRedrawAll(app,canvas):
     characterChoices = list(character_dict.values())
     listOfPossibleChoices =(random.sample(characterChoices, k=4))
     app.practiceFlashCard.drawTimedFlashCard1(canvas, app)                    
-    drawAnswerChoices(app,canvas,listOfPossibleChoices)     
-    modifiedAnswerQuestion(app,listOfPossibleChoices)               
+    drawAnswerChoices(app,canvas,listOfPossibleChoices)                  
     #if app.makeFlashCard == False and app.cardsToDo == 5:
         
         
@@ -297,7 +361,7 @@ def practiceModeRedrawAll(app,canvas):
     #     app.newKey = getRandomKey()
     #     drawNewCard(app,canvas)  
     canvas.create_text(app.cx, app.cy*1.2, font = 'Arial', 
-    text ="Please Select/Input\nthe Best Answer", fill = 'black')
+    text ="Please Select/Input the Best Answer", fill = 'black')
     if (app.cardsToLearn == 0):
         app.phase = 'transition'
    
