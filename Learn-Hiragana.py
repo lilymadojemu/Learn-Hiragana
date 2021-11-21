@@ -36,7 +36,7 @@ def appStarted(app):
     app.cardsLearned = 0
     app.cardsPracticed = 0
     #time alloted to answer each question during practice phase
-    app.baseProblemTime = 700
+    app.baseProblemTime = 100
     #Checks/Determines if a card has been flipped or not
     app.isFlipped = False
     #Checks if a "continue key" right) has been pressed to
@@ -79,8 +79,15 @@ def appStarted(app):
     app.streak = False
     app.startQuestion = False
     app.finishedQuestion = False
+    app.option1Chosen = False
+    app.option2Chosen = False
+    app.option3Chosen = False
+    app.option4Chosen = False
+    #Extras
     app.startBackground = app.loadImage('background.jpg')
-
+    app.lightMode = True
+    
+    app.DarkMode = False
 
 #mousePressed of different phases
 def mousePressed(app,event):

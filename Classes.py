@@ -123,7 +123,7 @@ class FlashCard(object):
         #                         fill = 'bisque')
         canvas.create_image(app.cx, app.cy, 
                             image=ImageTk.PhotoImage(app.image1))               
-        canvas.create_text(app.cx//3.3, app.cy//2,font = 'Arial',
+        canvas.create_text(app.cx//3.3, app.cy//2,font = 'Arial 15',
     text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
                             fill = 'black')
         canvas.create_text(app.cx*1.5, app.cy//2,font = 'Arial',

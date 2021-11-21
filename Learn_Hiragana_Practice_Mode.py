@@ -5,6 +5,7 @@ correctAnswers = dict()
 isCorrectKey = list()
 incorrectAnswers = dict()
 practiceHiraganaAndVocab = list(overall_dict.keys())
+character_dict
 print(practiceHiraganaAndVocab)
 toBePracticed = copy.deepcopy(overall_dict)
 alreadyPracticed = dict()
@@ -135,32 +136,54 @@ def answerQuestion(app,canvas):
 
 def getQuestionType():
     randomQuestionType = random.randint(1,4)
-    return randomQuestionType
+    testingType = 1
+    return testingType
 
 def drawAnswerChoices(app,canvas,listOfChoices):
     #Option 1
     randomChoice1 = listOfChoices[0]
-    canvas.create_rectangle(app.cx//2,app.cy//12,app.cx*1.5,app.cy//6, 
-    text =f'{randomChoice1}',  fill = 'plum')
-    #Baby Button
-    canvas.create_oval(app.cx,app.cy,0,0, fill = 'white')
-    #Option 2
     randomChoice2 = listOfChoices[1]
-    canvas.create_rectangle(app.cx//2,app.cy//12,app.cx*1.5,app.cy//6, 
-    text = f'{randomChoice2}', fill = 'plum')
-    canvas.create_oval(app.cx,app.cy//2,0,0, text =f'',
-                    fill = 'white')
-    #Option 3
     randomChoice3 = listOfChoices[2]
-    canvas.create_rectangle(app.cx//2,app.cy//12,app.cx*1.5,app.cy//6,
-    text = f'{randomChoice3}', fill = 'plum')
-
-    canvas.create_oval(app.cx,app.cy//4,0,0, fill = 'white')
-    #Option 4
     randomChoice4 = listOfChoices[3]
-    canvas.create_rectangle(app.cx//2,app.cy//12,app.cx*1.5,app.cy//6, 
-    text = f'{randomChoice4}', fill = 'plum')
-    canvas.create_oval(app.cx,app.cy//6,0,0, fill = 'white')
+
+    canvas.create_rectangle(app.cx*1.3,
+                            app.cy*1.3,
+                            app.cx//2,
+                            app.cy*1.4, 
+                            fill = 'pale violet red')
+    canvas.create_text(app.cx//2,app.cy//12,text = f'{randomChoice1}', 
+    fill ='black' )
+    #canvas.create_oval(app.cx,app.cy,0,0, fill = 'navajo white')
+    #Option 2
+    
+    canvas.create_rectangle(app.cx*1.3,
+                            app.cy*1.4,
+                            app.cx//2,
+                            app.cy*1.5, 
+                            fill = 'plum')
+    canvas.create_text(app.cx//2,app.cy//12,text = f'{randomChoice2}', 
+    fill ='black' )
+    #canvas.create_oval(app.cx,app.cy//2,0,0, fill = 'navajo white')
+    #Option 3
+   
+    canvas.create_rectangle(app.cx*1.3,
+                            app.cy*1.5,
+                            app.cx//2,
+                            app.cy*1.6,
+                            fill = 'red')
+    canvas.create_text(app.cx//2,app.cy//12,text = f'{randomChoice3}', 
+    fill ='black' )
+    #canvas.create_oval(app.cx,app.cy//4,0,0, fill = 'navajo white')
+    #Option 4
+    
+    canvas.create_rectangle(app.cx*1.3,
+                            app.cy*1.6,
+                            app.cx//2,
+                            app.cy*1.7,
+                            fill = 'sandy brown')
+    canvas.create_text(app.cx//2,app.cy//12, text = f'{randomChoice4}', 
+    fill ='black')
+    #canvas.create_oval(app.cx,app.cy//6,0,0, fill = 'navajo white')
 
 #keep randomizing list until targetAnswer in list of possible answers
 def practiceMode_keyPressed(app,event):
@@ -183,25 +206,35 @@ def practiceMode_keyPressed(app,event):
         app.wantInput = 'Yes'
 
 def practice_mousePressed(app,event):
-    if event.key == 'Up':
-        app.showMessage("Went up!")
+    pass
+    # if 
+    #     app.option1Chosen = True
+    # elif 
+    #     app.option2Chosen = True
+    # elif 
+    #     app.option3Chosen = True
+    # elif 
+    #     app.option4Chosen = True
+    
 
 def modifiedIsCorrect(targetAnswer,answerChoice, app):
     correctMessages = ["That's Correct!", "You're the best!", 
                             "You're a Hiragana Expert!"]
     incorrectMessages = ["Sorry, that's incorrect","Better luck next time!"]
     #may need to be changed for other question types
-    if answerChoice == targetAnswer and app.finishedQuestion == True:
+    if (answerChoice == character_dict[targetAnswer] and 
+        app.finishedQuestion == True):
         storeCorrectIncorrect(targetAnswer,answerChoice, True, app)
         praise = random.choice(correctMessages)
         app.showMessage(praise)
-    elif answerChoice != targetAnswer and app.finishedQuestion == True:
+    elif( answerChoice != character_dict[targetAnswer] and
+         app.finishedQuestion == True):
         #defaulQuestionTime - time user takes to answer a question
         storeCorrectIncorrect(targetAnswer,answerChoice, False,app)
         notPraise = random.choice(incorrectMessages)
         app.showMessage(notPraise)
 
-def modifiedAnswerQuestion(app,canvas):
+def modifiedAnswerQuestion(app,listOfPossibleChoices):
     startTime = time.time()
     defaultTimeLimit = app.baseProblemTime
     #timeDifference = defaultTimeLimit = timeTaken
@@ -219,14 +252,25 @@ def modifiedAnswerQuestion(app,canvas):
                     modifiedIsCorrect(targetAnswer,answer, app)
             else:
                 #Seleting an answer choice
-                listOfPossibleChoices =(random.sample(practiceHiraganaAndVocab, 
-                                        k=4))
                 if targetAnswer in listOfPossibleChoices:
-                    #drawAnswerChoices(app,canvas,listOfPossibleChoices)
                     #if clicked, that is answerChoice number
-                    userAnswer  = app.answerChoice
-                    app.finishedQuestion = True
-                    modifiedIsCorrect(targetAnswer,userAnswer, app)
+                    if app.option1Chosen == True:
+                        userAnswer  = listOfPossibleChoices[0]
+                        app.finishedQuestion = True
+                        modifiedIsCorrect(targetAnswer,userAnswer, app)
+                    elif app.option2Chosen == True:
+                        userAnswer = listOfPossibleChoices[1]
+                        app.finishedQuestion = True
+                        modifiedIsCorrect(targetAnswer,userAnswer, app)
+                    elif app.option3Chosen == True:
+                        userAnswer = listOfPossibleChoices[2]
+                        app.finishedQuestion = True
+                        modifiedIsCorrect(targetAnswer,userAnswer, app)
+                    elif app.option4Chosen == True:
+                        userAnswer = listOfPossibleChoices[3]
+                        app.finishedQuestion = True
+                        modifiedIsCorrect(targetAnswer,userAnswer, app)
+
     elif defaultTimeLimit <= 0:
         app.showMessage("Time's Up!")
         app.showMessage('Please Press Right or Click Next to Continue')
@@ -239,10 +283,14 @@ def timerFired(app):
             app.timeTaken += 1
         
 def practiceModeRedrawAll(app,canvas):
-    if app.makeFlashCard == False and app.cardsToDo == 5:
-        app.practiceFlashCard.drawTimedFlashCard1(canvas, app)
-        #modifiedAnswerQuestion(app,canvas) 
-        #drawAnswerChoices(app,canvas,listOfPossibleChoices)
+    characterChoices = list(character_dict.values())
+    listOfPossibleChoices =(random.sample(characterChoices, k=4))
+    app.practiceFlashCard.drawTimedFlashCard1(canvas, app)                    
+    drawAnswerChoices(app,canvas,listOfPossibleChoices)     
+    modifiedAnswerQuestion(app,listOfPossibleChoices)               
+    #if app.makeFlashCard == False and app.cardsToDo == 5:
+        
+        
     # # elif app.makeFlashCard == True and app.cardsToDo >= 0:
     # #     app.flashCard.drawFlashCard(canvas,app)
     # elif app.makeFlashCard == True and app.cardsToDo >= 0:

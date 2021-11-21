@@ -22,7 +22,7 @@ def intro_mousePressed(app,event):
     if (app.width//4 <= event.x and 
         event.x >= app.width//6 and app.height//10 <= event.y and 
         event.y >= app.height//5):
-        app.showMessage('Lets Learn Something New Today! ≧◠‿◠≦✌')
+        app.showMessage("Let's Practice! ≧◠‿◠≦✌")
         app.phase = 'practice'
 
 #Initiate Learning Mode
@@ -58,10 +58,11 @@ def drawLetsTryitButton(app,canvas):
                             app.cy*1.3, 
                             fill = 'pale violet red')
     canvas.create_text(app.cx*1.5,app.cy*1.4,
-                        font = 'Arial',  text = "Let's Try it!", fill = 'black') 
+                        font = 'Arial',  text = "Let's Practice!", 
+                        fill = 'black') 
 def startScreenRedrawall(app,canvas):
-    canvas.create_text(app.cx, 10, font = 'Arial',  
-                        text = "Let's Learn Hiragana!", fill = 'thistle')
+    canvas.create_text(app.cx, app.cy, font = 'Arial 24',  
+                        text = "Let's Learn Hiragana!", fill = 'navajo white')
     drawLetsLearnButton(app,canvas)
     drawLetsTryitButton(app,canvas)
     drawProfileSelectButton(app,canvas)
