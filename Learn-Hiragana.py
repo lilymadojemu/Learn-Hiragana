@@ -13,6 +13,7 @@ from User_Profile_Select_Screen import *
 from Learn_Hiragana_Learning_Mode import *
 from Learn_Hiragana_Practice_Mode import *
 from Transition_Screen import *
+from Settings_Screen import*
 import time, random
 
 def appStarted(app):
@@ -24,69 +25,73 @@ def appStarted(app):
     app.phase = "start"
     app.cx = app.width//2
     app.cy = app.height//2
-    #Level of vocab/ Character knowledge
-    app.characterLevel = 0
-    app.vocabLevel = 0
-    #During Practice stage, refers to time limit user is given to select answer
-    app.paused = False
-    #Number of flashcards that will appear in learning stage
-    app.cardsToLearn = 5
-    #Number of flashcards that will appear in practice phase
-    app.cardsToDo = 5
-    app.cardsLearned = 0
-    app.cardsPracticed = 0
-    #time alloted to answer each question during practice phase
-    app.baseProblemTime = 30
-    #Checks/Determines if a card has been flipped or not
-    app.isFlipped = False
+    app.frontcx = app.width//2
+    app.frontcy = app.height//2
+    app.backcx = app.width//2
+    app.backcy = app.height//2
+    app.textcx = app.width//2
+    app.textcy = app.height//2
+
+    #Important/Good to have
+
+    #Overall dictionary with hiragana and vocab 
+    app.bigDictionary = overall_dict
+    #Stagnant list of all hiragana characters
+    app.hiraganaList = hiraganaList
+    #Overall vocabulary Dictionary
+    app.vocabularyDictionary = vocabulary_dict    
+    #Overall character dictionary
+    app.characterDictionary = character_dict
+    #Takes in all of the flashcards a user has seen Overall
+    # app.seenFlashCards = dict()
+    #Overall hiragana flashcards user has seen
+    # app.seenHiraganaFlashCards = dict()
+    # #Overall vocabulary flashcards user has seen
+    # app.seenVocabFlashCards = dict()
+    #Learning Phase    
     #Checks if a "continue key" right) has been pressed to
     # move on to next Flashcard
     app.isContinueKeyPressed = False
     #Checks if "back key" (left) has been pressed to go to a previous card
     app.isBackKeyPressed = False
-    #Determines if a new flash card will be shown/made
-    app.makeFlashCard = False
-    app.makeOldFlashCard = False
-
-    #default flash card, key value
-    getHiraganaOrVocab(possibleKey)
-    app.flashCard = FlashCard(possibleKey,overall_dict[possibleKey])
-    app.practiceFlashCard = FlashCard(charaKey, character_dict[charaKey])
-
-    #Overall hiragana flashcards user has seen
-    # app.seenHiraganaFlashCards = dict()
-    # #Overall vocabulary flashcards user has seen
-    # app.seenVocabFlashCards = dict()
-    # #Takes in all of the flashcards a user has seen
-    # app.seenFlashCards = dict()
-    #Decides whether a flashcard appearing will be a 
-    # hiragana card or a vocab card
-    app.hiraganaOrVocab = random.randint(1,2)
-    app.newKey = getRandomKey()
-    #Overall character dictionary
-    app.characterDictionary = character_dict
-    # #Overall vocabulary Dictionary
-    # app.vocabularyDictionary = vocabulary_dict
-    # #Overall dictionary with hiragana and vocab 
-    # app.bigDictionary = overall_dict
-    #Stagnant list of all hiragana characters
-    app.hiraganaList = hiraganaList
-    #Information of each user
-    #User Profile
-    app.userProfiles = dict()
-    app.wantInput = False
     app.image1 = app.loadImage('flashcard.jpg')
-    #Practice Phase
-    #Determines if user has gotten answers correct from
-    app.streak = False
+    app.image2 = app.loadImage('flashcardBack.jpg')
+    app.makeOldFlashCard = False 
+    app.makeFlashCard = False
+    app.firstKey = getRandomKey()   
+    #getHiraganaOrVocab(app.firstKey)
+    app.flashCard = FlashCard(app.firstKey,overall_dict[app.firstKey])
+    app.newKey = getRandomKey()    
+    #Checks/Determines if a card has been flipped or not
+    app.isFlipped = False
+    #Number of flashcards that will appear in learning stage
+    app.cardsToLearn = 5
+    app.cardsLearned = 0
+
+    #Practice Phase      
+    #Level of vocab/ Character knowledge
+    app.characterLevel = 0
+    app.vocabLevel = 0  
+    #Number of flashcards that will appear in practice phase
+    app.cardsToDo = 5   
+    app.cardsPracticed = 0
+    app.practiceFlashCard = FlashCard(charaKey, character_dict[charaKey])
+    #time alloted to answer each question during practice phase
+    app.baseProblemTime = 30
+    app.timeTaken = 0    
+    #During Practice stage, refers to time limit user is given to select answer
+    app.paused = False
+    app.wantInput = False
     app.startQuestion = False
     app.finishedQuestion = False
     app.option1Chosen = False
     app.option2Chosen = False
     app.option3Chosen = False
     app.option4Chosen = False
-    app.timeTaken = 0
-    #Extras
+    #Users
+    app.userProfiles = dict()
+    #Extras 
+    app.streak = False
     app.startBackground = app.loadImage('background.jpg')
     app.lightMode = True
     app.lightPracticeBackground = app.loadImage('day.jpg')
@@ -96,7 +101,8 @@ def appStarted(app):
     app.darkTransitionBackground = app.loadImage('darkConfetti.jpg')
     app.lightSettingsBackground = app.loadImage('lightSettings.jpg')
     app.darkSettingsBackground = app.loadImage('darkSettings.gif')
-    
+    app.lightLearningBackground = app.loadImage('lightLearn.jpg')
+    app.darkLearningBackground = app.loadImage('darkLearn.gif')
     #Testing
     app.messages = ['appStarted']
 
@@ -127,9 +133,7 @@ def keyPressed(app,event):
         learningMode_keyPressed(app,event)
     elif app.phase == 'practice':
         practiceMode_keyPressed(app,event)
-def keyRelease(app,event):
-    if app.phase == 'learning':
-        learning_keyReleased(app, event)
+
 #The redrawAll's of different phases
 def redrawAll(app,canvas):
     if app.phase == 'start':
@@ -137,8 +141,15 @@ def redrawAll(app,canvas):
                             image=ImageTk.PhotoImage(app.startBackground))
         startScreenRedrawall(app,canvas)
     elif app.phase == 'learning':
-        learningModeRedrawAll(app,canvas)
-        #I think this continuous state is why answers keep appearing
+        if app.lightMode == True:
+            canvas.create_image(800, 800, 
+                            image=ImageTk.PhotoImage(app.lightLearningBackground))
+            learningModeRedrawAll(app,canvas)
+        elif app.darkMode == True:
+            canvas.create_image(800, 800, 
+                        image=ImageTk.PhotoImage(app.darkLearningBackground))
+            learningModeRedrawAll(app,canvas)
+    #I think this continuous state is why answers keep appearing
     elif app.phase == 'practice':
         if app.lightMode == True:
             canvas.create_image(800, 800, 
@@ -165,12 +176,20 @@ def redrawAll(app,canvas):
         if app.lightMode == True:
             canvas.create_image(800, 800, 
                             image=ImageTk.PhotoImage(app.startBackground))
+            settings_redrawAll(app,canvas)
         elif app.darkMode == True:
             canvas.create_image(800, 800, 
                             image=ImageTk.PhotoImage(app.startBackground))
-        pass
+            settings_redrawAll(app,canvas)
+
 def mouseMoved(app, event):
     app.messages.append(f'mouseMoved at {(event.x, event.y)}')
+
+def timerFired(app): 
+    if app.phase == 'learning':
+         learning_timerFired(app)
+    elif app.phase == 'practice':
+        practice_timerFired(app)
 
 def letsLearnHiragana():
     runApp(width = 800, height = 800)

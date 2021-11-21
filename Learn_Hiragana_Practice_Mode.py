@@ -1,17 +1,15 @@
 from Classes import*
 from Learn_Hiragana_Learning_Mode import*
 
-correctAnswers = dict()
-isCorrectKey = list()
-incorrectAnswers = dict()
 practiceHiraganaAndVocab = list(overall_dict.keys())
 toBePracticed = copy.deepcopy(overall_dict)
 alreadyPracticed = dict()
 #will form basis for review mode
 toBeReview = dict()
 knowledgeable = dict()
-answerStreak = list()
 
+#Extras
+answerStreak = list()
 def hasStreak(answerStreak):
     for i in range(len(answerStreak)):
         for j in range (i+1,len(answerStreak)):
@@ -36,8 +34,9 @@ def getPracticeHiraganaOrVocab():
         del toBePracticed[hiraganaOrVocab] 
     return hiraganaOrVocab 
 
-
-
+correctAnswers = dict()
+isCorrectKey = list()
+incorrectAnswers = dict()
 def isCorrect(app,targetAnswer,answerChoice, questionType, timeDifference):
     correctMessages = ["That's Correct!", "You're the best!", 
                             "You're a Hiragana Expert!"]
@@ -342,7 +341,7 @@ def modifiedAnswerQuestion(app, targetAnswer, listOfPossibleChoices):
         
 
 #Automatically move on to next flashcard card, Doing stage
-def timerFired(app):
+def practice_timerFired(app):
     if app.paused == False:
         app.baseProblemTime -= 1
         app.timeTaken += 1
