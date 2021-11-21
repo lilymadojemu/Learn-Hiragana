@@ -72,9 +72,11 @@ def appStarted(app):
     #Stagnant list of all hiragana characters
     app.hiraganaList = hiraganaList
     #Information of each user
+    #User Profile
     app.userProfiles = dict()
-    app.wantInput = 'No'
+    app.wantInput = False
     app.image1 = app.loadImage('flashcard.jpg')
+    #Practice Phase
     #Determines if user has gotten answers correct from
     app.streak = False
     app.startQuestion = False
@@ -95,6 +97,8 @@ def appStarted(app):
     app.lightSettingsBackground = app.loadImage('lightSettings.jpg')
     app.darkSettingsBackground = app.loadImage('darkSettings.gif')
     
+    #Testing
+    app.messages = ['appStarted']
 
 
 #mousePressed of different phases
@@ -139,7 +143,7 @@ def redrawAll(app,canvas):
         if app.lightMode == True:
             canvas.create_image(800, 800, 
                         image=ImageTk.PhotoImage(app.lightPracticeBackground))
-            if app.makeFlashCard == True:
+            if app.startQuestion == True:
                 practiceModeRedrawAll(app,canvas)
         elif app.darkMode == True:
             canvas.create_image(800, 800, 
@@ -165,6 +169,8 @@ def redrawAll(app,canvas):
             canvas.create_image(800, 800, 
                             image=ImageTk.PhotoImage(app.startBackground))
         pass
+def mouseMoved(app, event):
+    app.messages.append(f'mouseMoved at {(event.x, event.y)}')
 
 def letsLearnHiragana():
     runApp(width = 800, height = 800)
