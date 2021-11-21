@@ -26,7 +26,6 @@ class FlashCard(object):
         
         #Key its based on
     def drawFlashCard(self, canvas, app):
-        global font
         canvas.create_image(app.cx, app.cy, 
                             image=ImageTk.PhotoImage(app.image1))    
         canvas.create_text(app.cx//3, app.cy//5.5,font = 'Arial',
@@ -51,9 +50,9 @@ class FlashCard(object):
                 canvas.create_image(app.cx, app.cy, 
                             image=ImageTk.PhotoImage(app.image1))  
                 #The Pronunciation of Hiragana Character
-                canvas.create_text(app.cx, app.cy//2,font = 'Arial',
-                            text = f"{romanji}\n{pronunciation}", 
-                                fill = 'medium aquamarine')
+                canvas.create_text(app.cx,app.cy,font =('Helvetica','20','bold')
+                , text = f"{romanji}\n as in {pronunciation}", 
+                fill = 'medium aquamarine')
         #Vocabulary
         elif len(self.frontText) != 1:
                 if app.isFlipped == False:
@@ -75,13 +74,13 @@ class FlashCard(object):
                         threeWordRomanji = ""
                         for c in range(len(currRomanji)):
                             threeWordRomanji += currRomanji[c]
-                        canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                        canvas.create_text(app.cx,app.cy,font = 'Arial',
                     text = f"{threeWordRomanji}\n{translation1}{translation2}", 
                                     fill = 'medium aquamarine')
                     else:
                         wordRomanji = self.backText[0]
                         translation= self.backText[1]
-                        canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                        canvas.create_text(app.cx,app.cy,font = 'Arial',
                                     text = f"{wordRomanji}\n{translation}", 
                                         fill = 'medium aquamarine')
 
@@ -111,13 +110,14 @@ class FlashCard(object):
         #Make app.cx and app.cy smaller until it reaches the center
         # app.cx = app.width//2
         # app.cy = app.height//2
-        if app.cx < app.width//4 and app.cy < app.height//4:
-            app.cx -= 1
-            app.cy -= 1
-            self.drawFlashCard.config(app.cx,app.cy, font = 'Arial 15')
-            self.after(1, self.blinkSmallerLearning(app))
-        elif app.cx == app.width//4 and app.cy == app.height//4:
-            self.blinkDefaultLearning(app)
+        if app.isFlipped == True:
+            #if app.cx < app.width//4 and app.cy < app.height//4:
+                app.cx -= 1
+                app.cy -= 1
+                #self.drawFlashCard.config(app.cx,app.cy, font = 'Arial 15')
+                #self.after(1, self.blinkSmallerLearning(app))
+            #elif app.cx == app.width//4 and app.cy == app.height//4:
+               # self.blinkDefaultLearning(app)
     def blinkDefaultLearning(self,app):
         if app.cx == app.width//4 and app.cy == app.height//4:
             app.cx += 1
@@ -133,13 +133,11 @@ class FlashCard(object):
             app.cy -= 1
             self.drawTimedFlashCard(app.cx,app.cy)
             self.after(10,self.animatePractice)
-    # def getMeaning(self, word, app):
-    #     if word in characterDictionary:
-    #         return characterDictionary[word]
-    #     elif word in vocabularyDictionary:
-    #         return vocabularyDictionary[word]
-    #     else:
-    #         app.showMessage('Sorry, we don't have that word')
+    def getMeaning(self, word, app):
+        if word in app.bigDictionary:
+            return app.bigDictionary[word]
+        else:
+            app.showMessage("Sorry, we don't have that word\nPress d to add it or q to quit!")
     
 
 
