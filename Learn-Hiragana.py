@@ -43,7 +43,6 @@ def appStarted(app):
     #Checks if "back key" (left) has been pressed to go to a previous card
     app.isBackKeyPressed = False
     #Determines if a new flash card will be shown/made
-    app.makeFlashCard = False
 
     app.makeOldFlashCard = False
 
@@ -101,7 +100,9 @@ def keyPressed(app,event):
         learningMode_keyPressed(app,event)
     elif app.phase == 'practice':
         practiceMode_keyPressed(app,event)
-
+def keyRelease(app,event):
+    if app.phase == 'learning':
+        learning_keyReleased(app, event)
 #The redrawAll's of different phases
 def redrawAll(app,canvas):
     if app.phase == 'start':

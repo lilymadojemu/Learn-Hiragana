@@ -46,81 +46,81 @@ class FlashCard(object):
                                 fill = 'bisque')
         # canvas.create_image(app.cx, app.cy, 
         #                     image=ImageTk.PhotoImage(app.image1))
-        canvas.create_text(app.cx//2, app.cy//5,font = 'Arial',
-    text = f"Kana Level:{app.characterLevel},\nVocab Level:{app.vocabLevel}", 
+        canvas.create_text(app.cx//3, app.cy//5.5,font = 'Arial',
+    text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
                             fill = 'black')
 
         if app.phase == 'learning':
-            canvas.create_text(app.cx, app.cy,font = 'Arial',
+            canvas.create_text(app.cx*1.3, app.cy//6,font = 'Arial',
             text = f"Cards Left:{app.cardsToLearn}", fill = 'black')
 
         elif app.phase == 'practice':
-            canvas.create_text(app.cx//1.5, app.cy,font = 'Arial',
+            canvas.create_text(app.cx*1.3, app.cy//6,font = 'Arial',
                                 text = f"Cards Left:{app.cardsToDo}", 
                                 fill = 'medium aquamarine')
         #Hiragana
-        # if len(self.frontText) == 1:
+        if len(self.frontText) == 1:
 
-        #     print(self.frontText)
-        #     if app.isFlipped == False:
-        #         #Exact Placement to be changed
-        #         #The Hiragana Character
-        #         canvas.create_text(app.cx,app.cy//2,
-        #                         font = 'Arial',
-        #                         text = f"{self.frontText}", 
-        #                         fill = 'hot pink')
-        #     #Back of card
-        #     elif app.isFlipped == True:
-        #         romanji = self.backText[0]
-        #         pronunciation = self.backText[1]
-        #         canvas.create_rectangle(app.cx*1.5,
-        #                     app.cy//4,
-        #                     app.cx//4,
-        #                     app.cy, 
-        #                     fill = 'olive drab')
-        #         #The Pronunciation of Hiragana Character
-        #         canvas.create_text(app.cx, app.cy//2,font = 'Arial',
-        #                     text = f"{romanji}\n{pronunciation}", 
-        #                         fill = 'medium aquamarine')
-        # #Vocabulary
-        # elif len(self.frontText) != 1:
-        #         if app.isFlipped == False:
-        #             #Exact Placement to be changed
-        #             canvas.create_text(app.cx,app.cy//2,
-        #                             font = 'Arial',
-        #                             text = f"{self.frontText}", 
-        #                             fill = 'thistle')
-        #         #Back of card
-        #         elif app.isFlipped == True:
-        #             if len(self.backText) == 3:
-        #                 currRomanji = list(self.backText[0])
-        #                 translation1= self.backText[1]
-        #                 translation2=self.backText[2]
-        #                 currRomanji.insert(7," ")
-        #                 currRomanji.insert(10," ")
-        #                 threeWordRomanji = ""
-        #                 for c in range(len(currRomanji)):
-        #                     threeWordRomanji += currRomanji[c]
+            print(self.frontText)
+            if app.isFlipped == False:
+                #Exact Placement to be changed
+                #The Hiragana Character
+                canvas.create_text(app.cx,app.cy//2,
+                                font = 'Arial',
+                                text = f"{self.frontText}", 
+                                fill = 'hot pink')
+            #Back of card
+            elif app.isFlipped == True:
+                romanji = self.backText[0]
+                pronunciation = self.backText[1]
+                canvas.create_rectangle(app.cx*1.5,
+                            app.cy//4,
+                            app.cx//4,
+                            app.cy, 
+                            fill = 'olive drab')
+                #The Pronunciation of Hiragana Character
+                canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                            text = f"{romanji}\n{pronunciation}", 
+                                fill = 'medium aquamarine')
+        #Vocabulary
+        elif len(self.frontText) != 1:
+                if app.isFlipped == False:
+                    #Exact Placement to be changed
+                    canvas.create_text(app.cx,app.cy//2,
+                                    font = 'Arial',
+                                    text = f"{self.frontText}", 
+                                    fill = 'thistle')
+                #Back of card
+                elif app.isFlipped == True:
+                    if len(self.backText) == 3:
+                        currRomanji = list(self.backText[0])
+                        translation1= self.backText[1]
+                        translation2=self.backText[2]
+                        currRomanji.insert(7," ")
+                        currRomanji.insert(10," ")
+                        threeWordRomanji = ""
+                        for c in range(len(currRomanji)):
+                            threeWordRomanji += currRomanji[c]
 
-        #                 canvas.create_rectangle(app.cx*1.5,
-        #                         app.cy//4,
-        #                         app.cx//4,
-        #                         app.cy, 
-        #                         fill = 'olive drab')
-        #                 canvas.create_text(app.cx, app.cy//2,font = 'Arial',
-        #             text = f"{threeWordRomanji}\n{translation1}{translation2}", 
-        #                             fill = 'medium aquamarine')
-        #             else:
-        #                 wordRomanji = self.backText[0]
-        #                 translation= self.backText[1]
-        #                 canvas.create_rectangle(app.cx*1.5,
-        #                             app.cy//4,
-        #                             app.cx//4,
-        #                             app.cy, 
-        #                             fill = 'olive drab')
-        #                 canvas.create_text(app.cx, app.cy//2,font = 'Arial',
-        #                             text = f"{wordRomanji}\n{translation}", 
-        #                                 fill = 'medium aquamarine')
+                        canvas.create_rectangle(app.cx*1.5,
+                                app.cy//4,
+                                app.cx//4,
+                                app.cy, 
+                                fill = 'olive drab')
+                        canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                    text = f"{threeWordRomanji}\n{translation1}{translation2}", 
+                                    fill = 'medium aquamarine')
+                    else:
+                        wordRomanji = self.backText[0]
+                        translation= self.backText[1]
+                        canvas.create_rectangle(app.cx*1.5,
+                                    app.cy//4,
+                                    app.cx//4,
+                                    app.cy, 
+                                    fill = 'olive drab')
+                        canvas.create_text(app.cx, app.cy//2,font = 'Arial',
+                                    text = f"{wordRomanji}\n{translation}", 
+                                        fill = 'medium aquamarine')
     # def drawTimedFlashCard(self, canvas, app):
     #             canvas.create_rectangle(app.cx*1.5,
     #                             app.cy//4,
