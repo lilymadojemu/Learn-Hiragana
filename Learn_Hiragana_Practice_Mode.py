@@ -15,20 +15,22 @@ def hasStreak(answerStreak):
         for j in range (i+1,len(answerStreak)):
             if answerStreak[i][j] == 1:
                 return True
-
-def getPracticeHiraganaOrVocab():
+def getRandomPracticeKey(app):
+    for randomKey in random.shuffle(app.prevFlashCard):
+        return randomKey
+def getPracticeHiraganaOrVocab(app):
     hiraganaOrVocab = getRandomKey()
     #Base: Can store in practice
     #Inner: Store whether correct/incorrect
     if hiraganaOrVocab in hiraganaList:
         hiraganaValue = toBeLearned[hiraganaOrVocab]
-        prevFlashCard[hiraganaOrVocab] = hiraganaValue 
+        app.prevFlashCard[hiraganaOrVocab] = hiraganaValue 
         seenHiraganaFlashCards[hiraganaOrVocab] = hiraganaValue 
         seenFlashCards[hiraganaOrVocab] = hiraganaValue 
         del toBePracticed[hiraganaOrVocab]      
     elif hiraganaOrVocab in vocabList:
         vocabValue = toBeLearned[hiraganaOrVocab]
-        prevFlashCard[hiraganaOrVocab] = vocabValue
+        app.prevFlashCard[hiraganaOrVocab] = vocabValue
         seenVocabFlashCards[hiraganaOrVocab] = vocabValue
         seenFlashCards[hiraganaOrVocab] = vocabValue
         del toBePracticed[hiraganaOrVocab] 
@@ -251,6 +253,7 @@ def practiceMode_keyPressed(app,event):
         app.showMessage("All your progress will be lost!")
         app.phase = 'start'
     elif event.key == 'Right':
+        getRandomPracticeKey(app)
         app.makeFlashCard = True
         if app.cardsToDo != 0:
             app.cardsToDo -= 1
