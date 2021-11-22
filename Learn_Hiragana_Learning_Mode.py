@@ -1,22 +1,13 @@
 from Classes import*
-
 from Populate_Values import*
-'''
-Overall Purpose: It is up to the user to read what is on the front and back of 
-the flashcards
-'''
-'''
-flipping cards
-
-be at a base position, want that base position to change when flipped
-Get base position and center and ending base position & center
-'''
 modifyListOfKeys = list(overall_dict.keys())
 toBeLearned = copy.deepcopy(overall_dict)
 #Track what flashcards have been seen overall
 seenFlashCards = dict()
 seenHiraganaFlashCards = dict()
 seenVocabFlashCards = dict()
+def learning_appStarted(app):
+    pass
 def getRandomKey():
     randomKey = random.choice(modifyListOfKeys)
     return randomKey
@@ -56,23 +47,10 @@ def drawPrevCard(app,canvas):
     previousFlashCard.drawFlashCard(canvas,app)
 
 
+
 #What is a flip, like a blink/flash, will need another background for back
 #Understanding from https://www.youtube.com/watch?v=kvd6i1mXec8
 #from https://coderedirect.com/questions/124487/simple-animation-using-tkinter
-# def blinkSmallerLearning(app):
-#     #Make app.cx and app.cy smaller until it reaches the center
-#     # app.cx = app.width//2
-#     # app.cy = app.height//2
-#     if app.cardcx < app.width//4 and app.cardcy < app.height//4:
-#         app.cardcx -= 100
-#         app.cardcy -= 100
-#     elif app.cx == app.width//4 and app.cy == app.height//4:
-#         blinkDefaultLearning(app)
-# def blinkDefaultLearning(app):
-#     if app.cardcx != app.width//2 and app.cardcy != app.height//2:
-#         app.cardx += 100
-#         app.cardcy += 100
-
 def learningMode_keyPressed(app,event):
     #flips front of flash card to back
     #flips back to front 
@@ -130,7 +108,7 @@ def learningMode_mousePressed(app,event):
         app.showMessage('Are you ready to practice?\n Press l to Continue!')
         
 def drawBackButton(app,canvas):
-    canvas.create_rectangle(app.cx//2,
+    canvas.create_rectangle(app.cx//1.5,
                             app.cy*1.45,
                             app.cx//-2,
                             app.cy*1.6, 
@@ -138,7 +116,7 @@ def drawBackButton(app,canvas):
     canvas.create_text(app.cx//1.5,app.cy*1.5,
                         font = 'Arial',  text = "Back", fill = 'black')
 def drawNextButton(app,canvas):
-    canvas.create_rectangle(app.cx*3,
+    canvas.create_rectangle(app.cx*2.5,
                             app.cy*1.45,
                             app.cx,
                             app.cy*1.6, 
@@ -147,12 +125,12 @@ def drawNextButton(app,canvas):
                         font = 'Arial',  text = "Next", fill = 'black')
 #Initiate Practice Mode
 def drawLetsTryitButton(app,canvas):
-    canvas.create_rectangle(app.cx*3,
+    canvas.create_rectangle(app.cx*2.5,
                             app.cy*1.45,
                             app.cx,
                             app.cy*1.6, 
                             fill = 'cadet blue')
-    canvas.create_text(app.cx*1.5,app.cy*1.15,
+    canvas.create_text(app.cx*1.5,app.cy*1.5,
                         font = 'Arial',  text = "Let's Try it!", fill = 'black')
                         
 def decreasingFrontCard(app):
