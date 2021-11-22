@@ -43,11 +43,12 @@ def appStarted(app):
     #Overall character dictionary
     app.characterDictionary = character_dict
     #Takes in all of the flashcards a user has seen Overall
-    # app.seenFlashCards = dict()
+    app.seenFlashCards = dict()
     #Overall hiragana flashcards user has seen
-    # app.seenHiraganaFlashCards = dict()
+    app.seenHiraganaFlashCards = dict()
     # #Overall vocabulary flashcards user has seen
-    # app.seenVocabFlashCards = dict()
+    app.seenVocabFlashCards = dict()
+    app.prevFlashCard= dict()
     #Learning Phase    
     #Checks if a "continue key" right) has been pressed to
     # move on to next Flashcard
@@ -61,13 +62,16 @@ def appStarted(app):
     app.firstKey = getRandomKey()   
     #getHiraganaOrVocab(app.firstKey)
     app.flashCard = FlashCard(app.firstKey,overall_dict[app.firstKey])
-    app.newKey = getRandomKey()    
+    app.newKey = getRandomKey()  
+    app.prevCard = app.firstKey
+    app.alreadyOn = None
     #Checks/Determines if a card has been flipped or not
     app.isFlipped = False
     #Number of flashcards that will appear in learning stage
     app.cardsToLearn = 5
     app.cardsLearned = 0
-
+    app.isGrowing = False
+    app.isShrinking = False
     #Practice Phase      
     #Level of vocab/ Character knowledge
     app.characterLevel = 0
@@ -181,6 +185,7 @@ def redrawAll(app,canvas):
             canvas.create_image(800, 800, 
                             image=ImageTk.PhotoImage(app.startBackground))
             settings_redrawAll(app,canvas)
+
 
 def mouseMoved(app, event):
     app.messages.append(f'mouseMoved at {(event.x, event.y)}')
