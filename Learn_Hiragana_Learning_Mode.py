@@ -21,7 +21,6 @@ def getHiraganaOrVocab(app,randomKey):
         seenFlashCards[hiraganaOrVocab] = hiraganaValue
         if (hiraganaOrVocab in modifyListOfKeys and 
             hiraganaOrVocab in toBeLearned):
-
             modifyListOfKeys.remove(hiraganaOrVocab)
             del toBeLearned[hiraganaOrVocab]      
     elif hiraganaOrVocab in vocabList:
