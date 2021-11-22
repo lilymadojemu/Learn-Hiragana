@@ -13,24 +13,20 @@ def intro_mousePressed(app,event):
         app.phase = 'learning'
     elif (app.width//2 <= event.x and event.x >= app.width//4 and 
             app.height//14 >= event.y):
-            app.showMessage('Profiles')
+            app.showMessage('Profiles 👋≧◉ᴥ◉≦')
             #app.phase = 'profileselect'
     elif (app.width//2 <= event.x and event.x >= app.width//4 and 
             app.height//6 >= event.y):
-            app.showMessage('Settings')
+            app.showMessage('Settings ʕ•́ᴥ•̀ʔっ')
             #app.phase = 'settings'
-    if (app.width//4 <= event.x and 
-        event.x >= app.width//6 and app.height//10 <= event.y and 
-        event.y >= app.height//5):
-        app.showMessage("Let's Practice! ≧◠‿◠≦✌")
-        app.phase = 'practice'
 
 #Initiate Learning Mode
 def drawLetsLearnButton(app,canvas):
     canvas.create_rectangle(app.cx//2,app.cy//12,app.cx*1.5,app.cy//6, 
                                 fill = 'plum')
     canvas.create_text(app.cx,app.cy//9,font = 'Arial', 
-                        text = "Let's Learn!", fill = 'medium aquamarine')
+                        text = "Let's Learn!", 
+                        fill = 'medium aquamarine')
 
 #End will be a button that goes to profile select
 #Will be dealt with later
@@ -50,20 +46,10 @@ def drawSettingsButton(app,canvas):
                             fill = 'pale violet red')
     canvas.create_text(app.cx,app.cy//3,
                         font = 'Arial',  text = "Settings", fill = 'grey')
-#Initiate Practice Mode
-def drawLetsTryitButton(app,canvas):
-    canvas.create_rectangle(app.cx*2,
-                            app.cy*1.5,
-                            app.cx,
-                            app.cy*1.3, 
-                            fill = 'pale violet red')
-    canvas.create_text(app.cx*1.5,app.cy*1.4,
-                        font = 'Arial',  text = "Let's Practice!", 
-                        fill = 'black') 
 def startScreenRedrawall(app,canvas):
     canvas.create_text(app.cx, app.cy, font = 'Arial 24',  
-                        text = "Let's Learn Hiragana!", fill = 'navajo white')
+                        text = "Let's Learn Hiragana!", 
+                        fill = 'navajo white')
     drawLetsLearnButton(app,canvas)
-    drawLetsTryitButton(app,canvas)
     drawProfileSelectButton(app,canvas)
     drawSettingsButton(app,canvas)

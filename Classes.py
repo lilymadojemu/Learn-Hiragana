@@ -51,10 +51,11 @@ class FlashCard(object):
                                 image=ImageTk.PhotoImage(app.image1))   
                     #Exact Placement to be changed
                     #The Hiragana Character
-                    canvas.create_text(app.textcx,app.textcy,
-                                    font = 'Arial 20',
-                                    text = f"{self.frontText}", 
-                                    fill = 'dark orchid')
+                    if app.isFrontShown == False:
+                        canvas.create_text(app.textcx,app.textcy,
+                                        font = 'Arial 20',
+                                        text = f"{self.frontText}", 
+                                        fill = 'dark orchid')
                 elif app.isShrinking == False and app.isGrowing == True:
                     canvas.create_image(app.backcx, app.backcy, 
                                 image=ImageTk.PhotoImage(app.image2))  
@@ -62,10 +63,11 @@ class FlashCard(object):
                     romanji = self.backText[0]
                     pronunciation = self.backText[1]
                     #The Pronunciation of Hiragana Character
-                    canvas.create_text(app.textcx,app.textcy,
-                                        font =('Helvetica','20','bold')
-                    , text = f"{romanji}\n as in {pronunciation}", 
-                    fill = 'medium aquamarine')
+                    if app.isBackShown == True:
+                        canvas.create_text(app.textcx,app.textcy,
+                                            font =('Helvetica','20','bold')
+                        , text = f"{romanji}\n as in {pronunciation}", 
+                        fill = 'medium aquamarine')
         #Vocabulary
         elif self.frontText in vocabList:
                 if app.isFlipped == False:
@@ -88,15 +90,19 @@ class FlashCard(object):
                         threeWordRomanji = ""
                         for c in range(len(currRomanji)):
                             threeWordRomanji += currRomanji[c]
-                        canvas.create_text(app.textcx,app.textcy,font = 'Arial',
+                        if app.isBackShown == True:
+                            canvas.create_text(app.textcx,app.textcy,
+                            font = 'Arial',
                     text = f"{threeWordRomanji}\n{translation1}{translation2}", 
-                                    fill = 'medium aquamarine')
+                                        fill = 'medium aquamarine')
                     else:
                         wordRomanji = self.backText[0]
                         translation= self.backText[1]
-                        canvas.create_text(app.textcx,app.textcy,font = 'Arial',
+                        if app.isBackShown == True:
+                            canvas.create_text(app.textcx,app.textcy,
+                            font = 'Arial',
                                     text = f"{wordRomanji}\n{translation}", 
-                                        fill = 'medium aquamarine')
+                                            fill = 'medium aquamarine')
 
     '''Question1 specific'''
     def drawTimedFlashCard1(self, canvas, app):

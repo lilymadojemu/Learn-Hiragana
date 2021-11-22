@@ -72,6 +72,8 @@ def appStarted(app):
     app.cardsLearned = 0
     app.isGrowing = False
     app.isShrinking = False
+    app.isFrontShown = True
+    app.isBackShown = False
     #Practice Phase      
     #Level of vocab/ Character knowledge
     app.characterLevel = 0
@@ -84,15 +86,19 @@ def appStarted(app):
     app.baseProblemTime = 30
     app.timeTaken = 0    
     #During Practice stage, refers to time limit user is given to select answer
+    app.currQuestionType = 0
     app.paused = False
     app.wantInput = False
     app.startQuestion = False
     app.finishedQuestion = False
+    #answer Choices
     app.option1Chosen = False
     app.option2Chosen = False
     app.option3Chosen = False
     app.option4Chosen = False
     app.listOfPossibleChoices = list()
+    #User input
+    app.userAnswer = None
     #Users
     app.userProfiles = dict()
     #Extras 
