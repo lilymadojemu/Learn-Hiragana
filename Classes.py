@@ -46,7 +46,7 @@ class FlashCard(object):
                                 fill = 'dark orchid')
             #Back of card
             elif app.isFlipped == True:
-                if app.isShrinking == True and app.isGrowing == False:
+                # if app.isShrinking == True and app.isGrowing == False:
                     canvas.create_image(app.frontcx, app.frontcy, 
                                 image=ImageTk.PhotoImage(app.image1))   
                     #Exact Placement to be changed
@@ -56,7 +56,7 @@ class FlashCard(object):
                                         font = 'Arial 20',
                                         text = f"{self.frontText}", 
                                         fill = 'dark orchid')
-                elif app.isShrinking == False and app.isGrowing == True:
+                # elif app.isShrinking == False and app.isGrowing == True:
                     canvas.create_image(app.backcx, app.backcy, 
                                 image=ImageTk.PhotoImage(app.image2))  
                     #Reach certain point before overlaying

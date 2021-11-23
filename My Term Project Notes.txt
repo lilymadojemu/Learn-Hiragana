@@ -1,0 +1,55 @@
+My Term Project Notes
+
+Notes:
+-Focusing only on HIRAGANA & words only using base HIRAGANA,
+---------------------------------------------------------------------
+Goals before Nov 23rd:
+Behind the Scences Stuff:
+- Decide on and Hardcode the material that the user will learn
+- Figure out how information will be presented using graphics & images
+- Learning Aspect(Focus on reading/Recognition until MVP)
+
+1. Different User Profilese
+    - Each profile should have a "customized experience" as noted below
+2. Dynamically change information presented based on user's input
+
+-----------------------------------------------------------------------
+After MVP
+3. Text Entry as imagined, if not just have user
+install an use a Japanese keyboard
+4. Add Listening component
+5. Automatically include words based on Frequency in newspaper and every speech
+        ^^^ Could be based off a frequency list found online ^^^
+6. Audio!!!
+'''
+
+Thoughts:
+can create a dictionary from textfile, using a very large dict though :(
+No direcr try again feature, the incorrecr word will just be added to some bank
+keeping track of what words were right and wrong and will output them later 
+according to that
+No separate review phase (for now)
+
+
+
+May be adapted:
+def userProfile(app,canvas):
+    enteredUser = input
+    canvas.create_text(app.cx//2,app.cy//2,
+    font = 'Arial', 
+    text = "Please enter Username and Password",
+    fill = 'Red')
+    for user in app.userProfiles:
+        if enteredUser not in userProfile:
+            username = input("Please create your username:")
+            password = input("Please create your password:")
+            app.userProfiles[username] = password
+            canvas.create_text(app.cx//2,app.cy//2,
+                font = 'Arial', 
+                text = "User Profile has been created, please log in again",
+                fill = 'Red')
+        elif app.userProfiles[user] == app.userProfiles[enteredUser]:
+                canvas.create_text(app.cx//2,app.cy//2,
+                font = 'Arial', 
+                text = f"Welcome {enteredUser}!, Click",
+                fill = 'Red')
