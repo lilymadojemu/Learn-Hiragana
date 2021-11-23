@@ -12,16 +12,15 @@ toBePracticed = copy.deepcopy(overall_dict)
 
 ###############################################################################
 def getRandomPracticeKey(app):
-    # if app.prevFlashCard != dict():
-    #     previousKeys = list()
-    #     for prevKey in app.prevFlashCard:
-    #         previousKeys.append(prevKey)
-    #     randomizedPrev = random.shuffle(previousKeys)
-    #     randomKey = random.choice(randomizedPrev)
-    #     return randomKey
-    #else:
-    randomKey = random.choice(modifyListOfKeys)
-    return randomKey
+    if app.prevFlashCard != dict():
+        previousKeys = list()
+        for prevKey in app.prevFlashCard:
+            previousKeys.append(prevKey)
+        randomKey = random.choice(previousKeys)
+        return randomKey
+    else:
+        randomKey = random.choice(modifyListOfKeys)
+        return randomKey
 
 def getQuestionType():
     randomQuestionType = random.randint(1,4)
@@ -291,13 +290,14 @@ def practiceMode_keyPressed(app,event):
         app.showMessage("All your progress will be lost!")
         app.phase = 'start'
     elif event.key == 'Right':
-        app.isFirst = False
         getRandomPracticeKey(app)
         app.listOfPossibleChoices = getAnswerChoices()  
         realTarget = app.practiceFlashCard.backText
         #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
         app.listOfPossibleChoices.insert(randrange(
                                 len(app.listOfPossibleChoices)+1),realTarget[0]) 
+        app.baseProblemTime = 30
+        app.timeTaken = 0
         app.makeFlashCard = True
         app.startQuestion = True
         app.finishedQuestion = False
@@ -311,6 +311,8 @@ def practiceMode_keyPressed(app,event):
         #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
         app.listOfPossibleChoices.insert(randrange(
                                 len(app.listOfPossibleChoices)+1),realTarget[0])  
+        app.baseProblemTime = 30
+        app.timeTaken = 0
         app.makeFlashCard = True
         app.startQuestion = True
         app.finishedQuestion = False
@@ -411,24 +413,22 @@ def modifiedAnswerQuestion(app, targetAnswer):
                         userAnswer = app.listOfPossibleChoices[3]
                         modifiedIsCorrect(targetAnswer,userAnswer, app, diff)
     elif defaultTimeLimit == 0:
-        app.showMessage('Please Press Right or Click Next to Continue')
+        app.showMessage("Time's Up! Please Press Right to Continue")
         
 
 #Automatically move on to next flashcard card, Doing stage
 def practice_timerFired(app):
+
     if app.paused == False:
         #app.listOfPossibleChoices = getAnswerChoices()  
         app.baseProblemTime -= 1
         app.timeTaken += 1
         if app.baseProblemTime == 0 and app.isContinueKeyPressed == False:
             app.finishedQuestion = True
-
-            app.baseProblemTime = 30
-            app.timeTaken = 0
         if app.makeFlashCard == True:
             app.currQuestionType = getQuestionType()
-        elif app.isFirst == True:
-            app.currQuestionType = getQuestionType()
+        # elif app.isFirst == True:
+        #     app.currQuestionType = getQuestionType()
 
 #############################################################################
 
@@ -564,7 +564,7 @@ def drawNextButton(app,canvas):
 def practiceModeRedrawAll(app,canvas):
     canvas.create_text(app.cx,app.cy, font = 'Arial 20',
                         text = 'Press s to Start!')
-    if app.makeFlashCard == True and app.isFirst == False:
+    if app.makeFlashCard == True:
         app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
         canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
     text ="Please Select/Input the Best Answer", fill = 'black')
@@ -574,14 +574,14 @@ def practiceModeRedrawAll(app,canvas):
         modifiedAnswerQuestion(app,myTarget)
     elif app.baseProblemTime == 0 or app.cardsToDo == 0:
         drawNextButton(app,canvas)  
-    elif app.isFirst == True:
-        app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
-        canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
-    text ="Please Select/Input the Best Answer", fill = 'black')
-        realTarget = app.practiceFlashCard.backText
-        myTarget = realTarget[0]
-        drawAnswerChoices(app,canvas)  
-        modifiedAnswerQuestion(app,myTarget)
+    # elif app.isFirst == True:
+    #     app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
+    #     canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
+    # text ="Please Select/Input the Best Answer", fill = 'black')
+    #     realTarget = app.practiceFlashCard.backText
+    #     myTarget = realTarget[0]
+    #     drawAnswerChoices(app,canvas)  
+    #     modifiedAnswerQuestion(app,myTarget)
 
     #if app.makeFlashCard == False and app.cardsToDo == 5:
         

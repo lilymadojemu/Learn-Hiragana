@@ -97,7 +97,6 @@ def appStarted(app):
     app.option3Chosen = False
     app.option4Chosen = False
     app.listOfPossibleChoices = list()
-    #User input
     app.userAnswer = None
     #Users
     app.userProfiles = dict()
@@ -140,10 +139,11 @@ def keyPressed(app,event):
         app.phase = 'learning'
     if event.key == 'l':
         app.phase = 'practice'
-    if app.phase == 'learning':
-        learningMode_keyPressed(app,event)
+        app.makeFlashCard = False
     elif app.phase == 'practice':
         practiceMode_keyPressed(app,event)
+    elif app.phase == 'learning':
+        learningMode_keyPressed(app,event)
 
 #The redrawAll's of different phases
 def redrawAll(app,canvas):

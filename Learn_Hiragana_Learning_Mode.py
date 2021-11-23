@@ -151,11 +151,8 @@ def learningMode_keyPressed(app,event):
         app.makeOldFlashCard = True
         if app.cardsToLearn != 0:
             app.cardsToLearn += 1
-
     elif event.key == 'r':
         app.phase = 'review'
-    elif event.key == 'l':
-        app.phase = 'practice'
 
 def learningMode_mousePressed(app,event):
     #Determines whether a card needs to be flip
