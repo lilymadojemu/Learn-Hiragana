@@ -2,7 +2,6 @@ from Classes import*
 from Learn_Hiragana_Learning_Mode import*
 from Populate_Values import*
 from random import randrange, sample
-
 def practice_appStarted(app):
     pass
 practiceHiraganaAndVocab = list(overall_dict.keys())
@@ -13,16 +12,16 @@ toBePracticed = copy.deepcopy(overall_dict)
 
 ###############################################################################
 def getRandomPracticeKey(app):
-    if app.prevFlashCard != dict():
-        previousKeys = list()
-        for prevKey in app.prevFlashCard:
-            previousKeys.append(prevKey)
-        randomizedPrev = random.shuffle(previousKeys)
-        randomKey = random.choice(randomizedPrev)
-        return randomKey
-    else:
-        randomKey = random.choice(modifyListOfKeys)
-        return randomKey
+    # if app.prevFlashCard != dict():
+    #     previousKeys = list()
+    #     for prevKey in app.prevFlashCard:
+    #         previousKeys.append(prevKey)
+    #     randomizedPrev = random.shuffle(previousKeys)
+    #     randomKey = random.choice(randomizedPrev)
+    #     return randomKey
+    #else:
+    randomKey = random.choice(modifyListOfKeys)
+    return randomKey
 
 def getQuestionType():
     randomQuestionType = random.randint(1,4)
@@ -87,7 +86,7 @@ def storeCorrectIncorrect(targetAnswer, questionCorrect, timeDifference, app):
             elif (targetAnswer not in correctAnswers and 
                 targetAnswer in incorrectAnswers):
                 #For now a clean slate
-                del incorrectAnswers[app.practiceFlashCard.frontText]
+                #del incorrectAnswers[app.practiceFlashCard.frontText]
                 correctAnswers[app.practiceFlashCard.frontText] = answerChoice
             elif targetAnswer in correctAnswers:
                 app.characterLevel += 1
@@ -173,7 +172,6 @@ def answerQuestion(app,canvas):
 
 
 def drawAnswerChoices(app,canvas):
-
     targetAnswer = app.practiceFlashCard.frontText
     #Option 1
     randomChoice1 = app.listOfPossibleChoices[0]
@@ -293,6 +291,7 @@ def practiceMode_keyPressed(app,event):
         app.showMessage("All your progress will be lost!")
         app.phase = 'start'
     elif event.key == 'Right':
+        app.isFirst = False
         getRandomPracticeKey(app)
         app.listOfPossibleChoices = getAnswerChoices()  
         realTarget = app.practiceFlashCard.backText
@@ -428,6 +427,8 @@ def practice_timerFired(app):
             app.timeTaken = 0
         if app.makeFlashCard == True:
             app.currQuestionType = getQuestionType()
+        elif app.isFirst == True:
+            app.currQuestionType = getQuestionType()
 
 #############################################################################
 
@@ -445,6 +446,7 @@ def hasStreak(answerStreak):
 #Drawings
 
 ###########################################################################
+
 
 def drawAnswerChoices(app,canvas):
     #Option 1
@@ -562,7 +564,7 @@ def drawNextButton(app,canvas):
 def practiceModeRedrawAll(app,canvas):
     canvas.create_text(app.cx,app.cy, font = 'Arial 20',
                         text = 'Press s to Start!')
-    if app.makeFlashCard == True:
+    if app.makeFlashCard == True and app.isFirst == False:
         app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
         canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
     text ="Please Select/Input the Best Answer", fill = 'black')
@@ -571,7 +573,16 @@ def practiceModeRedrawAll(app,canvas):
         drawAnswerChoices(app,canvas)  
         modifiedAnswerQuestion(app,myTarget)
     elif app.baseProblemTime == 0 or app.cardsToDo == 0:
-        drawNextButton(app,canvas)   
+        drawNextButton(app,canvas)  
+    elif app.isFirst == True:
+        app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
+        canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
+    text ="Please Select/Input the Best Answer", fill = 'black')
+        realTarget = app.practiceFlashCard.backText
+        myTarget = realTarget[0]
+        drawAnswerChoices(app,canvas)  
+        modifiedAnswerQuestion(app,myTarget)
+
     #if app.makeFlashCard == False and app.cardsToDo == 5:
         
         

@@ -31,7 +31,7 @@ def appStarted(app):
     app.backcy = app.height//2
     app.textcx = app.width//2
     app.textcy = app.height//2
-
+    app.isFirst = False
     #Important/Good to have
 
     #Overall dictionary with hiragana and vocab 
