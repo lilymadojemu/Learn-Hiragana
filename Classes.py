@@ -3,7 +3,7 @@ Contains all classes that will be used
 '''
 from Populate_Values import*
 from cmu_112_graphics import*
-import os, random, time, copy
+import random, time, copy
 class correctWord(object):
     def __init__(self, correctWord):
         self.correctWord = correctWord
@@ -26,8 +26,7 @@ class FlashCard(object):
         
         #Key its based on
     def drawFlashCard(self, canvas, app):
-        canvas.create_image(app.frontcx, app.frontcy, 
-                            image=ImageTk.PhotoImage(app.image1))    
+  
         canvas.create_text(app.cx//3, app.cy//5.5,font = 'Arial',
     text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
                             fill = 'black')
@@ -36,7 +35,7 @@ class FlashCard(object):
         #Hiragana
         if self.frontText in hiraganaList:
             if app.isFlipped == False:
-                canvas.create_image(app.frontcx, app.frontcy, 
+                canvas.create_image(app.cx, app.cy, 
                             image=ImageTk.PhotoImage(app.image1))   
                 #Exact Placement to be changed
                 #The Hiragana Character
@@ -46,31 +45,37 @@ class FlashCard(object):
                                 fill = 'dark orchid')
             #Back of card
             elif app.isFlipped == True:
+                canvas.create_image(app.cx, app.cy, 
+                            image=ImageTk.PhotoImage(app.image2))       
+            
                 # if app.isShrinking == True and app.isGrowing == False:
-                    canvas.create_image(app.frontcx, app.frontcy, 
-                                image=ImageTk.PhotoImage(app.image1))   
-                    #Exact Placement to be changed
-                    #The Hiragana Character
-                    if app.isFrontShown == False:
-                        canvas.create_text(app.textcx,app.textcy,
-                                        font = 'Arial 20',
-                                        text = f"{self.frontText}", 
-                                        fill = 'dark orchid')
+                #     canvas.create_image(app.frontcx, app.frontcy, 
+                #                 image=ImageTk.PhotoImage(app.image1))   
+                #     #Exact Placement to be changed
+                #     #The Hiragana Character
+                #     if app.isFrontShown == False:
+                #         canvas.create_text(app.textcx,app.textcy,
+                #                         font = 'Arial 20',
+                #                         text = f"{self.frontText}", 
+                #                         fill = 'dark orchid')
                 # elif app.isShrinking == False and app.isGrowing == True:
-                    canvas.create_image(app.backcx, app.backcy, 
-                                image=ImageTk.PhotoImage(app.image2))  
-                    #Reach certain point before overlaying
-                    romanji = self.backText[0]
-                    pronunciation = self.backText[1]
-                    #The Pronunciation of Hiragana Character
-                    if app.isBackShown == True:
-                        canvas.create_text(app.textcx,app.textcy,
-                                            font =('Helvetica','20','bold')
-                        , text = f"{romanji}\n as in {pronunciation}", 
-                        fill = 'medium aquamarine')
+                #     canvas.create_image(app.backcx, app.backcy, 
+                #                 image=ImageTk.PhotoImage(app.image2))  
+                    #Reach certain point before overlaying\
+                romanji = self.backText[0]
+                pronunciation = self.backText[1]    
+
+                #The Pronunciation of Hiragana Character
+                # if app.isBackShown == True:
+                canvas.create_text(app.textcx,app.textcy,
+                                        font =('Helvetica','20','bold')
+                    , text = f"{romanji}\n as in {pronunciation}", 
+                    fill = 'medium aquamarine')
         #Vocabulary
         elif self.frontText in vocabList:
                 if app.isFlipped == False:
+                    canvas.create_image(app.cx, app.cy, 
+                            image=ImageTk.PhotoImage(app.image1))
                     #Exact Placement to be changed
                     canvas.create_text(app.textcx,app.textcy,
                                 font = 'Arial 20',
@@ -78,8 +83,7 @@ class FlashCard(object):
                                 fill = 'dark orchid')
                 #Back of card
                 elif app.isFlipped == True:
-
-                    canvas.create_image(app.backcx, app.backcy, 
+                    canvas.create_image(app.cx, app.cy, 
                             image=ImageTk.PhotoImage(app.image2)) 
                     if len(self.backText) == 3:
                         currRomanji = list(self.backText[0])
@@ -90,16 +94,16 @@ class FlashCard(object):
                         threeWordRomanji = ""
                         for c in range(len(currRomanji)):
                             threeWordRomanji += currRomanji[c]
-                        if app.isBackShown == True:
-                            canvas.create_text(app.textcx,app.textcy,
+                        #if app.isBackShown == True:
+                        canvas.create_text(app.textcx,app.textcy,
                             font = 'Arial',
                     text = f"{threeWordRomanji}\n{translation1}{translation2}", 
                                         fill = 'medium aquamarine')
                     else:
                         wordRomanji = self.backText[0]
                         translation= self.backText[1]
-                        if app.isBackShown == True:
-                            canvas.create_text(app.textcx,app.textcy,
+                        #if app.isBackShown == True:
+                        canvas.create_text(app.textcx,app.textcy,
                             font = 'Arial',
                                     text = f"{wordRomanji}\n{translation}", 
                                             fill = 'medium aquamarine')
