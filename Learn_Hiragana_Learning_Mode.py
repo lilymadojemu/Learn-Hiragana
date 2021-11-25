@@ -83,44 +83,9 @@ def learningMode_keyPressed(app,event):
         app.makeOldFlashCard = True
         if app.cardsToLearn != 0:
             app.cardsToLearn += 1
-
-    elif event.key == 'r':
-        app.phase = 'review'
     elif event.key == 'l':
         app.phase = 'practice'
-        app.isFirst = True
-        getRandomInitialPracticeKey(app)
-        app.listOfPossibleChoices = getInitialAnswerChoices()
-        realTarget = app.practiceFlashCard.backText
-        #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
-        app.listOfPossibleChoices.insert(randrange(
-                                len(app.listOfPossibleChoices)+1),realTarget[0])  
-        app.makeFlashCard = True
-        app.startQuestion = True
-        app.finishedQuestion = False
 
-def getInitialAnswerChoices():
-    #Question Type 1
-    characterChoices = list(character_dict.values())
-    characterPronunciations = list()
-    for row in range(len(characterChoices)):
-        for col in range(len(characterChoices[0])):
-            romanji = characterChoices[row][col]
-            if len(romanji) == 1:
-                characterPronunciations.append(romanji)
-    return random.sample(characterPronunciations, k=3)
-
-def getRandomInitialPracticeKey(app):
-    # if app.prevFlashCard != dict():
-    #     previousKeys = list()
-    #     for prevKey in app.prevFlashCard:
-    #         previousKeys.append(prevKey)
-    #     randomizedPrev = random.shuffle(previousKeys)
-    #     randomKey = random.choice(randomizedPrev)
-    #     return randomKey
-    #else:
-    randomKey = random.choice(modifyListOfKeys)
-    return randomKey
 
 ##################################################################
 #Pressed

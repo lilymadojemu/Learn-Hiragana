@@ -1,7 +1,7 @@
 from Classes import*
 from Learn_Hiragana_Learning_Mode import*
 from Populate_Values import*
-from random import randrange, sample
+from random import randrange
 def practice_appStarted(app):
     pass
 practiceHiraganaAndVocab = list(overall_dict.keys())
@@ -11,7 +11,7 @@ toBePracticed = copy.deepcopy(overall_dict)
 #Getting Things
 
 ###############################################################################
-def getRandomPracticeKey(app):
+def getPracticeKey(app):
     if app.prevFlashCard != dict():
         previousKeys = list()
         for prevKey in app.prevFlashCard:
@@ -52,21 +52,21 @@ def getSummary():
 correctAnswers = dict()
 isCorrectKey = list()
 incorrectAnswers = dict()
-def isCorrect(app,targetAnswer, questionType, timeDifference):
-    correctMessages = ["That's Correct!", "You're the best!", 
-                            "You're a Hiragana Expert!"]
-    incorrectMessages = ["Sorry, that's incorrect","Better luck next time!"]
-    #may need to be changed for other question types
-    answerChoice = app.userAnswer
-    if answerChoice == targetAnswer and app.finishedQuestion == True:
-        storeCorrectIncorrect(targetAnswer, True,timeDifference,app)
-        praise = random.choice(correctMessages)
-        app.showMessage(praise)
-    elif answerChoice != targetAnswer and app.finishedQuestion == True:
-        #defaulQuestionTime - time user takes to answer a question
-        storeCorrectIncorrect(targetAnswer, False,timeDifference,app)
-        notPraise = random.choice(incorrectMessages)
-        app.showMessage(notPraise)
+# def isCorrect(app,targetAnswer, questionType, timeDifference):
+#     correctMessages = ["That's Correct!", "You're the best!", 
+#                             "You're a Hiragana Expert!"]
+#     incorrectMessages = ["Sorry, that's incorrect","Better luck next time!"]
+#     #may need to be changed for other question types
+#     answerChoice = app.userAnswer
+#     if answerChoice == targetAnswer and app.finishedQuestion == True:
+#         storeCorrectIncorrect(targetAnswer, True,timeDifference,app)
+#         praise = random.choice(correctMessages)
+#         app.showMessage(praise)
+#     elif answerChoice != targetAnswer and app.finishedQuestion == True:
+#         #defaulQuestionTime - time user takes to answer a question
+#         storeCorrectIncorrect(targetAnswer, False,timeDifference,app)
+#         notPraise = random.choice(incorrectMessages)
+#         app.showMessage(notPraise)
 
 alreadyPracticed = dict()
 #will form basis for review mode
@@ -117,6 +117,8 @@ def getPracticeHiraganaOrVocab(app, randomKey):
 #The question in question
 
 #######################################################################
+
+#May be handy when I have more than one qus
 def questionCard(app,canvas,questionType):
     questionFlashCard = FlashCard(app.newKey,toBePracticed[app.newKey])
     if questionType == 1:
@@ -127,61 +129,54 @@ def questionCard(app,canvas,questionType):
     elif questionType == 4: pass
     else:app.showMessage('There as been an error')
 
-def answerQuestion(app,canvas):
-    startTime = time.time()
-    defaultTimeLimit = app.baseProblemTime
-    questionType = app.currQuestionType
-    if questionType == 1: #hiragana to romanji
-        questionFlashCard = FlashCard(app.newKey,toBePracticed[app.newKey])
-        if (defaultTimeLimit != 0 and questionFlashCard.frontText 
-            in hiraganaList):
-                targetAnswer = questionFlashCard.frontText
-                questionFlashCard.drawTimedFlashCard1(canvas, app)
-                print(targetAnswer)
-                app.showMessage('Press e to Input Your Answer!')
-                if app.wantInput == True:
-                    answer = app.getUserInput('Please Type in Best Answer')
-                    if answer == None:
-                        app.wantInput = False
-                    else:
-                        modifiedIsCorrect(targetAnswer,answer)
-                else:
-                    #Seleting an answer choice
-                    listOfPossibleChoices =(random.sample(
-                        practiceHiraganaAndVocab, k=4))
-                    if targetAnswer in listOfPossibleChoices:
-                        drawAnswerChoices(app,canvas)
-                        #if clicked, that is answerChoice number
-                        userAnswer  = app.answerChoice
-                        modifiedIsCorrect(targetAnswer,userAnswer)
+# def answerQuestion(app,canvas):
+#     startTime = time.time()
+#     defaultTimeLimit = app.baseProblemTime
+#     questionType = app.currQuestionType
+#     if questionType == 1: #hiragana to romanji
+#         questionFlashCard = FlashCard(app.newKey,toBePracticed[app.newKey])
+#         if (defaultTimeLimit != 0 and questionFlashCard.frontText 
+#             in hiraganaList):
+#                 targetAnswer = questionFlashCard.frontText
+#                 questionFlashCard.drawTimedFlashCard1(canvas, app)
+#                 print(targetAnswer)
+#                 app.showMessage('Press e to Input Your Answer!')
+#                 if app.wantInput == True:
+#                     answer = app.getUserInput('Please Type in Best Answer')
+#                     if answer == None:
+#                         app.wantInput = False
+#                     else:
+#                         modifiedIsCorrect(targetAnswer,answer)
+#                 else:
+#                     #Seleting an answer choice
+#                     listOfPossibleChoices =(random.sample(
+#                         practiceHiraganaAndVocab, k=4))
+#                     if targetAnswer in listOfPossibleChoices:
+#                         drawAnswerChoices(app,canvas)
+#                         #if clicked, that is answerChoice number
+#                         userAnswer  = app.answerChoice
+#                         modifiedIsCorrect(targetAnswer,userAnswer)
 
-        elif defaultTimeLimit <= 0:
-            app.showMessage("Time's Up!")
-            app.showMessage('Please Press Right or Click Next to Continue')
-    elif questionType == 2: #vocab to romanji
-        pass
-    elif questionType == 3: #romanji to vocab
-        pass
+#         elif defaultTimeLimit <= 0:
+#             app.showMessage("Time's Up!")
+#             app.showMessage('Please Press Right or Click Next to Continue')
+#     elif questionType == 2: #vocab to romanji
+#         pass
+#     elif questionType == 3: #romanji to vocab
+#         pass
     
-    elif questionType == 4: #romanji to hiragana
-        pass
+#     elif questionType == 4: #romanji to hiragana
+#         pass
 
-    else:
-        app.showMessage("There has been an error")
+#     else:
+#         app.showMessage("There has been an error")
 
 
 def drawAnswerChoices(app,canvas):
-    targetAnswer = app.practiceFlashCard.frontText
-    #Option 1
     randomChoice1 = app.listOfPossibleChoices[0]
-    print(randomChoice1)
     randomChoice2 = app.listOfPossibleChoices[1]
     randomChoice3 = app.listOfPossibleChoices[2]
     randomChoice4 = app.listOfPossibleChoices[3]
-    # if (randomChoice1 == app.practiceFlashCard.frontText or 
-    #     randomChoice2 == app.practiceFlashCard.frontText
-    #     or randomChoice3 == app.practiceFlashCard.frontText 
-    #     or randomChoice4 == app.practiceFlashCard.frontText):
     if app.lightMode == True:
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.3,
@@ -190,9 +185,8 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'light goldenrod')
         canvas.create_text(app.cx,app.cy*1.35,text = f'1 {randomChoice1}', 
         fill ='black' )
-        #canvas.create_oval(app.cx,app.cy,0,0, fill = 'navajo white')
+
         #Option 2
-        
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.4,
                                 app.cx//2,
@@ -200,9 +194,8 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'plum')
         canvas.create_text(app.cx,app.cy*1.45,text = f'2 {randomChoice2}', 
         fill ='black' )
-        #canvas.create_oval(app.cx,app.cy//2,0,0, fill = 'navajo white')
+
         #Option 3
-    
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.5,
                                 app.cx//2,
@@ -210,9 +203,8 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'lemon chiffon')
         canvas.create_text(app.cx,app.cy*1.55, text = f'3 {randomChoice3}', 
         fill ='black' )
-        #canvas.create_oval(app.cx,app.cy//4,0,0, fill = 'navajo white')
-        #Option 4
         
+        #Option 4
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.6,
                                 app.cx//2,
@@ -220,7 +212,6 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'honeydew2')
         canvas.create_text(app.cx,app.cy*1.65, text = f'4 {randomChoice4}', 
         fill ='black')
-        #canvas.create_oval(app.cx,app.cy//6,0,0, fill = 'navajo white')
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.7,
                                 app.cx//2,
@@ -229,7 +220,6 @@ def drawAnswerChoices(app,canvas):
         canvas.create_text(app.cx,app.cy*1.75,
                             text = 'Press e to Input Your Answer', 
                             fill ='black')
-        #canvas.create_oval(app.cx,app.cy//6,0,0, fill = 'navajo white')
     elif app.darkMode == True:
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.3,
@@ -238,9 +228,8 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'pale violet red')
         canvas.create_text(app.cx,app.cy//12,text = f'{randomChoice1}', 
         fill ='black' )
-        #canvas.create_oval(app.cx,app.cy,0,0, fill = 'navajo white')
+
         #Option 2
-        
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.4,
                                 app.cx//2,
@@ -248,9 +237,8 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'dark orange')
         canvas.create_text(app.cx//2,app.cy//12,text = f'{randomChoice2}', 
         fill ='black' )
-        #canvas.create_oval(app.cx,app.cy//2,0,0, fill = 'navajo white')
+
         #Option 3
-    
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.5,
                                 app.cx//2,
@@ -258,9 +246,8 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'maroon')
         canvas.create_text(app.cx//2,app.cy//12,text = f'{randomChoice3}', 
         fill ='black' )
-        #canvas.create_oval(app.cx,app.cy//4,0,0, fill = 'navajo white')
+
         #Option 4
-        
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.6,
                                 app.cx//2,
@@ -268,7 +255,7 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'dark goldenrod')
         canvas.create_text(app.cx//2,app.cy//12, text = f'{randomChoice4}', 
         fill ='black')
-        #canvas.create_oval(app.cx,app.cy//6,0,0, fill = 'navajo white')
+        #Input Answer Option
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.7,
                                 app.cx//2,
@@ -290,7 +277,7 @@ def practiceMode_keyPressed(app,event):
         app.showMessage("All your progress will be lost!")
         app.phase = 'start'
     elif event.key == 'Right':
-        getRandomPracticeKey(app)
+        getPracticeKey(app)
         app.listOfPossibleChoices = getAnswerChoices()  
         realTarget = app.practiceFlashCard.backText
         #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
@@ -304,8 +291,9 @@ def practiceMode_keyPressed(app,event):
         app.isContinueKeyPressed = True
         if app.cardsToDo != 0:
             app.cardsToDo -= 1
-    if event.key == 's':   
-        getRandomPracticeKey(app)
+    if event.key == 's': 
+        app.currQuestionType = getQuestionType()  
+        getPracticeKey(app)
         app.listOfPossibleChoices = getAnswerChoices()
         realTarget = app.practiceFlashCard.backText
         #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
@@ -320,31 +308,26 @@ def practiceMode_keyPressed(app,event):
         app.listOfPossibleChoices = getAnswerChoices()  
     elif event.key == 'd':
         app.startQuestion = False
-        app.finishedQuestion = True
+        
     elif event.key == 'e':
         app.userAnswer = app.getUserInput('Please Type in Best Answer')
         app.wantInput = True
     #Answer Selections
     if event.key == '1':
         app.option1Chosen = True
-        app.finishedQuestion = True
     elif event.key == '2':
         app.option2Chosen = True
-        app.finishedQuestion = True
     elif event.key == '3':
         app.option3Chosen = True
-        app.finishedQuestion = True
     elif event.key == '4':
         app.option4Chosen = True
-        app.finishedQuestion = True
 def practice_mousePressed(app,event):
     if (app.width//4 <= event.x and event.x >= app.width//6 and 
         app.height//10 <= event.y and event.y >= app.height//5):
         app.showMessage('Clicked')
         app.option1Chosen = True
         app.finishedQuestion = True
-    # app.finishedQuestion = True
-    # # elif 
+    # elif 
     # #     app.option2Chosen = True
     #         app.finishedQuestion = True
     # # elif 
@@ -353,6 +336,8 @@ def practice_mousePressed(app,event):
     # # elif 
     # #     app.option4Chosen = True
     # app.finishedQuestion = True
+    # elif
+    #Get Input
 ##############################################################################
 
 #"Modified" Functions (For MVP Testing)
@@ -363,72 +348,86 @@ def modifiedIsCorrect(targetAnswer, answerChoice, app, diff):
                             "You're a Hiragana Expert!"]
     incorrectMessages = ["Sorry, that's incorrect","Better luck next time!"]
     #may need to be changed for other question types
-    if (answerChoice == targetAnswer and 
-        app.finishedQuestion == True):
+    if answerChoice == targetAnswer:
         storeCorrectIncorrect(targetAnswer,True,diff, app)
         praise = random.choice(correctMessages)
         app.showMessage(praise)
-    elif(answerChoice != targetAnswer and
-         app.finishedQuestion == True):
+        app.finishedQuestion = True
+    elif answerChoice != targetAnswer:
         #defaulQuestionTime - time user takes to answer a question
         storeCorrectIncorrect(targetAnswer, False, diff,app)
         notPraise = random.choice(incorrectMessages)
         app.showMessage(notPraise)
+        app.finishedQuestion = True
 
-def modifiedAnswerQuestion(app, targetAnswer):
+def modifiedAnswerQuestion(app):
+    realTarget = app.practiceFlashCard.backText
+    targetAnswer = realTarget[0]
     startTime = time.time()
     defaultTimeLimit = app.baseProblemTime
-    #timeDifference = defaultTimeLimit = timeTaken
-     #hiragana to romanji
-    if defaultTimeLimit > 0:
-            if app.wantInput == True:
-                if app.userAnswer == None:
-                    app.wantInput = False
+    #hiragana to romanji
+    if app.currQuestionType == 1:
+        if defaultTimeLimit > 0:
+                if app.wantInput == True:
+                    if app.userAnswer == None:
+                        app.wantInput = False
+                    else:
+                        endTime = time.time()
+                        diff = endTime = startTime
+                        userAnswer = app.userAnswer
+                        modifiedIsCorrect(targetAnswer, userAnswer, app, diff)
                 else:
-                    endTime = time.time()
-                    diff = endTime = startTime
-                    userAnswer = app.userAnswer
-                    modifiedIsCorrect(targetAnswer, userAnswer, app, diff)
-            else:
-                #listOfPossibleChoices is a 1d list
-                if targetAnswer in app.listOfPossibleChoices:
-                    if app.option1Chosen == True:
-                        endTime = time.time()
-                        diff = endTime - startTime
-                        userAnswer  = app.listOfPossibleChoices[0]
-                        modifiedIsCorrect(targetAnswer,userAnswer, app, diff)
-                    elif app.option2Chosen == True:
-                        endTime = time.time()
-                        diff = endTime - startTime
-                        userAnswer = app.listOfPossibleChoices[1]
-                        modifiedIsCorrect(targetAnswer,userAnswer, app, diff)
-                    elif app.option3Chosen == True:
-                        endTime = time.time()
-                        diff = endTime - startTime
-                        userAnswer = app.listOfPossibleChoices[2]
-                        modifiedIsCorrect(targetAnswer,userAnswer, app, diff)
-                    elif app.option4Chosen == True:
-                        endTime = time.time()
-                        diff = endTime - startTime
-                        userAnswer = app.listOfPossibleChoices[3]
-                        modifiedIsCorrect(targetAnswer,userAnswer, app, diff)
-    elif defaultTimeLimit == 0:
-        app.showMessage("Time's Up! Please Press Right to Continue")
-        
+                    if targetAnswer in app.listOfPossibleChoices:
+                        if app.option1Chosen == True:
+                            endTime = time.time()
+                            diff = endTime - startTime
+                            userAnswer  = app.listOfPossibleChoices[0]
+                            modifiedIsCorrect(targetAnswer,userAnswer, 
+                                                app, diff)
+                        elif app.option2Chosen == True:
+                            endTime = time.time()
+                            diff = endTime - startTime
+                            userAnswer = app.listOfPossibleChoices[1]
+                            modifiedIsCorrect(targetAnswer,userAnswer,
+                                             app, diff)
+                        elif app.option3Chosen == True:
+                            endTime = time.time()
+                            diff = endTime - startTime
+                            userAnswer = app.listOfPossibleChoices[2]
+                            modifiedIsCorrect(targetAnswer,userAnswer, 
+                                                app, diff)
+                        elif app.option4Chosen == True:
+                            endTime = time.time()
+                            diff = endTime - startTime
+                            userAnswer = app.listOfPossibleChoices[3]
+                            modifiedIsCorrect(targetAnswer,userAnswer, 
+                                                app, diff)
+        elif defaultTimeLimit == 0:
+            app.showMessage("Time's Up! Please Press Right to Continue")
+    elif app.currQuestionType == 2: #vocab to romanji
+        pass
+    elif app.currQuestionType == 3: #romanji to vocab
+        pass
+    
+    elif app.currQuestionType == 4: #romanji to hiragana
+        pass
+    else:
+        app.showMessage("Sorry, There has been an error")
+            
 
 #Automatically move on to next flashcard card, Doing stage
 def practice_timerFired(app):
-
     if app.paused == False:
         #app.listOfPossibleChoices = getAnswerChoices()  
-        app.baseProblemTime -= 1
-        app.timeTaken += 1
-        if app.baseProblemTime == 0 and app.isContinueKeyPressed == False:
+        if app.finishedQuestion == False:
+            app.baseProblemTime -= 1
+            app.timeTaken += 1
+        elif app.baseProblemTime == 0 and app.isContinueKeyPressed == False:
+            app.startQuestion = False
             app.finishedQuestion = True
-        if app.makeFlashCard == True:
-            app.currQuestionType = getQuestionType()
-        # elif app.isFirst == True:
-        #     app.currQuestionType = getQuestionType()
+        elif (app.startQuestion == True and app.finishedQuestion == False and 
+                app.currQuestionType == 1):
+            modifiedAnswerQuestion(app)
 
 #############################################################################
 
@@ -449,15 +448,10 @@ def hasStreak(answerStreak):
 
 
 def drawAnswerChoices(app,canvas):
-    #Option 1
     randomChoice1 = app.listOfPossibleChoices[0]
     randomChoice2 = app.listOfPossibleChoices[1]
     randomChoice3 = app.listOfPossibleChoices[2]
     randomChoice4 = app.listOfPossibleChoices[3]
-    # if (randomChoice1 == app.practiceFlashCard.frontText or 
-    #     randomChoice2 == app.practiceFlashCard.frontText
-    #     or randomChoice3 == app.practiceFlashCard.frontText 
-    #     or randomChoice4 == app.practiceFlashCard.frontText):
     if app.lightMode == True:
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.3,
@@ -568,11 +562,11 @@ def practiceModeRedrawAll(app,canvas):
         app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
         canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
     text ="Please Select/Input the Best Answer", fill = 'black')
-        realTarget = app.practiceFlashCard.backText
-        myTarget = realTarget[0]
+        # realTarget = app.practiceFlashCard.backText
+        # myTarget = realTarget[0]
         drawAnswerChoices(app,canvas)  
-        modifiedAnswerQuestion(app,myTarget)
-    elif app.baseProblemTime == 0 or app.cardsToDo == 0:
+    elif app.finishedQuestion == True:
+        app.showMessage("Click Next or")
         drawNextButton(app,canvas)  
     # elif app.isFirst == True:
     #     app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
@@ -593,3 +587,10 @@ def practiceModeRedrawAll(app,canvas):
     #     drawNewCard(app,canvas)  
 
     #if answer is correct and in a certain range
+
+
+############################################################################
+
+#Internal Review Mode
+#Automatically switch to review mode after a certain point
+#############################################################################
