@@ -322,22 +322,38 @@ def practiceMode_keyPressed(app,event):
     elif event.key == '4':
         app.option4Chosen = True
 def practice_mousePressed(app,event):
-    if (app.width//4 <= event.x and event.x >= app.width//6 and 
-        app.height//10 <= event.y and event.y >= app.height//5):
-        app.showMessage('Clicked')
-        app.option1Chosen = True
-        app.finishedQuestion = True
-    # elif 
-    # #     app.option2Chosen = True
-    #         app.finishedQuestion = True
-    # # elif 
-    # #     app.option3Chosen = True
-    # app.finishedQuestion = True
-    # # elif 
-    # #     app.option4Chosen = True
-    # app.finishedQuestion = True
-    # elif
-    #Get Input
+    if app.width//4 <= event.x:
+        if event.y: #option1
+            app.showMessage('Clicked1')
+            app.option1Chosen = True
+        elif event.y: #option2
+            app.showMessage('Clicked2')
+            app.option1Chosen = True
+        elif event.y: #option3
+            app.showMessage('Clicked3')
+            app.option1Chosen = True
+        elif event.y: #option4
+            app.showMessage('Clicked4')
+            app.option1Chosen = True
+        elif event.y: #Input
+            app.showMessage('ClickedI')
+            app.option1Chosen = True
+        elif event.y: #Click Next/Finished
+            app.currQuestionType = getQuestionType()  
+            getPracticeKey(app)
+            app.listOfPossibleChoices = getAnswerChoices()
+            realTarget = app.practiceFlashCard.backText
+            #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
+            app.listOfPossibleChoices.insert(randrange(
+                                    len(app.listOfPossibleChoices)+1),realTarget[0])  
+            app.baseProblemTime = 30
+            app.timeTaken = 0
+            app.makeFlashCard = True
+            app.startQuestion = True
+            app.finishedQuestion = False
+
+
+            
 ##############################################################################
 
 #"Modified" Functions (For MVP Testing)
@@ -361,6 +377,7 @@ def modifiedIsCorrect(targetAnswer, answerChoice, app, diff):
         app.showMessage(notPraise)
         app.finishedQuestion = True
         app.showMessage("Click Next or Press Right")
+        
 
 def modifiedAnswerQuestion(app):
     realTarget = app.practiceFlashCard.backText
@@ -464,7 +481,7 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'light goldenrod')
         canvas.create_text(app.cx,app.cy*1.35,text = f'1 {randomChoice1}', 
         fill ='black' )
-        #canvas.create_oval(app.cx,app.cy,0,0, fill = 'navajo white')
+      
         #Option 2
         
         canvas.create_rectangle(app.cx*1.5,
@@ -474,7 +491,7 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'plum')
         canvas.create_text(app.cx,app.cy*1.45,text = f'2 {randomChoice2}', 
         fill ='black' )
-        #canvas.create_oval(app.cx,app.cy//2,0,0, fill = 'navajo white')
+       
         #Option 3
     
         canvas.create_rectangle(app.cx*1.5,
@@ -484,7 +501,7 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'lemon chiffon')
         canvas.create_text(app.cx,app.cy*1.55, text = f'3 {randomChoice3}', 
         fill ='black' )
-        #canvas.create_oval(app.cx,app.cy//4,0,0, fill = 'navajo white')
+   
         #Option 4
         
         canvas.create_rectangle(app.cx*1.5,
@@ -494,7 +511,7 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'honeydew2')
         canvas.create_text(app.cx,app.cy*1.65, text = f'4 {randomChoice4}', 
         fill ='black')
-        #canvas.create_oval(app.cx,app.cy//6,0,0, fill = 'navajo white')
+   
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.7,
                                 app.cx//2,
@@ -503,7 +520,7 @@ def drawAnswerChoices(app,canvas):
         canvas.create_text(app.cx,app.cy*1.75,
                             text = 'Press e to Input Your Answer', 
                             fill ='black')
-        #canvas.create_oval(app.cx,app.cy//6,0,0, fill = 'navajo white')
+   
     elif app.darkMode == True:
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.3,
@@ -512,7 +529,7 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'pale violet red')
         canvas.create_text(app.cx,app.cy//12,text = f'{randomChoice1}', 
         fill ='black' )
-        #canvas.create_oval(app.cx,app.cy,0,0, fill = 'navajo white')
+       
         #Option 2
         
         canvas.create_rectangle(app.cx*1.5,
@@ -522,9 +539,8 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'dark orange')
         canvas.create_text(app.cx//2,app.cy//12,text = f'{randomChoice2}', 
         fill ='black' )
-        #canvas.create_oval(app.cx,app.cy//2,0,0, fill = 'navajo white')
-        #Option 3
-    
+
+        #Option 3  
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.5,
                                 app.cx//2,
@@ -532,9 +548,8 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'maroon')
         canvas.create_text(app.cx//2,app.cy//12,text = f'{randomChoice3}', 
         fill ='black' )
-        #canvas.create_oval(app.cx,app.cy//4,0,0, fill = 'navajo white')
-        #Option 4
         
+        #Option 4
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.6,
                                 app.cx//2,
@@ -542,7 +557,7 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'dark goldenrod')
         canvas.create_text(app.cx//2,app.cy//12, text = f'{randomChoice4}', 
         fill ='black')
-        #canvas.create_oval(app.cx,app.cy//6,0,0, fill = 'navajo white')
+        
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.7,
                                 app.cx//2,
@@ -567,11 +582,15 @@ def drawFinishButton(app,canvas):
                             fill = 'pale violet red')
     canvas.create_text(app.cx,app.cy//5, font = 'Arial', text = "Finish", 
                         fill = 'azure4')
+def drawPracticeCard(app,canvas):
+    #FlashCard info.
+    app.practiceFlashCard.drawTimedFlashCard1(canvas, app)
+
 def practiceModeRedrawAll(app,canvas):
     canvas.create_text(app.cx,app.cy, font = 'Arial 20',
                         text = 'Press s to Start!')
     if app.makeFlashCard == True:
-        app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
+        drawPracticeCard(app,canvas)  
         canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
     text ="Please Select/Input the Best Answer", fill = 'black')
         # realTarget = app.practiceFlashCard.backText
@@ -579,8 +598,8 @@ def practiceModeRedrawAll(app,canvas):
         drawAnswerChoices(app,canvas)  
     if app.finishedQuestion == True:
         drawNextButton(app,canvas)  
-    elif app.cardsToDo == 0:
-        drawFinishButton(app,canvas)
+        if app.cardsToDo == 0:
+            drawFinishButton(app,canvas)
         
 ############################################################################
 
