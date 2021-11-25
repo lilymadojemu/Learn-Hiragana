@@ -483,7 +483,7 @@ def practice_timerFired(app):
         #app.listOfPossibleChoices = getAnswerChoices()  
         if (app.startQuestion == True and app.finishedQuestion == False and 
                 app.currQuestionType == 1):
-            modifiedAnswerQuestion(app,None)
+            modifiedAnswerQuestion(app)
             if app.finishedQuestion == False:
                 app.baseProblemTime -= 1
                 app.timeTaken += 1
@@ -643,8 +643,6 @@ def practiceModeRedrawAll(app,canvas):
         drawAnswerChoices(app,canvas)  
     if app.makeFlashCard == True and app.cardsToDo < 5:
         drawPracticeCard(app,canvas) 
-        canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
-        text ="Please Select/Input the Best Answer", fill = 'black')
         drawAnswerChoices(app,canvas)  
     if app.finishedQuestion == True:
         drawNextButton(app,canvas)  
