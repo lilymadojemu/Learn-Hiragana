@@ -367,88 +367,105 @@ def modifiedIsCorrect(targetAnswer, answerChoice, app, diff):
         praise = random.choice(correctMessages)
         app.showMessage(praise)
         app.finishedQuestion = True
+        app.startQuestion = False
         app.showMessage("Click Next or Press Right")
     elif answerChoice != targetAnswer and app.finishedQuestion == False:
-        #defaulQuestionTime - time user takes to answer a question
         storeCorrectIncorrect(targetAnswer, False, diff,app)
         notPraise = random.choice(incorrectMessages)
         app.showMessage(notPraise)
         app.finishedQuestion = True
+        app.startQuestion = False
         app.showMessage("Click Next or Press Right")
-        
 
-def modifiedAnswerQuestion(app,targetAnswer):
-    realTargetBase = app.practiceFlashCard.backText
+def modifiedAnswerQuestion(app):
+    #Initial
+    targetWhole = app.practiceFlashCard.backText
+    targetAnswer = targetWhole[0]
+    #Other Cards
+    lookingFor = overall_dict[app.practiceKey]
+    answer = lookingFor[0]
     startTime = time.time()
     defaultTimeLimit = app.baseProblemTime
     #hiragana to romanji
     if app.currQuestionType == 1:
-        if defaultTimeLimit > 0:
-                if app.wantInput == True:
-                    if app.userAnswer == None:
-                        app.wantInput = False
+        if app.cardsToDo == 5:
+            if defaultTimeLimit > 0:
+                    if app.wantInput == True:
+                        if app.userAnswer == None:
+                            app.wantInput = False
+                        else:
+                            endTime = time.time()
+                            diff = endTime = startTime
+                            userAnswer = app.userAnswer
+                            modifiedIsCorrect(targetAnswer, userAnswer, app, 
+                                                diff)
                     else:
+                            if targetAnswer in app.listOfPossibleChoices:
+                                if app.option1Chosen == True:
+                                    endTime = time.time()
+                                    diff = endTime - startTime
+                                    userAnswer  = app.listOfPossibleChoices[0]
+                                    modifiedIsCorrect(targetAnswer,userAnswer, 
+                                                        app, diff)
+                                elif app.option2Chosen == True:
+                                    endTime = time.time()
+                                    diff = endTime - startTime
+                                    userAnswer = app.listOfPossibleChoices[1]
+                                    modifiedIsCorrect(targetAnswer,userAnswer,
+                                                    app, diff)
+                                elif app.option3Chosen == True:
+                                    endTime = time.time()
+                                    diff = endTime - startTime
+                                    userAnswer = app.listOfPossibleChoices[2]
+                                    modifiedIsCorrect(targetAnswer,userAnswer, 
+                                                        app, diff)
+                                elif app.option4Chosen == True:
+                                    endTime = time.time()
+                                    diff = endTime - startTime
+                                    userAnswer = app.listOfPossibleChoices[3]
+                                    modifiedIsCorrect(targetAnswer,userAnswer, 
+                                                        app, diff)
+            elif defaultTimeLimit == 0:
+                app.showMessage("Time's Up! Please Press Right to Continue")
+        else:
+            if defaultTimeLimit > 0:
+                    if app.wantInput == True:
+                        if app.userAnswer == None:
+                            app.wantInput = False
+                        else:
+                            endTime = time.time()
+                            diff = endTime = startTime
+                            userAnswer = app.userAnswer
+                            modifiedIsCorrect(answer, userAnswer, app, 
+                                                diff)
+            else:
+                if answer in app.listOfPossibleChoices:
+                    if app.option1Chosen == True:
                         endTime = time.time()
-                        diff = endTime = startTime
-                        userAnswer = app.userAnswer
-                        modifiedIsCorrect(realTargetBase[0], userAnswer, app, 
-                                            diff)
-                else:
-                    if targetAnswer == None:
-                        if realTargetBase[0] in app.listOfPossibleChoices:
-                            if app.option1Chosen == True:
-                                endTime = time.time()
-                                diff = endTime - startTime
-                                userAnswer  = app.listOfPossibleChoices[0]
-                                modifiedIsCorrect(realTargetBase[0],userAnswer, 
-                                                    app, diff)
-                            elif app.option2Chosen == True:
-                                endTime = time.time()
-                                diff = endTime - startTime
-                                userAnswer = app.listOfPossibleChoices[1]
-                                modifiedIsCorrect(realTargetBase[0],userAnswer,
-                                                app, diff)
-                            elif app.option3Chosen == True:
-                                endTime = time.time()
-                                diff = endTime - startTime
-                                userAnswer = app.listOfPossibleChoices[2]
-                                modifiedIsCorrect(realTargetBase[0],userAnswer, 
-                                                    app, diff)
-                            elif app.option4Chosen == True:
-                                endTime = time.time()
-                                diff = endTime - startTime
-                                userAnswer = app.listOfPossibleChoices[3]
-                                modifiedIsCorrect(realTargetBase[0],userAnswer, 
-                                                    app, diff)
-                    else:
-                        if targetAnswer in app.listOfPossibleChoices:
-                            if app.option1Chosen == True:
-                                endTime = time.time()
-                                diff = endTime - startTime
-                                userAnswer  = app.listOfPossibleChoices[0]
-                                modifiedIsCorrect(realTargetBase[0],userAnswer, 
-                                                    app, diff)
-                            elif app.option2Chosen == True:
-                                endTime = time.time()
-                                diff = endTime - startTime
-                                userAnswer = app.listOfPossibleChoices[1]
-                                modifiedIsCorrect(realTargetBase[0],userAnswer,
-                                                app,diff)
-                            elif app.option3Chosen == True:
-                                endTime = time.time()
-                                diff = endTime - startTime
-                                userAnswer = app.listOfPossibleChoices[2]
-                                modifiedIsCorrect(realTargetBase[0],userAnswer, 
-                                                    app, diff)
-                            elif app.option4Chosen == True:
-                                endTime = time.time()
-                                diff = endTime - startTime
-                                userAnswer = app.listOfPossibleChoices[3]
-                                modifiedIsCorrect(realTargetBase[0],userAnswer, 
-                                                    app, diff)
-                        
-        elif defaultTimeLimit == 0:
-            app.showMessage("Time's Up! Please Press Right to Continue")
+                        diff = endTime - startTime
+                        userAnswer  = app.listOfPossibleChoices[0]
+                        modifiedIsCorrect(answer,userAnswer, 
+                                            app, diff)
+                    elif app.option2Chosen == True:
+                        endTime = time.time()
+                        diff = endTime - startTime
+                        userAnswer = app.listOfPossibleChoices[1]
+                        modifiedIsCorrect(answer,userAnswer,
+                                        app, diff)
+                    elif app.option3Chosen == True:
+                        endTime = time.time()
+                        diff = endTime - startTime
+                        userAnswer = app.listOfPossibleChoices[2]
+                        modifiedIsCorrect(answer,userAnswer, 
+                                            app, diff)
+                    elif app.option4Chosen == True:
+                        endTime = time.time()
+                        diff = endTime - startTime
+                        userAnswer = app.listOfPossibleChoices[3]
+                        modifiedIsCorrect(answer,userAnswer, 
+                                            app, diff)
+                elif defaultTimeLimit == 0:
+                    app.showMessage("Time's Up! Please Press Right to Continue")
     elif app.currQuestionType == 2: #vocab to romanji
         pass
     elif app.currQuestionType == 3: #romanji to vocab
@@ -611,8 +628,9 @@ def drawPracticeCard(app,canvas):
     #FlashCard info.
     practiceFlashCard = FlashCard(app.practiceKey, overall_dict[app.practiceKey])
     practiceFlashCard.drawTimedFlashCard1(canvas, app)
-    realTarget = overall_dict[app.practiceKey]
-    modifiedAnswerQuestion(app,realTarget[0])
+    modifiedAnswerQuestion(app)
+    canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
+    text ="Please Select/Input the Best Answer", fill = 'black')
 
 
 def practiceModeRedrawAll(app,canvas):
