@@ -73,6 +73,11 @@ def appStarted(app):
     app.isFrontShown = True
     app.isBackShown = False
     #Practice Phase      
+    #Leitner System
+    #Japanese words for now, middle/fine, and good
+    app.ima = app.prevFlashCard #Box 1
+    app.mama = dict() #Box 2
+    app.jyozu = dict() #Box 3
     #Level of vocab/ Character knowledge
     app.characterLevel = 0
     app.vocabLevel = 0  

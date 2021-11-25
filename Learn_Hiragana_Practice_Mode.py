@@ -7,20 +7,24 @@ def practice_appStarted(app):
 practiceHiraganaAndVocab = list(overall_dict.keys())
 toBePracticed = copy.deepcopy(overall_dict)
 ###############################################################################
-
+# Leitner system,3 box set up
+#ima, questioned right after
+#middle, comes up after 2 questions of other types (1 immediate & 1 adv, etc.)
+#adv, comes up after 4 questions 
+#Practice is unlimitied (BUT!) Transition screen will come up every few cards
+#to give users opporunity to end session and see progress
+###############################################################################
 #Getting Things
 
 ###############################################################################
 def getPracticeKey(app):
-    if app.prevFlashCard != dict():
-        previousKeys = list()
-        for prevKey in app.prevFlashCard:
-            previousKeys.append(prevKey)
-        randomKey = random.choice(previousKeys)
-        return randomKey
-    else:
-        randomKey = random.choice(modifyListOfKeys)
-        return randomKey
+    getPreviousKey(app)
+    # if app.ima != {}:
+    #     previousKeys = list()
+    #     for prevKey in app.prevFlashCard:
+    #         previousKeys.append(prevKey)
+    #     randomKey = random.choice(previousKeys)
+    #     return randomKey
 
 def getQuestionType():
     randomQuestionType = random.randint(1,4)
@@ -40,18 +44,12 @@ def getAnswerChoices():
 
 #Once practice Mode is finished/ on Transition screen, 
 # user will seen what they got wrong and what they got right in the end
-def getSummary():
-    return toBeReview, knowledgeable, correctAnswers, incorrectAnswers
-
-
+def getSummary(app):
+    return app.ima, app.mama, app.jyozu, toBePracticed
 ################################################################
-
 #Determining Correctness
-
 ###############################################################
-correctAnswers = dict()
-isCorrectKey = list()
-incorrectAnswers = dict()
+
 # def isCorrect(app,targetAnswer, questionType, timeDifference):
 #     correctMessages = ["That's Correct!", "You're the best!", 
 #                             "You're a Hiragana Expert!"]
@@ -68,35 +66,69 @@ incorrectAnswers = dict()
 #         notPraise = random.choice(incorrectMessages)
 #         app.showMessage(notPraise)
 
-alreadyPracticed = dict()
-#will form basis for review mode
-toBeReview = dict()
-knowledgeable = dict()
 def storeCorrectIncorrect(targetAnswer, questionCorrect, timeDifference, app):
     #Question Type 1
-    #target answer may change to front text
     answerChoice = app.userAnswer
     questionType = app.currQuestionType
     if questionType == 1:
         if questionCorrect == True:
-        #Want each answer to have a counter 
-            if targetAnswer not in correctAnswers:
-                correctAnswers[app.practiceFlashCard.frontText] = answerChoice
-            elif (targetAnswer not in correctAnswers and 
-                targetAnswer in incorrectAnswers):
-                #For now a clean slate
-                #del incorrectAnswers[app.practiceFlashCard.frontText]
-                correctAnswers[app.practiceFlashCard.frontText] = answerChoice
-            elif targetAnswer in correctAnswers:
-                app.characterLevel += 1
-                knowledgeable[app.practiceFlashCard.frontText] = answerChoice
+            #No correct answers in box 1
+            #Criteria to get to box 2 from box 1
+            if (answerChoice in app.ima and answerChoice not in app.mama and 
+                answerChoice not in app.jyozu):
+                #Initial FlashCard
+                if app.cardsToDo == 5:
+                    app.mama[app.practiceFlashCard.frontText] = answerChoice
+                #Other FlashCards
+                else:
+                    lookingFor = overall_dict[app.practiceKey]
+                    answer = lookingFor[0]
+                    app.mama[answer] = answerChoice
+            #Criteria to get to box 3 from box 2
+            elif (answerChoice not in app.ima and answerChoice in app.mama and 
+                    answerChoice not in app.jyozu):
+                    if app.cardsToDo == 5:
+                        app.jyozu[app.practiceFlashCard.frontText] =answerChoice
+                    else:
+                        lookingFor = overall_dict[app.practiceKey]
+                        answer = lookingFor[0]
+                        app.jyozu[answer] = answerChoice
+            elif (answerChoice not in app.ima and answerChoice not in app.mama
+                    and answerChoice in app.jyozu):
+                    if app.practiceKey in hiraganaList:
+                        app.characterLevel -= 1
+                    elif app.practiceKey in vocabList:
+                        app.vocabLevel -= 1
+            else:
+                app.showMessage('There has been a storing error')
         elif questionCorrect == False:
-            #User hasn't done question before or gotten it wrong before
-            if targetAnswer not in incorrectAnswers:
-                incorrectAnswers[app.practiceFlashCard.frontText] = answerChoice
-            #Needs to be reviewed
-            elif targetAnswer in incorrectAnswers:
-                toBeReview[app.practiceFlashCard.frontText] =  answerChoice
+            #Get into box 2 from box 3
+            if (answerChoice not in app.ima and answerChoice not in app.mama 
+                and answerChoice in app.jyozu):
+                if app.cardsToDo == 5:
+                    app.mama[app.practiceFlashCard.frontText] = answerChoice
+                else:
+                    lookingFor = overall_dict[app.practiceKey]
+                    answer = lookingFor[0]
+                    app.mama[answer] = answerChoice
+            #Get into box 1 from box 2
+            elif (answerChoice not in app.ima and answerChoice in app.mama and 
+                answerChoice not in app.jyozu):
+                if app.cardsToDo == 5:
+                    app.ima[app.practiceFlashCard.frontText] = answerChoice
+                else:
+                    lookingFor = overall_dict[app.practiceKey]
+                    answer = lookingFor[0]
+                    app.ima[answer] = answerChoice
+            #Character & vocab levels
+            elif (answerChoice in app.ima and answerChoice not in app.mama and 
+                answerChoice not in app.jyozu):
+                if app.practiceKey in hiraganaList:
+                    app.characterLevel -= 1
+                elif app.practiceKey in vocabList:
+                    app.vocabLevel -= 1
+            else:
+                app.showMessage('There has been a storing error')
 #Storing
 def getPracticeHiraganaOrVocab(app, randomKey):
     hiraganaOrVocab = randomKey
@@ -112,10 +144,9 @@ def getPracticeHiraganaOrVocab(app, randomKey):
         seenVocabFlashCards[hiraganaOrVocab] = vocabValue
         seenFlashCards[hiraganaOrVocab] = vocabValue
         del toBePracticed[hiraganaOrVocab] 
+
 ######################################################################
-
 #The question in question
-
 #######################################################################
 
 #May be handy when I have more than one qus
@@ -128,49 +159,6 @@ def questionCard(app,canvas,questionType):
     elif questionType == 4: pass
     elif questionType == 4: pass
     else:app.showMessage('There as been an error')
-
-# def answerQuestion(app,canvas):
-#     startTime = time.time()
-#     defaultTimeLimit = app.baseProblemTime
-#     questionType = app.currQuestionType
-#     if questionType == 1: #hiragana to romanji
-#         questionFlashCard = FlashCard(app.newKey,toBePracticed[app.newKey])
-#         if (defaultTimeLimit != 0 and questionFlashCard.frontText 
-#             in hiraganaList):
-#                 targetAnswer = questionFlashCard.frontText
-#                 questionFlashCard.drawTimedFlashCard1(canvas, app)
-#                 print(targetAnswer)
-#                 app.showMessage('Press e to Input Your Answer!')
-#                 if app.wantInput == True:
-#                     answer = app.getUserInput('Please Type in Best Answer')
-#                     if answer == None:
-#                         app.wantInput = False
-#                     else:
-#                         modifiedIsCorrect(targetAnswer,answer)
-#                 else:
-#                     #Seleting an answer choice
-#                     listOfPossibleChoices =(random.sample(
-#                         practiceHiraganaAndVocab, k=4))
-#                     if targetAnswer in listOfPossibleChoices:
-#                         drawAnswerChoices(app,canvas)
-#                         #if clicked, that is answerChoice number
-#                         userAnswer  = app.answerChoice
-#                         modifiedIsCorrect(targetAnswer,userAnswer)
-
-#         elif defaultTimeLimit <= 0:
-#             app.showMessage("Time's Up!")
-#             app.showMessage('Please Press Right or Click Next to Continue')
-#     elif questionType == 2: #vocab to romanji
-#         pass
-#     elif questionType == 3: #romanji to vocab
-#         pass
-    
-#     elif questionType == 4: #romanji to hiragana
-#         pass
-
-#     else:
-#         app.showMessage("There has been an error")
-
 
 def drawAnswerChoices(app,canvas):
     randomChoice1 = app.listOfPossibleChoices[0]
@@ -264,11 +252,8 @@ def drawAnswerChoices(app,canvas):
         canvas.create_text(app.cx,app.cy*1.75,
                             text = 'Press e to Input Your Answer', 
                             fill ='black')
-#keep randomizing list until targetAnswer in list of possible answers
 ###########################################################################
-
 #Pressed
-
 ###########################################################################
 def practiceMode_keyPressed(app,event):
     if (event.key == 'p'):
@@ -349,9 +334,6 @@ def practice_mousePressed(app,event):
             app.makeFlashCard = True
             app.startQuestion = True
             app.finishedQuestion = False
-
-
-            
 ##############################################################################
 
 #"Modified" Functions (For MVP Testing)
@@ -491,25 +473,9 @@ def practice_timerFired(app):
             app.startQuestion = False
             app.finishedQuestion = True
 
-
-#############################################################################
-
-#Extras
-
-################################################################################
-answerStreak = list()
-def hasStreak(answerStreak):
-    for i in range(len(answerStreak)):
-        for j in range (i+1,len(answerStreak)):
-            if answerStreak[i][j] == 1:
-                return True
 ###########################################################################
-
 #Drawings
-
 ###########################################################################
-
-
 def drawAnswerChoices(app,canvas):
     randomChoice1 = app.listOfPossibleChoices[0]
     randomChoice2 = app.listOfPossibleChoices[1]
@@ -523,9 +489,7 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'light goldenrod')
         canvas.create_text(app.cx,app.cy*1.35,text = f'1 {randomChoice1}', 
         fill ='black' )
-      
         #Option 2
-        
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.4,
                                 app.cx//2,
@@ -533,9 +497,7 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'plum')
         canvas.create_text(app.cx,app.cy*1.45,text = f'2 {randomChoice2}', 
         fill ='black' )
-       
         #Option 3
-    
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.5,
                                 app.cx//2,
@@ -543,9 +505,7 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'lemon chiffon')
         canvas.create_text(app.cx,app.cy*1.55, text = f'3 {randomChoice3}', 
         fill ='black' )
-   
         #Option 4
-        
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.6,
                                 app.cx//2,
@@ -553,7 +513,6 @@ def drawAnswerChoices(app,canvas):
                                 fill = 'honeydew2')
         canvas.create_text(app.cx,app.cy*1.65, text = f'4 {randomChoice4}', 
         fill ='black')
-   
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.7,
                                 app.cx//2,
@@ -562,7 +521,6 @@ def drawAnswerChoices(app,canvas):
         canvas.create_text(app.cx,app.cy*1.75,
                             text = 'Press e to Input Your Answer', 
                             fill ='black')
-   
     elif app.darkMode == True:
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.3,
@@ -573,7 +531,6 @@ def drawAnswerChoices(app,canvas):
         fill ='black' )
        
         #Option 2
-        
         canvas.create_rectangle(app.cx*1.5,
                                 app.cy*1.4,
                                 app.cx//2,
@@ -608,6 +565,7 @@ def drawAnswerChoices(app,canvas):
         canvas.create_text(app.cx,app.cy*1.75,
                             text = 'Press e to Input Your Answer', 
                             fill ='black')
+
 def drawNextButton(app,canvas):
     canvas.create_rectangle(app.cx//1.2,
                             app.cy//2.5,
@@ -616,6 +574,7 @@ def drawNextButton(app,canvas):
                             fill = 'honeydew2')
     canvas.create_text(app.cx,app.cy//2, font = 'Arial', text = "Next", 
                         fill = 'DeepSkyBlue2')
+
 def drawFinishButton(app,canvas):
     canvas.create_rectangle(app.cx//1.2,
                             app.cy*1.2,
@@ -632,7 +591,6 @@ def drawPracticeCard(app,canvas):
     canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
     text ="Please Select/Input the Best Answer", fill = 'black')
 
-
 def practiceModeRedrawAll(app,canvas):
     canvas.create_text(app.cx,app.cy, font = 'Arial 20',
                         text = 'Press s to Start!')
@@ -648,9 +606,3 @@ def practiceModeRedrawAll(app,canvas):
         drawNextButton(app,canvas)  
         if app.cardsToDo == 0:
             drawFinishButton(app,canvas)
-        
-############################################################################
-
-#Internal Review Mode
-#Automatically switch to review mode after a certain point
-#############################################################################
