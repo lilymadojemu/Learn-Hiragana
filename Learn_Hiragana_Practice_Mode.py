@@ -353,12 +353,14 @@ def modifiedIsCorrect(targetAnswer, answerChoice, app, diff):
         praise = random.choice(correctMessages)
         app.showMessage(praise)
         app.finishedQuestion = True
+        app.showMessage("Click Next or Press Right")
     elif answerChoice != targetAnswer:
         #defaulQuestionTime - time user takes to answer a question
         storeCorrectIncorrect(targetAnswer, False, diff,app)
         notPraise = random.choice(incorrectMessages)
         app.showMessage(notPraise)
         app.finishedQuestion = True
+        app.showMessage("Click Next or Press Right")
 
 def modifiedAnswerQuestion(app):
     realTarget = app.practiceFlashCard.backText
@@ -419,15 +421,17 @@ def modifiedAnswerQuestion(app):
 def practice_timerFired(app):
     if app.paused == False:
         #app.listOfPossibleChoices = getAnswerChoices()  
-        if app.finishedQuestion == False:
-            app.baseProblemTime -= 1
-            app.timeTaken += 1
-        elif app.baseProblemTime == 0 and app.isContinueKeyPressed == False:
-            app.startQuestion = False
-            app.finishedQuestion = True
-        elif (app.startQuestion == True and app.finishedQuestion == False and 
+        if (app.startQuestion == True and app.finishedQuestion == False and 
                 app.currQuestionType == 1):
             modifiedAnswerQuestion(app)
+            if app.finishedQuestion == False:
+                app.baseProblemTime -= 1
+                app.timeTaken += 1
+            
+        if app.baseProblemTime == 0:
+            app.startQuestion = False
+            app.finishedQuestion = True
+
 
 #############################################################################
 
@@ -548,13 +552,21 @@ def drawAnswerChoices(app,canvas):
                             text = 'Press e to Input Your Answer', 
                             fill ='black')
 def drawNextButton(app,canvas):
-    canvas.create_rectangle(app.cx*3,
+    canvas.create_rectangle(app.cx//1.2,
+                            app.cy//2.5,
+                            app.cx*1.2,
+                            app.cy//1.8, 
+                            fill = 'honeydew2')
+    canvas.create_text(app.cx,app.cy//2, font = 'Arial', text = "Next", 
+                        fill = 'DeepSkyBlue2')
+def drawFinishButton(app,canvas):
+    canvas.create_rectangle(app.cx//1.2,
                             app.cy*1.2,
-                            app.cx,
-                            app.cy*1.1, 
+                            app.cx*1.2,
+                            app.cy//3, 
                             fill = 'pale violet red')
-    canvas.create_text(app.cx*1.5,app.cy*1.15,
-                        font = 'Arial',  text = "Next", fill = 'black')
+    canvas.create_text(app.cx,app.cy//5, font = 'Arial', text = "Finish", 
+                        fill = 'azure4')
 def practiceModeRedrawAll(app,canvas):
     canvas.create_text(app.cx,app.cy, font = 'Arial 20',
                         text = 'Press s to Start!')
@@ -565,30 +577,11 @@ def practiceModeRedrawAll(app,canvas):
         # realTarget = app.practiceFlashCard.backText
         # myTarget = realTarget[0]
         drawAnswerChoices(app,canvas)  
-    elif app.finishedQuestion == True:
-        app.showMessage("Click Next or")
+    if app.finishedQuestion == True:
         drawNextButton(app,canvas)  
-    # elif app.isFirst == True:
-    #     app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
-    #     canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
-    # text ="Please Select/Input the Best Answer", fill = 'black')
-    #     realTarget = app.practiceFlashCard.backText
-    #     myTarget = realTarget[0]
-    #     drawAnswerChoices(app,canvas)  
-    #     modifiedAnswerQuestion(app,myTarget)
-
-    #if app.makeFlashCard == False and app.cardsToDo == 5:
+    elif app.cardsToDo == 0:
+        drawFinishButton(app,canvas)
         
-        
-    # # elif app.makeFlashCard == True and app.cardsToDo >= 0:
-    # #     app.flashCard.drawFlashCard(canvas,app)
-    # elif app.makeFlashCard == True and app.cardsToDo >= 0:
-    #     app.newKey = getRandomKey()
-    #     drawNewCard(app,canvas)  
-
-    #if answer is correct and in a certain range
-
-
 ############################################################################
 
 #Internal Review Mode

@@ -1,5 +1,6 @@
 from Classes import*
 from Populate_Values import*
+import random, time
 from random import randrange, sample
 
 modifyListOfKeys = list(overall_dict.keys())
@@ -8,6 +9,7 @@ toBeLearned = copy.deepcopy(overall_dict)
 seenFlashCards = dict()
 seenHiraganaFlashCards = dict()
 seenVocabFlashCards = dict()
+
 def learning_appStarted(app):
     pass
 def getRandomKey():

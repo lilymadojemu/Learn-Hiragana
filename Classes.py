@@ -3,16 +3,6 @@ Contains all classes that will be used
 '''
 from Populate_Values import*
 from cmu_112_graphics import*
-import random, time, copy
-class correctWord(object):
-    def __init__(self, correctWord):
-        self.correctWord = correctWord
-    def isCorrectAnswer(self, possibleAnswer):
-        if self.frontText == possibleAnswer:
-            return True
-        else:
-            return False  
-
 ''' In Learning Phase'''
 
 class FlashCard(object):
@@ -114,62 +104,51 @@ class FlashCard(object):
                             image=ImageTk.PhotoImage(app.image1))               
         canvas.create_text(app.cx//3.3, app.cy//2,font = 'Arial 15',
     text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
-                            fill = 'goldenrod')
+                            fill = 'DeepSkyBlue2')
         canvas.create_text(app.cx*1.5, app.cy//2,font = 'Arial 15 ',
                             text = f"Cards Left:{app.cardsToDo}", 
-                            fill = 'goldenrod')
+                            fill = 'DeepSkyBlue2')
         canvas.create_text(app.cx, app.cy//3,font = 'Arial 15',
                             text = f"Time Limit:{app.baseProblemTime}", 
-                            fill = 'goldenrod')
+                            fill = 'DeepSkyBlue2')
         canvas.create_text(app.textcx,app.textcy,
                         font = 'Arial 20',
                         text = f"{self.frontText}", 
                         fill = 'dark orchid')
 
 
-#What is a flip, like a blink/flash, will need another background for back
-#Understanding from https://www.youtube.com/watch?v=kvd6i1mXec8
-#from https://coderedirect.com/questions/124487/simple-animation-using-tkinter
-    def blinkSmallerLearning(self,app):
-        #Make app.cx and app.cy smaller until it reaches the center
-        # app.cx = app.width//2
-        # app.cy = app.height//2
-        if app.isFlipped == True:
-            #if app.cx < app.width//4 and app.cy < app.height//4:
-                app.cx -= 1
-                app.cy -= 1
-                #self.drawFlashCard.config(app.cx,app.cy, font = 'Arial 15')
-                #self.after(1, self.blinkSmallerLearning(app))
-            #elif app.cx == app.width//4 and app.cy == app.height//4:
-               # self.blinkDefaultLearning(app)
-    def blinkDefaultLearning(self,app):
-        if app.cx == app.width//4 and app.cy == app.height//4:
-            app.cx += 1
-            app.cy += 1
-            self.drawFlashCard.config(app.cx,app.cy, font = 'Arial 20')
-            self.after(1,self.blinkDefaultLearning(app))
+# #What is a flip, like a blink/flash, will need another background for back
+# #Understanding from https://www.youtube.com/watch?v=kvd6i1mXec8
+# #from https://coderedirect.com/questions/124487/simple-animation-using-tkinter
+#     def blinkSmallerLearning(self,app):
+#         #Make app.cx and app.cy smaller until it reaches the center
+#         # app.cx = app.width//2
+#         # app.cy = app.height//2
+#         if app.isFlipped == True:
+#             #if app.cx < app.width//4 and app.cy < app.height//4:
+#                 app.cx -= 1
+#                 app.cy -= 1
+#                 #self.drawFlashCard.config(app.cx,app.cy, font = 'Arial 15')
+#                 #self.after(1, self.blinkSmallerLearning(app))
+#             #elif app.cx == app.width//4 and app.cy == app.height//4:
+#                # self.blinkDefaultLearning(app)
+#     def blinkDefaultLearning(self,app):
+#         if app.cx == app.width//4 and app.cy == app.height//4:
+#             app.cx += 1
+#             app.cy += 1
+#             self.drawFlashCard.config(app.cx,app.cy, font = 'Arial 20')
+#             self.after(1,self.blinkDefaultLearning(app))
 
-    def animatePractice(self,app):
-        app.cx = app.width//2
-        app.cy = app.height//2
-        if app.cx <= app.width and app.cy <= app.height:
-            app.cx -= 1
-            app.cy -= 1
-            self.drawTimedFlashCard(app.cx,app.cy)
-            self.after(10,self.animatePractice)
+#     def animatePractice(self,app):
+#         app.cx = app.width//2
+#         app.cy = app.height//2
+#         if app.cx <= app.width and app.cy <= app.height:
+#             app.cx -= 1
+#             app.cy -= 1
+#             self.drawTimedFlashCard(app.cx,app.cy)
+#             self.after(10,self.animatePractice)
     def getMeaning(self, word, app):
         if word in app.bigDictionary:
             return app.bigDictionary[word]
         else:
             app.showMessage("Sorry, we don't have that word\nPress d to add it or q to quit!")
-    
-
-
-# #Base: what to do with values that are correct
-class AssignedTime(object):
-    def __init__(self, app):
-        self.app.baseProblemTime = app.baseProblemTime 
-    def mapTime(self,timeTaken):
-        timeDifference = self.app.baseProblemTime - timeTaken
-        #If in a certain range
-        return timeDifference
