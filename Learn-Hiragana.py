@@ -59,7 +59,6 @@ def appStarted(app):
     app.makeOldFlashCard = False 
     app.makeFlashCard = False
     app.firstKey = getRandomKey()   
-    #getHiraganaOrVocab(app.firstKey)
     app.flashCard = FlashCard(app.firstKey,overall_dict[app.firstKey])
     app.newKey = getRandomKey()  
     app.prevCard = app.firstKey
@@ -81,6 +80,8 @@ def appStarted(app):
     app.cardsToDo = 5   
     app.cardsPracticed = 0
     app.practiceFlashCard = FlashCard(charaKey, character_dict[charaKey])
+    app.practiceKey = getPracticeKey(app)
+    app.practiceValue = None
     #time alloted to answer each question during practice phase
     app.baseProblemTime = 30
     app.timeTaken = 0    
