@@ -77,12 +77,11 @@ def learningMode_keyPressed(app,event):
             app.isContinueKeyPressed = True
             app.makeFlashCard = True
             app.cardsLearned += 1
-            if app.cardsToLearn != 0:
-                app.cardsToLearn -= 1
+            app.cardsToLearn -= 1
         #Based on seencards
         elif app.cardsToLearn == 0:
             app.makeOldFlashCard = False
-            print(app.prevFlashCard)
+            #print(app.prevFlashCard)
             #print(app.newKey)
             #Can only see old things
             #Populate new card with old information in correct order
@@ -98,7 +97,7 @@ def learningMode_keyPressed(app,event):
                         notSeenPreviousCardKeys.append(nextKey)
                         #     #Take it out of seen flash cards
                         app.newKey = nextKey
-                        print(app.newKey)
+                        #print(app.newKey)
             app.isContinueKeyPressed = True
             app.makeFlashCard = True
                     
@@ -111,7 +110,7 @@ def learningMode_keyPressed(app,event):
     elif event.key == 'l':
         app.phase = 'practice'
         app.makeFlashCard = False
-        
+
 def learningMode_mousePressed(app,event):
     #Determines whether a card needs to be flip
     if app.width >= event.x and event.y >= app.height:

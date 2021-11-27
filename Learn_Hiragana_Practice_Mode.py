@@ -17,14 +17,11 @@ toBePracticed = copy.deepcopy(overall_dict)
 #Getting Things
 
 ###############################################################################
-def getPracticeKey(app):
-    getPreviousKey(app)
-    # if app.ima != {}:
-    #     previousKeys = list()
-    #     for prevKey in app.prevFlashCard:
-    #         previousKeys.append(prevKey)
-    #     randomKey = random.choice(previousKeys)
-    #     return randomKey
+def getBox1Key(app): pass
+
+def getBox2Key(app): pass
+
+def getBox3Key(app): pass
 
 def getQuestionType():
     randomQuestionType = random.randint(1,4)
@@ -50,85 +47,84 @@ def getSummary(app):
 #Determining Correctness
 ###############################################################
 
-# def isCorrect(app,targetAnswer, questionType, timeDifference):
-#     correctMessages = ["That's Correct!", "You're the best!", 
-#                             "You're a Hiragana Expert!"]
-#     incorrectMessages = ["Sorry, that's incorrect","Better luck next time!"]
-#     #may need to be changed for other question types
-#     answerChoice = app.userAnswer
-#     if answerChoice == targetAnswer and app.finishedQuestion == True:
-#         storeCorrectIncorrect(targetAnswer, True,timeDifference,app)
-#         praise = random.choice(correctMessages)
-#         app.showMessage(praise)
-#     elif answerChoice != targetAnswer and app.finishedQuestion == True:
-#         #defaulQuestionTime - time user takes to answer a question
-#         storeCorrectIncorrect(targetAnswer, False,timeDifference,app)
-#         notPraise = random.choice(incorrectMessages)
-#         app.showMessage(notPraise)
-
-def storeCorrectIncorrect(targetAnswer, questionCorrect, timeDifference, app):
+def storeCorrectIncorrect(questionCorrect,app):
     #Question Type 1
     answerChoice = app.userAnswer
+    print(answerChoice)
     questionType = app.currQuestionType
     if questionType == 1:
         if questionCorrect == True:
+            print(app.ima.values())
             #No correct answers in box 1
             #Criteria to get to box 2 from box 1
-            if (answerChoice in app.ima and answerChoice not in app.mama and 
-                answerChoice not in app.jyozu):
+            if (answerChoice in list(app.ima.values())):
+                print('This is good')
+            if answerChoice in app.prevFlashCard:
+                print('What is this nonsense')
+            if (answerChoice in app.ima.values() and 
+                answerChoice not in app.mama.values() and 
+                answerChoice not in app.jyozu.values()):
+                #print(app.prevFlashCard)
                 #Initial FlashCard
-                if app.cardsToDo == 5:
-                    app.mama[app.practiceFlashCard.frontText] = answerChoice
+                #if app.cardsToDo == 5:
+                app.mama[app.practiceKey] = answerChoice
+                print(app.mama)
                 #Other FlashCards
-                else:
-                    lookingFor = overall_dict[app.practiceKey]
-                    answer = lookingFor[0]
-                    app.mama[answer] = answerChoice
+                # else:
+                #     lookingFor = overall_dict[app.practiceKey]
+                #     answer = lookingFor[0]
+                #     app.mama[answer] = answerChoice
             #Criteria to get to box 3 from box 2
-            elif (answerChoice not in app.ima and answerChoice in app.mama and 
-                    answerChoice not in app.jyozu):
-                    if app.cardsToDo == 5:
-                        app.jyozu[app.practiceFlashCard.frontText] =answerChoice
-                    else:
-                        lookingFor = overall_dict[app.practiceKey]
-                        answer = lookingFor[0]
-                        app.jyozu[answer] = answerChoice
-            elif (answerChoice not in app.ima and answerChoice not in app.mama
-                    and answerChoice in app.jyozu):
+            elif (answerChoice not in app.ima.values() and 
+                    answerChoice in app.mama.values() and 
+                    answerChoice not in app.jyozu.values()):
+                    #if app.cardsToDo == 5:
+                    app.jyozu[app.practiceKey]= answerChoice
+                    # else:
+                    #     lookingFor = overall_dict[app.practiceKey]
+                    #     answer = lookingFor[0]
+                    #     app.jyozu[answer] = answerChoice
+            elif (answerChoice not in app.ima.values() and 
+                    answerChoice not in app.mama.values()
+                    and answerChoice in app.jyozu.values()):
                     if app.practiceKey in hiraganaList:
-                        app.characterLevel -= 1
+                        app.characterLevel += 1
                     elif app.practiceKey in vocabList:
-                        app.vocabLevel -= 1
+                        app.vocabLevel += 1
             else:
-                app.showMessage('There has been a storing error')
+                print(app.mama)
+                app.showMessage('Question Correct storing error')
         elif questionCorrect == False:
             #Get into box 2 from box 3
-            if (answerChoice not in app.ima and answerChoice not in app.mama 
-                and answerChoice in app.jyozu):
-                if app.cardsToDo == 5:
-                    app.mama[app.practiceFlashCard.frontText] = answerChoice
-                else:
-                    lookingFor = overall_dict[app.practiceKey]
-                    answer = lookingFor[0]
-                    app.mama[answer] = answerChoice
+            if (answerChoice not in app.ima.values() and 
+                answerChoice not in app.mama.values()
+                and answerChoice in app.jyozu.values()):
+                # if app.cardsToDo == 5:
+                app.mama[app.practiceKey] = answerChoice
+                # else:
+                #     lookingFor = overall_dict[app.practiceKey]
+                #     answer = lookingFor[0]
+                #     app.mama[answer] = answerChoice
             #Get into box 1 from box 2
-            elif (answerChoice not in app.ima and answerChoice in app.mama and 
-                answerChoice not in app.jyozu):
-                if app.cardsToDo == 5:
-                    app.ima[app.practiceFlashCard.frontText] = answerChoice
-                else:
-                    lookingFor = overall_dict[app.practiceKey]
-                    answer = lookingFor[0]
-                    app.ima[answer] = answerChoice
-            #Character & vocab levels
-            elif (answerChoice in app.ima and answerChoice not in app.mama and 
-                answerChoice not in app.jyozu):
+            elif (answerChoice not in app.ima.values() and 
+                answerChoice in app.mama.values() and 
+                answerChoice not in app.jyozu.values()):
+                #if app.cardsToDo == 5:
+                    app.ima[app.practiceKey] = answerChoice
+                # else:
+                #     lookingFor = overall_dict[app.practiceKey]
+                #     answer = lookingFor[0]
+                #     app.ima[answer] = answerChoice
+            #Lower Character & vocab levels
+            elif (answerChoice in app.ima.values() and 
+                answerChoice not in app.mama.values() and 
+                answerChoice not in app.jyozu.values()):
                 if app.practiceKey in hiraganaList:
                     app.characterLevel -= 1
                 elif app.practiceKey in vocabList:
                     app.vocabLevel -= 1
             else:
-                app.showMessage('There has been a storing error')
+                app.showMessage('Question Incorrect storing error')
 #Storing
 def getPracticeHiraganaOrVocab(app, randomKey):
     hiraganaOrVocab = randomKey
@@ -148,18 +144,6 @@ def getPracticeHiraganaOrVocab(app, randomKey):
 ######################################################################
 #The question in question
 #######################################################################
-
-#May be handy when I have more than one qus
-def questionCard(app,canvas,questionType):
-    questionFlashCard = FlashCard(app.newKey,toBePracticed[app.newKey])
-    if questionType == 1:
-        currQuestion = questionFlashCard.drawTimedFlashCard1(canvas, app)
-        return currQuestion
-    elif questionType == 2: pass
-    elif questionType == 4: pass
-    elif questionType == 4: pass
-    else:app.showMessage('There as been an error')
-
 def drawAnswerChoices(app,canvas):
     randomChoice1 = app.listOfPossibleChoices[0]
     randomChoice2 = app.listOfPossibleChoices[1]
@@ -262,28 +246,38 @@ def practiceMode_keyPressed(app,event):
         app.showMessage("All your progress will be lost!")
         app.phase = 'start'
     elif event.key == 'Right':
-        app.currQuestionType = getQuestionType()  
-        #getPracticeKey(app)
-        app.practiceKey = getPreviousKey(app)
-        app.listOfPossibleChoices = getAnswerChoices() 
-        realTarget = overall_dict[app.practiceKey]
-        #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
-        app.listOfPossibleChoices.insert(randrange(
-                                len(app.listOfPossibleChoices)+1),realTarget[0]) 
-        app.baseProblemTime = 30
-        app.timeTaken = 0
-        app.makeFlashCard = True
-        app.startQuestion = True
-        app.finishedQuestion = False
-        app.isContinueKeyPressed = True
-        if app.cardsToDo != 0:
-            app.cardsToDo -= 1
+        if app.ima == app.prevFlashCard:
+            app.currQuestionType = getQuestionType()  
+            #getPracticeKey(app)
+            app.practiceKey = getPreviousKey(app)
+            app.listOfPossibleChoices = getAnswerChoices() 
+            realTarget = overall_dict[app.practiceKey]
+            #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
+            app.listOfPossibleChoices.insert(randrange(
+                                    len(app.listOfPossibleChoices)+1),realTarget[0]) 
+            app.baseProblemTime = 30
+            app.timeTaken = 0
+            app.makeFlashCard = True
+            app.startQuestion = True
+            app.finishedQuestion = False
+            app.isContinueKeyPressed = True
+            if app.cardsToDo != 0:
+                app.cardsToDo -= 1
+        else:
+            if app.ima != dict() and 30 <= app.timetaken >= 40: #Box1
+                app.practiceKey = getBox1Key(app)
+
+            elif app.mama != dict() and 41 <= app.timeTaken >=60:
+                app.practiceKey = getBox2Key(app)
+            elif app.jyozu != dict() and app.timeTaken >= 60:
+                app.practiceKey = app.getBox3Key(app)
+
     if event.key == 's': 
         app.currQuestionType = getQuestionType()  
-        #getPracticeKey(app)
         app.practiceKey = getPreviousKey(app)
         app.listOfPossibleChoices = getAnswerChoices()
-        realTarget = app.practiceFlashCard.backText
+        print(app.practiceKey)
+        realTarget = overall_dict[app.practiceKey]
         #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
         app.listOfPossibleChoices.insert(randrange(
                                 len(app.listOfPossibleChoices)+1),realTarget[0])  
@@ -325,7 +319,7 @@ def practice_mousePressed(app,event):
             app.option1Chosen = True
         elif event.y: #Click Next/Finished
             app.currQuestionType = getQuestionType()  
-            getPracticeKey(app)
+            getPreviousKey(app)
             app.listOfPossibleChoices = getAnswerChoices()
             realTarget = app.practiceFlashCard.backText
             #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
@@ -337,115 +331,82 @@ def practice_mousePressed(app,event):
             app.startQuestion = True
             app.finishedQuestion = False
 ##############################################################################
-def modifiedIsCorrect(targetAnswer, answerChoice, app, diff):
+def modifiedIsCorrect(targetAnswer, answerChoice, app):
     correctMessages = ["That's Correct!", "You're the best!", 
                             "You're a Hiragana Expert!"]
-    incorrectMessages = ["Sorry, that's incorrect","Better luck next time!"]
+    incorrectMessages = ["Sorry, that's incorrect",
+                "Better luck next time! Click Next/Press Right to Continue."]
     #may need to be changed for other question types
+    
     if answerChoice == targetAnswer and app.finishedQuestion == False:
-        storeCorrectIncorrect(targetAnswer,True,diff, app)
+        app.userAnswer = answerChoice
+        storeCorrectIncorrect(True, app)
         praise = random.choice(correctMessages)
         app.showMessage(praise)
-        app.finishedQuestion = True
         app.startQuestion = False
-        app.showMessage("Click Next or Press Right")
+        app.finishedQuestion = True
     elif answerChoice != targetAnswer and app.finishedQuestion == False:
-        storeCorrectIncorrect(targetAnswer, False, diff,app)
+        app.userAnswer = answerChoice
+        storeCorrectIncorrect(False,app)
         notPraise = random.choice(incorrectMessages)
-        app.showMessage(notPraise)
-        app.finishedQuestion = True
+        app.showMessage(notPraise)  
         app.startQuestion = False
-        app.showMessage("Click Next or Press Right")
+        app.finishedQuestion = True
 
 def modifiedAnswerQuestion(app):
-    #Initial
-    targetWhole = app.practiceFlashCard.backText
-    targetAnswer = targetWhole[0]
     #Other Cards
-    lookingFor = overall_dict[app.practiceKey]
-    answer = lookingFor[0]
-    startTime = time.time()
+    values = overall_dict[app.practiceKey]
+    answerValue = values[0]
     defaultTimeLimit = app.baseProblemTime
     #hiragana to romanji
     if app.currQuestionType == 1:
-        if app.cardsToDo == 5:
-            if defaultTimeLimit > 0:
-                    if app.wantInput == True:
-                        if app.userAnswer == None:
-                            app.wantInput = False
-                        else:
-                            endTime = time.time()
-                            diff = endTime = startTime
-                            userAnswer = app.userAnswer
-                            modifiedIsCorrect(targetAnswer, userAnswer, app, 
-                                                diff)
+        if defaultTimeLimit > 0:
+                if app.wantInput == True:
+                    if app.userAnswer == None:
+                        app.wantInput = False
                     else:
-                            if targetAnswer in app.listOfPossibleChoices:
-                                if app.option1Chosen == True:
-                                    endTime = time.time()
-                                    diff = endTime - startTime
-                                    userAnswer  = app.listOfPossibleChoices[0]
-                                    modifiedIsCorrect(targetAnswer,userAnswer, 
-                                                        app, diff)
-                                elif app.option2Chosen == True:
-                                    endTime = time.time()
-                                    diff = endTime - startTime
-                                    userAnswer = app.listOfPossibleChoices[1]
-                                    modifiedIsCorrect(targetAnswer,userAnswer,
-                                                    app, diff)
-                                elif app.option3Chosen == True:
-                                    endTime = time.time()
-                                    diff = endTime - startTime
-                                    userAnswer = app.listOfPossibleChoices[2]
-                                    modifiedIsCorrect(targetAnswer,userAnswer, 
-                                                        app, diff)
-                                elif app.option4Chosen == True:
-                                    endTime = time.time()
-                                    diff = endTime - startTime
-                                    userAnswer = app.listOfPossibleChoices[3]
-                                    modifiedIsCorrect(targetAnswer,userAnswer, 
-                                                        app, diff)
-            elif defaultTimeLimit == 0:
-                app.showMessage("Time's Up! Please Press Right to Continue")
-        else:
-            if defaultTimeLimit > 0:
-                    if app.wantInput == True:
-                        if app.userAnswer == None:
-                            app.wantInput = False
-                        else:
-                            endTime = time.time()
-                            diff = endTime = startTime
-                            userAnswer = app.userAnswer
-                            modifiedIsCorrect(answer, userAnswer, app, 
-                                                diff)
-            else:
-                if answer in app.listOfPossibleChoices:
-                    if app.option1Chosen == True:
-                        endTime = time.time()
-                        diff = endTime - startTime
-                        userAnswer  = app.listOfPossibleChoices[0]
-                        modifiedIsCorrect(answer,userAnswer, 
-                                            app, diff)
-                    elif app.option2Chosen == True:
-                        endTime = time.time()
-                        diff = endTime - startTime
-                        userAnswer = app.listOfPossibleChoices[1]
-                        modifiedIsCorrect(answer,userAnswer,
-                                        app, diff)
-                    elif app.option3Chosen == True:
-                        endTime = time.time()
-                        diff = endTime - startTime
-                        userAnswer = app.listOfPossibleChoices[2]
-                        modifiedIsCorrect(answer,userAnswer, 
-                                            app, diff)
-                    elif app.option4Chosen == True:
-                        endTime = time.time()
-                        diff = endTime - startTime
-                        userAnswer = app.listOfPossibleChoices[3]
-                        modifiedIsCorrect(answer,userAnswer, 
-                                            app, diff)
-                elif defaultTimeLimit == 0:
-                    app.showMessage("Time's Up! Please Press Right to Continue")
+                        userAnswer = app.userAnswer
+                        modifiedIsCorrect(answerValue, userAnswer, app)
+                else:
+                    if answerValue in app.listOfPossibleChoices:
+                        if app.option1Chosen == True:
+                            userAnswer  = app.listOfPossibleChoices[0]
+                            modifiedIsCorrect(answerValue,userAnswer,app)
+                        elif app.option2Chosen == True:
+                            userAnswer = app.listOfPossibleChoices[1]
+                            modifiedIsCorrect(answerValue,userAnswer,app)
+                        elif app.option3Chosen == True:
+                            userAnswer = app.listOfPossibleChoices[2]
+                            modifiedIsCorrect(answerValue,userAnswer,app)
+                        elif app.option4Chosen == True:
+                            userAnswer = app.listOfPossibleChoices[3]
+                            modifiedIsCorrect(answerValue,userAnswer,app)
+        elif defaultTimeLimit == 0:
+            app.showMessage("Time's Up! Please Press Right to Continue")
+        # else:
+        #     if defaultTimeLimit > 0:
+        #             if app.wantInput == True:
+        #                 if app.userAnswer == None:
+        #                     app.wantInput = False
+        #                 else:
+        #                     userAnswer = app.userAnswer
+        #                     modifiedIsCorrect(answer, userAnswer, app)
+        #     else:
+        #         if answer in app.listOfPossibleChoices:
+        #             if app.option1Chosen == True:
+        #                 userAnswer  = app.listOfPossibleChoices[0]
+        #                 modifiedIsCorrect(answer,userAnswer,app)
+        #             elif app.option2Chosen == True:
+        #                 userAnswer = app.listOfPossibleChoices[1]
+        #                 modifiedIsCorrect(answer,userAnswer,app)
+        #             elif app.option3Chosen == True:
+        #                 userAnswer = app.listOfPossibleChoices[2]
+        #                 modifiedIsCorrect(answer,userAnswer,app)
+        #             elif app.option4Chosen == True:
+        #                 userAnswer = app.listOfPossibleChoices[3]
+        #                 modifiedIsCorrect(answer,userAnswer,app)
+        #         elif defaultTimeLimit == 0:
+        #             app.showMessage("Time's Up! Please Press Right to Continue")
     elif app.currQuestionType == 2: #vocab to romanji
         pass
     elif app.currQuestionType == 3: #romanji to vocab
@@ -456,20 +417,19 @@ def modifiedAnswerQuestion(app):
     else:
         app.showMessage("Sorry, There has been an error")
             
-
 #Automatically move on to next flashcard card, Doing stage
 def practice_timerFired(app):
     if app.paused == False:
-        #app.listOfPossibleChoices = getAnswerChoices()  
         if (app.startQuestion == True and app.finishedQuestion == False and 
                 app.currQuestionType == 1):
-            modifiedAnswerQuestion(app)
-            if app.finishedQuestion == False:
+                startTime = time.time()
+                modifiedAnswerQuestion(app)
                 app.baseProblemTime -= 1
-                app.timeTaken += 1
-        if app.baseProblemTime == 0:
-            app.startQuestion = False
-            app.finishedQuestion = True
+                endTime = time.time()
+                app.timeTaken = endTime - startTime
+                if app.baseProblemTime == 0:
+                    app.startQuestion = False
+                    app.finishedQuestion = True
 
 ###########################################################################
 #Drawings
@@ -585,20 +545,22 @@ def drawPracticeCard(app,canvas):
     #FlashCard info.
     practiceFlashCard = FlashCard(app.practiceKey, overall_dict[app.practiceKey])
     practiceFlashCard.drawTimedFlashCard1(canvas, app)
-    modifiedAnswerQuestion(app)
+    #modifiedAnswerQuestion(app)
     canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
     text ="Please Select/Input the Best Answer", fill = 'black')
 
 def practiceModeRedrawAll(app,canvas):
     canvas.create_text(app.cx,app.cy, font = 'Arial 20',
                         text = 'Press s to Start!')
-    if app.makeFlashCard == True and app.cardsToDo == 5:
-        getPreviousKey(app)
-        firstPracticeCard = FlashCard()
-        app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
-        canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
-        text ="Please Select/Input the Best Answer", fill = 'black')
-        drawAnswerChoices(app,canvas)  
+    #First Run Through
+    # if (app.makeFlashCard == True and app.cardsToDo == 5 and 
+    #     app.ima == app.prevFlashCard):
+    #     getPreviousKey(app)
+    #     firstPracticeCard = FlashCard()
+    #     app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
+    #     canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
+    #     text ="Please Select/Input the Best Answer", fill = 'black')
+    #     drawAnswerChoices(app,canvas)  
     if app.makeFlashCard == True:
         drawPracticeCard(app,canvas) 
         drawAnswerChoices(app,canvas)  
@@ -609,3 +571,6 @@ def practiceModeRedrawAll(app,canvas):
     #If time difference is in some range, draw that card from box 2 or 3
     #Box 1, First five from learning mode that is the first time seeing and 
     # anything wrong from box 2
+    #if app.ima != dict() and 30 <= app.timeTaken >= 40:
+        #drawPracticeCard (Where will app.practice key come from?)
+    #elif

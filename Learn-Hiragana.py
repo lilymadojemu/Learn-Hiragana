@@ -84,7 +84,7 @@ def appStarted(app):
     app.cardsToDo = 10   
     app.cardsPracticed = 0
     app.practiceFlashCard = FlashCard(charaKey, character_dict[charaKey])
-    app.practiceKey = getPracticeKey(app)
+    app.practiceKey = getPreviousKey(app)
     app.practiceValue = None
     #time alloted to answer each question during practice phase
     app.baseProblemTime = 30
