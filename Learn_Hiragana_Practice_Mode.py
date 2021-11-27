@@ -364,11 +364,15 @@ def modifiedIsCorrect(targetAnswer, answerChoice, app):
 
 def modifiedAnswerQuestion(app):
     #Other Cards
-    values = overall_dict[app.practiceKey]
-    answerValue = values[0]
+
+    
     defaultTimeLimit = app.baseProblemTime
     #hiragana to romanji
-    if app.currQuestionType == 1:
+    if (app.currQuestionType == 1 and app.startQuestion == True and 
+        app.finishedQuestion == False):
+        values = overall_dict[app.practiceKey]
+        answerValue = values[0]
+        print(answerValue)
         if defaultTimeLimit > 0:
                 if app.wantInput == True:
                     if app.userAnswer == None:
