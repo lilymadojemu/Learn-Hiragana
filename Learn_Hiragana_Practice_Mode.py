@@ -15,13 +15,28 @@ toBePracticed = copy.deepcopy(overall_dict)
 #to give users opporunity to end session and see progress
 ###############################################################################
 #Getting Things
-
 ###############################################################################
-def getBox1Key(app): pass
+seenBox1Keys = []
+def getBox1Key(app):
+    box1Keys = list(app.ima.keys())
+    for currBox1Key in box1Keys:
+        if currBox1Key != app.practiceKey and currBox1Key not in seenBox1Keys:
+            seenBox1Keys.append(currBox1Key)
+            return currBox1Key
+seenBox2Keys = []
+def getBox2Key(app):
+    box2Keys =list(app.mama.keys())
+    for currBox2Key in box2Keys:
+        if currBox2Key != app.practiceKey and currBox2Key not in seenBox2Keys:
+            seenBox2Keys.append(currBox2Key)
+            return currBox2Key
 
-def getBox2Key(app): pass
-
-def getBox3Key(app): pass
+seenBox3Keys = []
+def getBox3Key(app):
+    box3Keys = list(app.jyozu.keys())
+    for currBox3Key in box3Keys:
+        seenBox3Keys.append(currBox3Key)
+        return currBox3Key
 
 def getQuestionType():
     randomQuestionType = random.randint(1,4)
@@ -38,7 +53,6 @@ def getAnswerChoices():
             if len(romanji) == 1:
                 characterPronunciations.append(romanji)
     return random.sample(characterPronunciations, k=3)
-
 #Once practice Mode is finished/ on Transition screen, 
 # user will seen what they got wrong and what they got right in the end
 def getSummary(app):
@@ -246,32 +260,29 @@ def practiceMode_keyPressed(app,event):
         app.showMessage("All your progress will be lost!")
         app.phase = 'start'
     elif event.key == 'Right':
+        app.currQuestionType = getQuestionType()  
         if app.ima == app.prevFlashCard:
-            app.currQuestionType = getQuestionType()  
-            #getPracticeKey(app)
             app.practiceKey = getPreviousKey(app)
-            app.listOfPossibleChoices = getAnswerChoices() 
-            realTarget = overall_dict[app.practiceKey]
-            #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
-            app.listOfPossibleChoices.insert(randrange(
-                                    len(app.listOfPossibleChoices)+1),realTarget[0]) 
-            app.baseProblemTime = 30
-            app.timeTaken = 0
-            app.makeFlashCard = True
-            app.startQuestion = True
-            app.finishedQuestion = False
-            app.isContinueKeyPressed = True
-            if app.cardsToDo != 0:
-                app.cardsToDo -= 1
-        else:
+        else: #THESE TIMES MAY CHANGE
             if app.ima != dict() and 30 <= app.timetaken >= 40: #Box1
                 app.practiceKey = getBox1Key(app)
-
             elif app.mama != dict() and 41 <= app.timeTaken >=60:
                 app.practiceKey = getBox2Key(app)
             elif app.jyozu != dict() and app.timeTaken >= 60:
-                app.practiceKey = app.getBox3Key(app)
-
+                app.practiceKey = getBox3Key(app)
+        app.listOfPossibleChoices = getAnswerChoices() 
+        realTarget = overall_dict[app.practiceKey]
+        #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
+        app.listOfPossibleChoices.insert(randrange(
+                                len(app.listOfPossibleChoices)+1),realTarget[0]) 
+        app.baseProblemTime = 30
+        app.timeTaken = 0
+        app.makeFlashCard = True
+        app.startQuestion = True
+        app.finishedQuestion = False
+        app.isContinueKeyPressed = True
+        if app.cardsToDo != 0:
+            app.cardsToDo -= 1
     if event.key == 's': 
         app.currQuestionType = getQuestionType()  
         app.practiceKey = getPreviousKey(app)
@@ -336,8 +347,6 @@ def modifiedIsCorrect(targetAnswer, answerChoice, app):
                             "You're a Hiragana Expert!"]
     incorrectMessages = ["Sorry, that's incorrect",
                 "Better luck next time! Click Next/Press Right to Continue."]
-    #may need to be changed for other question types
-    
     if answerChoice == targetAnswer and app.finishedQuestion == False:
         app.userAnswer = answerChoice
         storeCorrectIncorrect(True, app)
@@ -545,22 +554,12 @@ def drawPracticeCard(app,canvas):
     #FlashCard info.
     practiceFlashCard = FlashCard(app.practiceKey, overall_dict[app.practiceKey])
     practiceFlashCard.drawTimedFlashCard1(canvas, app)
-    #modifiedAnswerQuestion(app)
     canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
     text ="Please Select/Input the Best Answer", fill = 'black')
 
 def practiceModeRedrawAll(app,canvas):
     canvas.create_text(app.cx,app.cy, font = 'Arial 20',
                         text = 'Press s to Start!')
-    #First Run Through
-    # if (app.makeFlashCard == True and app.cardsToDo == 5 and 
-    #     app.ima == app.prevFlashCard):
-    #     getPreviousKey(app)
-    #     firstPracticeCard = FlashCard()
-    #     app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
-    #     canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
-    #     text ="Please Select/Input the Best Answer", fill = 'black')
-    #     drawAnswerChoices(app,canvas)  
     if app.makeFlashCard == True:
         drawPracticeCard(app,canvas) 
         drawAnswerChoices(app,canvas)  
