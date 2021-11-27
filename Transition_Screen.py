@@ -8,6 +8,10 @@ def transition_mousePressed(app,event):
 def transition_keyPressed(app,event):
     if event.key == 'o':
         getSummary()
+    elif event.key == 'right':
+        app.phase = 'practice'
+    elif event.key == 'left':
+        app.phase = 'start'
 
 def drawExitButton(app,canvas):
     canvas.create_rectangle(app.cx*3,
@@ -16,8 +20,8 @@ def drawExitButton(app,canvas):
                             app.cy*1.1, 
                             fill = 'pale violet red')
     canvas.create_text(app.cx*1.5,app.cy*1.15,
-                        font = 'Arial',  text = "Next", fill = 'black')
-    pass
+                        font = 'Arial',  text = "Exit", fill = 'black')
+
 def drawContinueButton(app,canvas):
     canvas.create_rectangle(app.cx//2,
                             app.cy*1.2,
@@ -25,15 +29,11 @@ def drawContinueButton(app,canvas):
                             app.cy*1.1, 
                             fill = 'pale violet red')
 
-    canvas.create_text(app.cx/6,app.cy*1.15,
-                        font = 'Arial',  text = "Back", fill = 'black')
-    pass
+    canvas.create_text(app.cx/6,app.cy*1.15,font = 'Arial 20', 
+                        text = "Continue", fill = 'black')
+
 def transitionScreenRedrawAll(app,canvas):
-    if app.streak == True:
-        canvas.create_text(app.cx, app.cy, 
-                            text ="You were on Fire!\n Press o for Summary!")
-    else: 
-        canvas.create_text(app.cx, app.cy,
-                        text ="You're all done for Now!\n Press o for Summary!")
+    canvas.create_text(app.cx,app.cy, text = f'{getSummary(app)}', 
+                        fill = 'black')
     drawExitButton(app,canvas)
     drawContinueButton(app,canvas)

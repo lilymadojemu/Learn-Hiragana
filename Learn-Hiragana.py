@@ -145,11 +145,21 @@ def keyPressed(app,event):
         practiceMode_keyPressed(app,event)
     elif app.phase == 'learning':
         learningMode_keyPressed(app,event)
+    elif event.key == 't':
+        app.phase = 'transition'
+    elif event.key == 'c':
+        app.phase = 'settings'
+    elif app.phase == 'transition':
+        transition_keyPressed(app,event)
+    elif app.phase == 'settings':
+       settings_keyPressed(app,event)
+    if event.key == 'q':
+        app.phase = 'start'
 
 #The redrawAll's of different phases
 def redrawAll(app,canvas):
     if app.phase == 'start':
-        canvas.create_image(800, 800, 
+        canvas.create_image(app.width, app.height, 
                             image=ImageTk.PhotoImage(app.startBackground))
         startScreenRedrawall(app,canvas)
     elif app.phase == 'learning':
@@ -176,7 +186,7 @@ def redrawAll(app,canvas):
                         image=ImageTk.PhotoImage(app.transitionBackground))
             transitionScreenRedrawAll(app,canvas)
         elif app.darkMode == True:
-            canvas.create_image(800, 800, 
+            canvas.create_image(app.width, app.height, 
                         image=ImageTk.PhotoImage(app.darkTransitionBackground))
             transitionScreenRedrawAll(app,canvas)
     elif app.phase == 'profileselect':
@@ -184,11 +194,11 @@ def redrawAll(app,canvas):
     elif app.phase == 'settings':
         if app.lightMode == True:
             canvas.create_image(800, 800, 
-                            image=ImageTk.PhotoImage(app.startBackground))
+                        image=ImageTk.PhotoImage(app.lightSettingsBackground))
             settings_redrawAll(app,canvas)
         elif app.darkMode == True:
             canvas.create_image(800, 800, 
-                            image=ImageTk.PhotoImage(app.startBackground))
+                        image=ImageTk.PhotoImage(app.darkSettingsBackground))
             settings_redrawAll(app,canvas)
 
 

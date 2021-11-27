@@ -56,7 +56,7 @@ def getAnswerChoices():
 #Once practice Mode is finished/ on Transition screen, 
 # user will seen what they got wrong and what they got right in the end
 def getSummary(app):
-    return app.ima, app.mama, app.jyozu, toBePracticed
+    return app.ima, app.mama, app.jyozu
 ################################################################
 #Determining Correctness
 ###############################################################
@@ -443,6 +443,8 @@ def practice_timerFired(app):
                 if app.baseProblemTime == 0:
                     app.startQuestion = False
                     app.finishedQuestion = True
+        if app.finishedQuestion == True and app.cardsToDo == 0:
+            app.phase = 'transition'
 
 ###########################################################################
 #Drawings
