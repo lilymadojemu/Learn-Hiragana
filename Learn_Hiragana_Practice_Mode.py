@@ -92,6 +92,7 @@ def storeCorrectIncorrect(questionCorrect,app):
                     #if app.cardsToDo == 5:
                     app.jyozu.add(app.practiceKey)
                     app.mama.remove(app.practiceKey)
+                    print(app.jyozu)
                     # else:
                     #     lookingFor = overall_dict[app.practiceKey]
                     #     answer = lookingFor[0]
@@ -266,31 +267,40 @@ def practiceMode_keyPressed(app,event):
         if app.ima == app.prevFlashCard or app.cardsToDo != 0:
             app.practiceKey = getPreviousKey(app)
         else: #THESE TIMES MAY CHANGE
-            if app.ima != set() and app.timeTaken <= 40: #Box1
+            if (app.ima != set() and app.timeTaken <= 3 or app.mama == set() and
+                app.jyozu == set()): #Box1
                 app.practiceKey = getBox1Key(app)
-            elif (app.mama != set() and 41 <= app.timeTaken >=60 or 
-                app.ima == set()):
+            elif (app.mama != set() and app.timeTaken >=6 or 
+                app.ima == set() and app.jyozu == set()):
                 app.practiceKey = getBox2Key(app)
-            elif (app.jyozu != set() and app.timeTaken >= 60 or 
-                app.mama == set()):
+            elif (app.jyozu != set() and app.timeTaken >= 8 or 
+                app.mama == set() and app.ima == set()):
                 app.practiceKey = getBox3Key(app)
+            elif app.ima == set() and app.mama == set() and app.jyozu == set():
+                app.finishedQuestion = True
+                app.cardsToDo = 0
+            else:
+                app.finishedQuestion = True
+                app.cardsToDo = 0
+
         app.option1Chosen = False
         app.option2Chosen = False
         app.option3Chosen = False
         app.option4Chosen = False
-        app.listOfPossibleChoices = getAnswerChoices() 
-        realTarget = overall_dict[app.practiceKey]
+        app.listOfPossibleChoices = getAnswerChoices()
+        if app.practiceKey != None:
+            realTarget = overall_dict[app.practiceKey]
         #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
-        app.listOfPossibleChoices.insert(randrange(
-                                len(app.listOfPossibleChoices)+1),realTarget[0]) 
-        app.baseProblemTime = 30
-        app.timeTaken = 0
-        app.makeFlashCard = True
-        app.startQuestion = True
-        app.finishedQuestion = False
-        app.isContinueKeyPressed = True
-        if app.cardsToDo != 0:
-            app.cardsToDo -= 1
+            app.listOfPossibleChoices.insert(randrange(
+                                    len(app.listOfPossibleChoices)+1),realTarget[0]) 
+            app.baseProblemTime = 30
+            app.timeTaken = 0
+            app.makeFlashCard = True
+            app.startQuestion = True
+            app.finishedQuestion = False
+            app.isContinueKeyPressed = True
+            if app.cardsToDo != 0:
+                app.cardsToDo -= 1
     if event.key == 's': 
         app.currQuestionType = getQuestionType()  
         app.practiceKey = getPreviousKey(app)
@@ -450,7 +460,7 @@ def practice_timerFired(app):
                 if app.baseProblemTime == 0:
                     app.startQuestion = False
                     app.finishedQuestion = True
-        if app.finishedQuestion == True and app.cardsToDo == 0:
+        if  (app.finishedQuestion == True and app.cardsToDo == 0):
             app.phase = 'transition'
 
 ###########################################################################
@@ -573,13 +583,14 @@ def drawPracticeCard(app,canvas):
 def practiceModeRedrawAll(app,canvas):
     canvas.create_text(app.cx,app.cy, font = 'Arial 20',
                         text = 'Press s to Start!')
-    if app.makeFlashCard == True:
+    if (app.makeFlashCard == True and app.cardsToDo > 0 and 
+        app.practiceKey != None):
         drawPracticeCard(app,canvas) 
         drawAnswerChoices(app,canvas)  
-    if app.finishedQuestion == True:
+    if app.finishedQuestion == True and app.cardsToDo > 0:
         drawNextButton(app,canvas)  
-        if app.cardsToDo == 0:
-            drawFinishButton(app,canvas)
+    if app.finishedQuestion == True and app.cardsToDo == 0:
+        drawFinishButton(app,canvas)
     #If time difference is in some range, draw that card from box 2 or 3
     #Box 1, First five from learning mode that is the first time seeing and 
     # anything wrong from box 2
