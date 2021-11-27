@@ -20,12 +20,16 @@ def getRandomKey():
 
 #Gets Each Previous Key in the dictionary for the current session
 seenPreviousCardKeys = []
+notSeenPreviousCardKeys = []
+#LAST CHARACTER?VOCAB NOT INCLUDED
 def getPreviousKey(app):
     prevKeyList = list(app.prevFlashCard.keys())
     for prevKey in reversed(prevKeyList):
         if prevKey != app.prevCard and prevKey not in seenPreviousCardKeys:
             seenPreviousCardKeys.append(prevKey)
             return prevKey
+        elif app.cardsToLearn == 0:
+            prevKeyList.append(app.newKey)
         
 #Stores the Hiragana Characters or Vocabulary words into dictionaries
 def getHiraganaOrVocab(app,randomKey):
@@ -68,28 +72,39 @@ def learningMode_keyPressed(app,event):
         app.isFlipped = not app.isFlipped
     #Move to new card, populate next card
     elif event.key == 'Right':
-        #if app.cardsToLearn != 0:
-        app.newKey = getRandomKey()
-        app.isContinueKeyPressed = True
-        app.makeFlashCard = True
-        app.cardsLearned += 1
         if app.cardsToLearn != 0:
-            app.cardsToLearn -= 1
+            app.newKey = getRandomKey()
+            app.isContinueKeyPressed = True
+            app.makeFlashCard = True
+            app.cardsLearned += 1
+            if app.cardsToLearn != 0:
+                app.cardsToLearn -= 1
         #Based on seencards
-        # if app.cardsToLearn == 0:
-        #     #Can only see old things
-        #     #Populate new card with old information in correct order
-        #     # A list of seen keys for this session and if that list is not empty 
-        #     # get the next key
-        #     #NEED TO MAKE SURE KEY WOULD BE THE DIRECT NEXT KEY OF FLASHCARDS
-        #     #A LIST OF KEYS AND FOR LOOP FOR INDEX POSITION WOULD BE HELPFUL
-        #     for nextKey in app.prevFlashCard:
-        #         if app.prevFlashCard != {} and nextKey != app.prevCard:
-        #             app.newKey = nextKey
-        #             app.isContinueKeyPressed = True
-        #             app.makeFlashCard = True
+        elif app.cardsToLearn == 0:
+            app.makeOldFlashCard = False
+            print(app.prevFlashCard)
+            #print(app.newKey)
+            #Can only see old things
+            #Populate new card with old information in correct order
+            # A list of seen keys for this session and if that list is not empty 
+            # get the next key
+            #NEED TO MAKE SURE KEY WOULD BE THE DIRECT NEXT KEY OF FLASHCARDS
+            #A LIST OF KEYS AND FOR LOOP FOR INDEX POSITION WOULD BE HELPFUL
+            for nextKey in seenPreviousCardKeys:
+                if (nextKey != app.prevCard and nextKey in seenPreviousCardKeys 
+                        and nextKey not in notSeenPreviousCardKeys):
+                        #print(seenPreviousCardKeys)
+                        # if (nextKey != app.prevCard
+                        notSeenPreviousCardKeys.append(nextKey)
+                        #     #Take it out of seen flash cards
+                        app.newKey = nextKey
+                        print(app.newKey)
+            app.isContinueKeyPressed = True
+            app.makeFlashCard = True
+                    
     #Move to previous card
     elif event.key == 'Left':
+        #RETURNS NONE IF BEYOND THE AMOUNT
         app.prevCard = getPreviousKey(app)
         app.isBackKeyPressed = True
         app.makeOldFlashCard = True
