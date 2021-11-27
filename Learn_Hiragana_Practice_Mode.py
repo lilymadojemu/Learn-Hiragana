@@ -263,7 +263,8 @@ def practiceMode_keyPressed(app,event):
         app.phase = 'start'
     elif event.key == 'Right':
         app.currQuestionType = getQuestionType()  
-        getPracticeKey(app)
+        #getPracticeKey(app)
+        app.practiceKey = getPreviousKey(app)
         app.listOfPossibleChoices = getAnswerChoices() 
         realTarget = overall_dict[app.practiceKey]
         #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
@@ -279,7 +280,8 @@ def practiceMode_keyPressed(app,event):
             app.cardsToDo -= 1
     if event.key == 's': 
         app.currQuestionType = getQuestionType()  
-        getPracticeKey(app)
+        #getPracticeKey(app)
+        app.practiceKey = getPreviousKey(app)
         app.listOfPossibleChoices = getAnswerChoices()
         realTarget = app.practiceFlashCard.backText
         #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
@@ -334,10 +336,6 @@ def practice_mousePressed(app,event):
             app.makeFlashCard = True
             app.startQuestion = True
             app.finishedQuestion = False
-##############################################################################
-
-#"Modified" Functions (For MVP Testing)
-
 ##############################################################################
 def modifiedIsCorrect(targetAnswer, answerChoice, app, diff):
     correctMessages = ["That's Correct!", "You're the best!", 
@@ -595,14 +593,19 @@ def practiceModeRedrawAll(app,canvas):
     canvas.create_text(app.cx,app.cy, font = 'Arial 20',
                         text = 'Press s to Start!')
     if app.makeFlashCard == True and app.cardsToDo == 5:
+        getPreviousKey(app)
+        firstPracticeCard = FlashCard()
         app.practiceFlashCard.drawTimedFlashCard1(canvas, app)  
         canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
         text ="Please Select/Input the Best Answer", fill = 'black')
         drawAnswerChoices(app,canvas)  
-    if app.makeFlashCard == True and app.cardsToDo < 5:
+    if app.makeFlashCard == True:
         drawPracticeCard(app,canvas) 
         drawAnswerChoices(app,canvas)  
     if app.finishedQuestion == True:
         drawNextButton(app,canvas)  
         if app.cardsToDo == 0:
             drawFinishButton(app,canvas)
+    #If time difference is in some range, draw that card from box 2 or 3
+    #Box 1, First five from learning mode that is the first time seeing and 
+    # anything wrong from box 2

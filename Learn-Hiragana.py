@@ -32,7 +32,6 @@ def appStarted(app):
     app.textcx = app.width//2
     app.textcy = app.height//2
     #Important/Good to have
-
     #Overall dictionary with hiragana and vocab 
     app.bigDictionary = overall_dict
     #Stagnant list of all hiragana characters
@@ -82,7 +81,7 @@ def appStarted(app):
     app.characterLevel = 0
     app.vocabLevel = 0  
     #Number of flashcards that will appear in practice phase
-    app.cardsToDo = 5   
+    app.cardsToDo = 10   
     app.cardsPracticed = 0
     app.practiceFlashCard = FlashCard(charaKey, character_dict[charaKey])
     app.practiceKey = getPracticeKey(app)
@@ -142,9 +141,6 @@ def mousePressed(app,event):
 def keyPressed(app,event):
     if event.key == 'Enter':
         app.phase = 'learning'
-    if event.key == 'l':
-        app.phase = 'practice'
-        app.makeFlashCard = False
     elif app.phase == 'practice':
         practiceMode_keyPressed(app,event)
     elif app.phase == 'learning':

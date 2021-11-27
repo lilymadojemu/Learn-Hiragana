@@ -108,6 +108,10 @@ def learningMode_keyPressed(app,event):
         app.prevCard = getPreviousKey(app)
         app.isBackKeyPressed = True
         app.makeOldFlashCard = True
+    elif event.key == 'l':
+        app.phase = 'practice'
+        app.makeFlashCard = False
+        
 def learningMode_mousePressed(app,event):
     #Determines whether a card needs to be flip
     if app.width >= event.x and event.y >= app.height:
