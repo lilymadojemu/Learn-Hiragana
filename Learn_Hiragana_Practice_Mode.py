@@ -68,20 +68,17 @@ def storeCorrectIncorrect(questionCorrect,app):
     questionType = app.currQuestionType
     if questionType == 1:
         if questionCorrect == True:
-            print(app.ima.values())
+            
             #No correct answers in box 1
             #Criteria to get to box 2 from box 1
-            if (answerChoice in list(app.ima.values())):
-                print('This is good')
-            if answerChoice in app.prevFlashCard:
-                print('What is this nonsense')
-            if (answerChoice in app.ima.values() and 
-                answerChoice not in app.mama.values() and 
-                answerChoice not in app.jyozu.values()):
+            if (app.practiceKey in app.ima and 
+                app.practiceKey not in app.mama and 
+                app.practiceKey not in app.jyozu):
                 #print(app.prevFlashCard)
                 #Initial FlashCard
                 #if app.cardsToDo == 5:
-                app.mama[app.practiceKey] = answerChoice
+                app.mama.add(app.practiceKey)
+                app.ima.remove(app.practiceKey)
                 print(app.mama)
                 #Other FlashCards
                 # else:
@@ -89,18 +86,19 @@ def storeCorrectIncorrect(questionCorrect,app):
                 #     answer = lookingFor[0]
                 #     app.mama[answer] = answerChoice
             #Criteria to get to box 3 from box 2
-            elif (answerChoice not in app.ima.values() and 
-                    answerChoice in app.mama.values() and 
-                    answerChoice not in app.jyozu.values()):
+            elif (app.practiceKey not in app.ima and 
+                    app.practiceKey in app.mama and 
+                    app.practiceKey not in app.jyozu):
                     #if app.cardsToDo == 5:
-                    app.jyozu[app.practiceKey]= answerChoice
+                    app.jyozu.add(app.practiceKey)
+                    app.mama.remove(app.practiceKey)
                     # else:
                     #     lookingFor = overall_dict[app.practiceKey]
                     #     answer = lookingFor[0]
                     #     app.jyozu[answer] = answerChoice
-            elif (answerChoice not in app.ima.values() and 
-                    answerChoice not in app.mama.values()
-                    and answerChoice in app.jyozu.values()):
+            elif (app.practiceKey not in app.ima and 
+                    app.practiceKey not in app.mama
+                    and app.practiceKey in app.jyozu):
                     if app.practiceKey in hiraganaList:
                         app.characterLevel += 1
                     elif app.practiceKey in vocabList:
@@ -108,31 +106,35 @@ def storeCorrectIncorrect(questionCorrect,app):
             else:
                 print(app.mama)
                 app.showMessage('Question Correct storing error')
+        #Currently not removing anything
         elif questionCorrect == False:
             #Get into box 2 from box 3
-            if (answerChoice not in app.ima.values() and 
-                answerChoice not in app.mama.values()
-                and answerChoice in app.jyozu.values()):
+            if (app.practiceKey not in app.ima and 
+                app.practiceKey not in app.mama
+                and app.practiceKey in app.jyozu):
+                #Currently not removing anything
                 # if app.cardsToDo == 5:
-                app.mama[app.practiceKey] = answerChoice
+                app.mama.add(app.practiceKey)
+                app.jyozu.remove(app.practiceKey)
                 # else:
                 #     lookingFor = overall_dict[app.practiceKey]
                 #     answer = lookingFor[0]
                 #     app.mama[answer] = answerChoice
             #Get into box 1 from box 2
-            elif (answerChoice not in app.ima.values() and 
-                answerChoice in app.mama.values() and 
-                answerChoice not in app.jyozu.values()):
+            elif (app.practiceKey not in app.ima and 
+                app.practiceKey in app.mama and 
+                app.practiceKey not in app.jyozu):
                 #if app.cardsToDo == 5:
-                    app.ima[app.practiceKey] = answerChoice
+                    app.ima.add(app.practiceKey)
+                    app.mama.remove(app.practiceKey)
                 # else:
                 #     lookingFor = overall_dict[app.practiceKey]
                 #     answer = lookingFor[0]
                 #     app.ima[answer] = answerChoice
             #Lower Character & vocab levels
-            elif (answerChoice in app.ima.values() and 
-                answerChoice not in app.mama.values() and 
-                answerChoice not in app.jyozu.values()):
+            elif (app.practiceKey in app.ima and 
+                app.practiceKey not in app.mama and 
+                app.practiceKey  not in app.jyozu):
                 if app.practiceKey in hiraganaList:
                     app.characterLevel -= 1
                 elif app.practiceKey in vocabList:
@@ -261,15 +263,21 @@ def practiceMode_keyPressed(app,event):
         app.phase = 'start'
     elif event.key == 'Right':
         app.currQuestionType = getQuestionType()  
-        if app.ima == app.prevFlashCard:
+        if app.ima == app.prevFlashCard or app.cardsToDo != 0:
             app.practiceKey = getPreviousKey(app)
         else: #THESE TIMES MAY CHANGE
-            if app.ima != dict() and 30 <= app.timetaken >= 40: #Box1
+            if app.ima != set() and app.timeTaken <= 40: #Box1
                 app.practiceKey = getBox1Key(app)
-            elif app.mama != dict() and 41 <= app.timeTaken >=60:
+            elif (app.mama != set() and 41 <= app.timeTaken >=60 or 
+                app.ima == set()):
                 app.practiceKey = getBox2Key(app)
-            elif app.jyozu != dict() and app.timeTaken >= 60:
+            elif (app.jyozu != set() and app.timeTaken >= 60 or 
+                app.mama == set()):
                 app.practiceKey = getBox3Key(app)
+        app.option1Chosen = False
+        app.option2Chosen = False
+        app.option3Chosen = False
+        app.option4Chosen = False
         app.listOfPossibleChoices = getAnswerChoices() 
         realTarget = overall_dict[app.practiceKey]
         #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
@@ -318,16 +326,17 @@ def practice_mousePressed(app,event):
             app.option1Chosen = True
         elif event.y: #option2
             app.showMessage('Clicked2')
-            app.option1Chosen = True
+            app.option2Chosen = True
         elif event.y: #option3
             app.showMessage('Clicked3')
-            app.option1Chosen = True
+            app.option3Chosen = True
         elif event.y: #option4
             app.showMessage('Clicked4')
-            app.option1Chosen = True
+            app.option4Chosen = True
         elif event.y: #Input
             app.showMessage('ClickedI')
-            app.option1Chosen = True
+            app.wantInput = True
+            app.userAnswer = app.getUserInput('Please Type in Best Answer')
         elif event.y: #Click Next/Finished
             app.currQuestionType = getQuestionType()  
             getPreviousKey(app)
@@ -363,9 +372,6 @@ def modifiedIsCorrect(targetAnswer, answerChoice, app):
         app.finishedQuestion = True
 
 def modifiedAnswerQuestion(app):
-    #Other Cards
-
-    
     defaultTimeLimit = app.baseProblemTime
     #hiragana to romanji
     if (app.currQuestionType == 1 and app.startQuestion == True and 
@@ -434,12 +440,13 @@ def modifiedAnswerQuestion(app):
 def practice_timerFired(app):
     if app.paused == False:
         if (app.startQuestion == True and app.finishedQuestion == False and 
-                app.currQuestionType == 1):
+                app.currQuestionType == 1 and app.makeFlashCard == True):
                 startTime = time.time()
                 modifiedAnswerQuestion(app)
                 app.baseProblemTime -= 1
                 endTime = time.time()
                 app.timeTaken = endTime - startTime
+                print(app.timeTaken)
                 if app.baseProblemTime == 0:
                     app.startQuestion = False
                     app.finishedQuestion = True

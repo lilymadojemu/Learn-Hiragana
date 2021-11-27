@@ -74,9 +74,9 @@ def appStarted(app):
     #Practice Phase      
     #Leitner System
     #Japanese words for now, middle/fine, and good
-    app.ima = app.prevFlashCard #Box 1
-    app.mama = dict() #Box 2
-    app.jyozu = dict() #Box 3
+    app.ima = set() #Box 1
+    app.mama = set() #Box 2, set contains what the "target answer"
+    app.jyozu = set() #Box 3
     #Level of vocab/ Character knowledge
     app.characterLevel = 0
     app.vocabLevel = 0  
