@@ -47,6 +47,7 @@ def appStarted(app):
     # #Overall vocabulary flashcards user has seen
     app.seenVocabFlashCards = dict()
     app.prevFlashCard= dict()
+    app.currSession = dict()
     #Learning Phase    
     #Checks if a "continue key" right) has been pressed to
     # move on to next Flashcard
@@ -60,7 +61,7 @@ def appStarted(app):
     app.firstKey = getRandomKey()   
     app.flashCard = FlashCard(app.firstKey,overall_dict[app.firstKey])
     app.newKey = getRandomKey()  
-    app.prevCard = app.firstKey
+    app.prevCard = None
     app.alreadyOn = None
     #Checks/Determines if a card has been flipped or not
     app.isFlipped = False

@@ -581,6 +581,7 @@ def drawPracticeCard(app,canvas):
     text ="Please Select/Input the Best Answer", fill = 'black')
 
 def practiceModeRedrawAll(app,canvas):
+    print(app.prevFlashCard)
     canvas.create_text(app.cx,app.cy, font = 'Arial 20',
                         text = 'Press s to Start!')
     if (app.makeFlashCard == True and app.cardsToDo > 0 and 

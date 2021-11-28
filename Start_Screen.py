@@ -29,7 +29,6 @@ def drawLetsLearnButton(app,canvas):
                         fill = 'MistyRose2')
 
 #End will be a button that goes to profile select
-#Will be dealt with later
 def drawProfileSelectButton(app,canvas):
     canvas.create_rectangle(app.cx//2,app.cy//4, app.cx*1.5, app.cy//6, 
                             fill = 'papaya whip')
