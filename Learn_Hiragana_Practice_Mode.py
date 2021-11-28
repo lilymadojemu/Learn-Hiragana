@@ -7,6 +7,13 @@ def practice_appStarted(app):
 practiceHiraganaAndVocab = list(overall_dict.keys())
 toBePracticed = copy.deepcopy(overall_dict)
 ###############################################################################
+# Leitner system,3 box set up
+#ima, questioned right after
+#middle, comes up after 2 questions of other types (1 immediate & 1 adv, etc.)
+#adv, comes up after 4 questions 
+#Practice is unlimitied (BUT!) Transition screen will come up every few cards
+#to give users opporunity to end session and see progress
+###############################################################################
 #Getting Things
 ###############################################################################
 seenBox1Keys = []
@@ -46,7 +53,7 @@ def getAnswerChoices(app):
         return random.sample(characterPronunciations, k=3)
 #Once practice Mode is finished/ on Transition screen, 
 # user will seen what they got wrong and what they got right in the end
-def getSummary(app,canvas):
+def getSummary(app):
     return app.ima, app.mama, app.jyozu
 ################################################################
 #Determining Correctness
@@ -232,7 +239,7 @@ def practiceMode_keyPressed(app,event):
         app.phase = 'start'
     elif event.key == 'Right':
         app.currQuestionType = getQuestionType()  
-        if app.ima != set() and app.cardsPracticed <= 5:
+        if app.ima != set():
             app.practiceKey = getPreviousKey(app)
         else: #THESE TIMES MAY CHANGE
             if app.timeTaken < 1:#Box1 preference
@@ -294,16 +301,19 @@ def practiceMode_keyPressed(app,event):
     if event.key == 's': 
         app.currQuestionType = getQuestionType()  
         app.practiceKey = getPreviousKey(app)
-        app.listOfPossibleChoices = getAnswerChoices(app)
-        realTarget = overall_dict[app.practiceKey]
-        #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
-        app.listOfPossibleChoices.insert(randrange(
-                                len(app.listOfPossibleChoices)+1),realTarget[0])  
-        app.baseProblemTime = 30
-        app.timeTaken = 0
-        app.makeFlashCard = True
-        app.startQuestion = True
-        app.finishedQuestion = False
+        if app.practiceKey != None:
+            app.listOfPossibleChoices = getAnswerChoices(app)
+            realTarget = overall_dict[app.practiceKey]
+            #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
+            app.listOfPossibleChoices.insert(randrange(
+                            len(app.listOfPossibleChoices)+1),realTarget[0])  
+            app.baseProblemTime = 30
+            app.timeTaken = 0
+            app.makeFlashCard = True
+            app.startQuestion = True
+            app.finishedQuestion = False
+        else:
+            print('this shit is none')
     elif event.key == 'e':
         app.userAnswer = app.getUserInput('Please Type in Best Answer')
         app.wantInput = True
