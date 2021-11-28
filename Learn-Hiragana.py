@@ -113,12 +113,12 @@ def appStarted(app):
     app.lightPracticeBackground = app.loadImage('day.jpg')
     app.darkMode = False
     app.darkPracticeBackground = app.loadImage('night.jpg')
-    app.transitionBackground = app.loadImage('confetti.jpg')
+    app.transitionBackground = app.loadImage('transition.jpg')
     app.darkTransitionBackground = app.loadImage('darkConfetti.jpg')
     app.lightSettingsBackground = app.loadImage('lightSettings.jpg')
-    app.darkSettingsBackground = app.loadImage('darkSettings.gif')
+    app.darkSettingsBackground = app.loadImage('darkSettings.jpg')
     app.lightLearningBackground = app.loadImage('lightLearn.jpg')
-    app.darkLearningBackground = app.loadImage('darkLearn.gif')
+    app.darkLearningBackground = app.loadImage('darkLearn.jpg')
     #Testing
     app.messages = ['appStarted']
 
@@ -161,45 +161,45 @@ def keyPressed(app,event):
 #The redrawAll's of different phases
 def redrawAll(app,canvas):
     if app.phase == 'start':
-        canvas.create_image(app.width, app.height, 
+        canvas.create_image(app.width//2, app.height//2, 
                             image=ImageTk.PhotoImage(app.startBackground))
         startScreenRedrawall(app,canvas)
     elif app.phase == 'learning':
         if app.lightMode == True:
-            canvas.create_image(800, 800, 
+            canvas.create_image(app.width//2, app.height//2, 
                             image=ImageTk.PhotoImage(app.lightLearningBackground))
             learningModeRedrawAll(app,canvas)
         elif app.darkMode == True:
-            canvas.create_image(800, 800, 
+            canvas.create_image(app.width//2, app.height//2, 
                         image=ImageTk.PhotoImage(app.darkLearningBackground))
             learningModeRedrawAll(app,canvas)
     elif app.phase == 'practice':
         if app.lightMode == True:
-            canvas.create_image(800, 800, 
+            canvas.create_image(app.width//2, app.height//2, 
                         image=ImageTk.PhotoImage(app.lightPracticeBackground))
             practiceModeRedrawAll(app,canvas)
         elif app.darkMode == True:
-            canvas.create_image(800, 800, 
+            canvas.create_image(app.width//2, app.height//2, 
                         image=ImageTk.PhotoImage(app.darkPracticeBackground))
             practiceModeRedrawAll(app,canvas)
     elif app.phase == 'transition':
         if app.lightMode == True:
-            canvas.create_image(800, 800, 
+            canvas.create_image(app.width//2, app.height//2, 
                         image=ImageTk.PhotoImage(app.transitionBackground))
             transitionScreenRedrawAll(app,canvas)
         elif app.darkMode == True:
-            canvas.create_image(app.width, app.height, 
+            canvas.create_image(app.width//2, app.height//2, 
                         image=ImageTk.PhotoImage(app.darkTransitionBackground))
             transitionScreenRedrawAll(app,canvas)
     elif app.phase == 'profileselect':
         userProfileRedrawAll(app,canvas)
     elif app.phase == 'settings':
         if app.lightMode == True:
-            canvas.create_image(800, 800, 
+            canvas.create_image(app.width//2, app.height//2, 
                         image=ImageTk.PhotoImage(app.lightSettingsBackground))
             settings_redrawAll(app,canvas)
         elif app.darkMode == True:
-            canvas.create_image(800, 800, 
+            canvas.create_image(app.width//2, app.height//2, 
                         image=ImageTk.PhotoImage(app.darkSettingsBackground))
             settings_redrawAll(app,canvas)
 

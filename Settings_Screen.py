@@ -12,25 +12,30 @@ def settings_keyPressed(app,event):
         app.phase = 'start'
 
 def drawLightModeButton(app,canvas):
-    canvas.create_rectangle(app.cx*3,
+    canvas.create_rectangle(app.cx*2,
                             app.cy*1.2,
                             app.cx,
                             app.cy*1.1, 
-                            fill = 'pale violet red')
+                            fill = 'peach puff')
     canvas.create_text(app.cx*1.5,app.cy*1.15,
-                        font = 'Arial',  text = "Light Mode", fill = 'black')
+                        font = 'Arial 20',  text = "Light Mode", 
+                        fill = 'deep sky blue')
 
 def drawDarkModeButton(app,canvas):
     canvas.create_rectangle(app.cx//2,
                             app.cy*1.2,
-                            app.cx//-2,
+                            app.cx//-1.5,
                             app.cy*1.1, 
-                            fill = 'pale violet red')
-    canvas.create_text(app.cx/6,app.cy*1.15,font = 'Arial 20', 
+                            fill = 'blue violet')
+    canvas.create_text(app.cx//4,app.cy*1.15,font = 'Arial 20', 
                         text = "Dark Mode", fill = 'black')
 
 def settings_redrawAll(app,canvas):
-    canvas.create_text(app.cx,app.cy, font = 'Arial 25', 
-                        text = "Welcome to Settings!")
+    if app.lightMode == True:
+        canvas.create_text(app.cx,app.cy//3, font = 'Arial 25', 
+                            text = "Welcome to Settings!")
+    else:
+        canvas.create_text(app.cx,app.cy//3, font = 'Arial 25', 
+                            text = "Welcome to Settings!", fill = 'papaya whip')
     drawLightModeButton(app,canvas)
     drawDarkModeButton(app,canvas)

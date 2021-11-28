@@ -34,8 +34,9 @@ def drawProfileSelectButton(app,canvas):
     canvas.create_rectangle(app.cx//2,app.cy//4, app.cx*1.5, app.cy//6, 
                             fill = 'papaya whip')
     canvas.create_text(app.cx,app.cy//5,
-                        font = 'Arial 15',  text = "New User",
-                            fill = 'plum')
+                        font = 'Arial 15',  
+                        text = "New User *Coming Soon*",
+                        fill = 'plum')
 
 #Where user will be able to edit things, like default number of cards, etc. 
 def drawSettingsButton(app,canvas):
