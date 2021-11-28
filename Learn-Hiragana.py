@@ -95,6 +95,8 @@ def appStarted(app):
     app.wantInput = False
     app.startQuestion = False
     app.finishedQuestion = False
+    app.seenPreviousCardKeys = list(app.prevFlashCard.keys())
+    app.notSeenPreviousCardKeys = list()
     #answer Choices
     app.option1Chosen = False
     app.option2Chosen = False
