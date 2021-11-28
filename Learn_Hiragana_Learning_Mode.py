@@ -22,12 +22,24 @@ def getRandomKey():
 
 #Gets Each Previous Key in the dictionary for the current session
 def getPreviousKey(app):
+    print(app.prevFlashCard)
     prevKeyList = list(app.prevFlashCard.keys())
-    for prevKey in reversed(prevKeyList):
-        if prevKey != app.prevCard and prevKey != app.newKey:
-            if prevKey not in app.seenPreviousCardKeys:
-                app.seenPreviousCardKeys.append(prevKey)
-                return prevKey
+    if app.phase == 'learning': #Current Session Instead?
+        for prevKey in reversed(prevKeyList):
+            
+            if (prevKey != app.prevCard and prevKey != app.newKey and 
+                prevKey != None):
+                if prevKey not in app.seenPreviousCardKeys:
+                    app.seenPreviousCardKeys.append(prevKey)
+                    print(f'The card coming from {app.prevCard}')
+                    print(f'The next key I see when going back {prevKey}')
+                    return prevKey
+    elif app.phase == 'practice':
+        practicePrevKeys = list(app.currSession.keys())
+        for practicePrevKey in practicePrevKeys:
+            print(f'practice Key from learning mode {practicePrevKey}')
+            if (practicePrevKey != None):
+                    return practicePrevKey
 
 #Stores the Hiragana Characters or Vocabulary words into dictionaries
 def getHiraganaOrVocab(app,randomKey):
@@ -56,7 +68,6 @@ Pressed
 '''
 def learningMode_keyPressed(app,event):
     if event.key == 'q':
-        app.showMessage("All your progress will be lost!")
         app.phase = 'start'
     #flips front of flash card to back
     #flips back to front    
@@ -64,53 +75,64 @@ def learningMode_keyPressed(app,event):
         app.isFlipped = not app.isFlipped
     #Move to new card, populate next card
     elif event.key == 'Right':
-        if (app.cardsToLearn <= 5 and app.cardsToLearn != 0 and 
-            app.cardsToLearn > 0):
-             if app.cardsToLearn <= 5:
-                if app.firstKey not in app.currSession:
-                    app.currSession[app.firstKey] = overall_dict[app.firstKey]
-                app.newKey = getRandomKey()
-                print(f'a {app.newKey}')
-                app.currSession[app.newKey] = overall_dict[app.newKey]
-                app.isContinueKeyPressed = True
-                app.makeOldFlashCard = False
-                app.makeFlashCard = True
-                app.cardsLearned += 1
-                app.cardsToLearn -= 1
-        #Based on seencards
+        if app.cardsLearned < 5:
+            app.newKey = getRandomKey()
+            getHiraganaOrVocab(app,app.newKey)
+            print(f'New Key {app.newKey}')
+            print(f"What has been seen {app.prevFlashCard}")
+            app.currSession[app.newKey] = overall_dict[app.newKey]
+            app.isContinueKeyPressed = True
+            app.makeOldFlashCard = False
+            app.makeFlashCard = True
+            app.cardsLearned += 1
+            app.cardsToLearn -= 1
+        #Based on current session
         else:
-            print(f'curr:{app.currSession}')
-            print(f'prev {app.prevFlashCard}')
-            if len(app.currSession.keys()) == len(app.prevFlashCard.keys()):
-                for key in range(len(app.seenPreviousCardKeys)):
-                    goingThrough = app.seenPreviousCardKeys[::-1]
-                    if app.prevCard == None:
-                        previousIndex = 0
-                    else:
-                        previousIndex = goingThrough.index(app.prevCard)
-                        nextKey = goingThrough[previousIndex + 1]
-                        print(app.prevCard)
-                        print(nextKey)
-                        if nextKey != app.prevCard:
-                            app.newKey = nextKey
-                            print(app.newKey)
-                            app.isContinueKeyPressed = True
-                            app.isBackKeyPressed = False
-                            app.makeOldFlashCard = False
-                            app.makeFlashCard = True
+            print(f'Cards That have been seen curr:{app.currSession}')
+            print(f'Previous FlashCards {app.prevFlashCard}')
+            index = 0
+            for redrawCard in reversed(app.currSession):
+                #Make into list
+                currPreviousIndex = app.currSession.index(app.prevCard) 
+                if currPreviousIndex + 1 == redrawCard:
+                    app.newKey = redrawCard
+                    print(app.newKey)
+                    app.isContinueKeyPressed = True
+                    app.isBackKeyPressed = False
+                    app.makeOldFlashCard = False
+                    app.makeFlashCard = True
+
+
+                # for key in range(len(app.seenPreviousCardKeys)):
+                #     goingThrough = app.seenPreviousCardKeys[::-1]
+                #     if app.prevCard == None:
+                #         previousIndex = 0
+                #     else:
+                #         previousIndex = goingThrough.index(app.prevCard)
+                #         nextKey = goingThrough[previousIndex + 1]
+                #         print(app.prevCard)
+                #         print(nextKey)
+                #         if nextKey != app.prevCard:
+                #             app.newKey = nextKey
+                            
+      
                                 # app.notSeenPreviousCardKeys.append(nextKey)
                                 # app.seenPreviousCardKeys.remove(nextKey)
     #Move to previous card
     elif event.key == 'Left':
+        print(f'Cards that have been learned {app.cardsLearned')
         if app.prevFlashCard != dict():
             app.prevCard = getPreviousKey(app)
-            print(app.prevCard)
-            print(app.prevFlashCard)
-            app.isBackKeyPressed = True
-            app.makeOldFlashCard = True
+
+            if app.prevCard != None:
+                print(f'Pressed Left for {app.prevCard}')
+                print(app.prevFlashCard)
+                app.isBackKeyPressed = True
+                app.makeOldFlashCard = True
     elif event.key == 'l':
         for seen in app.prevFlashCard:
             app.ima.add(seen)
+        print(f"current seen for box 1 {app.ima}")
         app.phase = 'practice'
         app.makeFlashCard = False
 
@@ -178,12 +200,8 @@ def learning_timerFired(app):
         pass
         # decreasingFrontCard(app)
         # increasingBackCard(app)
-    if app.isContinueKeyPressed == False and app.cardsLearned == 0:
-        getHiraganaOrVocab(app,app.firstKey)
-    if app.isContinueKeyPressed == True:
-        if app.newKey not in app.prevFlashCard:
-            app.prevFlashCard[app.newKey] = overall_dict[app.newKey]
-        getHiraganaOrVocab(app,app.newKey)
+    # if app.isContinueKeyPressed == True:
+    #     getHiraganaOrVocab(app,app.newKey)
 '''
 Drawings
 '''
@@ -224,9 +242,13 @@ def drawLetsTryitButton(app,canvas):
                         font = 'Arial',  text = "Let's Try it!", fill = 'black')
 
 def learningModeRedrawAll(app,canvas):
-    canvas.create_text(app.cx, app.cy//2, font = 'Arial 15', 
-                text = "Use Up/Down Arrow Keys to Flip Card!")
-    canvas.create_text(app.cx, app.cy//1.7, font = 'Arial 15', 
+    if app.cardsLearned == 0:
+            canvas.create_text(app.cx,app.cy, font = 'Arial 20', 
+            text = "Press the Right Arrow Key to Begin!")
+    elif app.cardsLearned >= 1:
+        canvas.create_text(app.cx, app.cy//2, font = 'Arial 15', 
+                    text = "Use Up/Down Arrow Keys to Flip Card!")
+        canvas.create_text(app.cx, app.cy//1.7, font = 'Arial 15', 
                 text = "Click Next/Press the Right Arrow Key to Move Forward!")             
     if toBeLearned == dict():
         canvas.create_text(app.cx,app.cy, font = 'Arial 20',
@@ -234,8 +256,6 @@ def learningModeRedrawAll(app,canvas):
         fill = 'black')
     else: #Learning Cards
         drawNextButton(app,canvas)
-        if  app.isContinueKeyPressed == False and app.cardsToLearn == 4:
-            app.flashCard.drawFlashCard(canvas,app)
         if app.isContinueKeyPressed == True and toBeLearned != dict():
             drawNewCard(app,canvas)             
         if (app.isBackKeyPressed == True and toBeLearned != dict() and 

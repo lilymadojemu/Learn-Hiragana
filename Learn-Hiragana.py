@@ -66,7 +66,7 @@ def appStarted(app):
     #Checks/Determines if a card has been flipped or not
     app.isFlipped = False
     #Number of flashcards that will appear in learning stage
-    app.cardsToLearn = 4
+    app.cardsToLearn = 5
     app.cardsLearned = 0
     app.isGrowing = False
     app.isShrinking = False
