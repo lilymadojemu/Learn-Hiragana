@@ -108,11 +108,10 @@ def appStarted(app):
     #Users
     app.userProfiles = dict()
     #Extras 
-    app.streak = False
-    app.startBackground = app.loadImage('background.jpg')
     app.lightMode = True
-    app.lightPracticeBackground = app.loadImage('day.jpg')
     app.darkMode = False
+    app.startBackground = app.loadImage('background.jpg')
+    app.lightPracticeBackground = app.loadImage('day.jpg')
     app.darkPracticeBackground = app.loadImage('night.jpg')
     app.transitionBackground = app.loadImage('transition.jpg')
     app.darkTransitionBackground = app.loadImage('darkConfetti.jpg')
@@ -121,10 +120,6 @@ def appStarted(app):
     app.lightLearningBackground = app.loadImage('lightLearn.jpg')
     app.darkLearningBackground = app.loadImage('darkLearn.jpg')
     app.timerDelay = 1000
-    #Testing
-    app.messages = ['appStarted']
-
-
 #mousePressed of different phases
 def mousePressed(app,event):
     if app.phase == 'start':
@@ -138,8 +133,7 @@ def mousePressed(app,event):
     elif app.phase == 'profileselect':
         userSelect_mousePressed(app,event)
     elif app.phase == 'settings':
-        ''' After MVP'''
-        pass
+        settings_mousePressed(app,event)
 
 #Houses the key presses of all phases
 def keyPressed(app,event):
@@ -205,9 +199,6 @@ def redrawAll(app,canvas):
                         image=ImageTk.PhotoImage(app.darkSettingsBackground))
             settings_redrawAll(app,canvas)
 
-
-def mouseMoved(app, event):
-    app.messages.append(f'mouseMoved at {(event.x, event.y)}')
 
 def timerFired(app): 
     if app.phase == 'learning':

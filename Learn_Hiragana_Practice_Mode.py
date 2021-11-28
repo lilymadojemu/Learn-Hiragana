@@ -7,34 +7,24 @@ def practice_appStarted(app):
 practiceHiraganaAndVocab = list(overall_dict.keys())
 toBePracticed = copy.deepcopy(overall_dict)
 ###############################################################################
-# Leitner system,3 box set up
-#ima, questioned right after
-#middle, comes up after 2 questions of other types (1 immediate & 1 adv, etc.)
-#adv, comes up after 4 questions 
-#Practice is unlimitied (BUT!) Transition screen will come up every few cards
-#to give users opporunity to end session and see progress
-###############################################################################
 #Getting Things
 ###############################################################################
 seenBox1Keys = []
 def getBox1Key(app):
-    box1Keys = list(app.ima.keys())
-    for currBox1Key in box1Keys:
+    for currBox1Key in app.ima:
         if currBox1Key != app.practiceKey and currBox1Key not in seenBox1Keys:
             seenBox1Keys.append(currBox1Key)
             return currBox1Key
 seenBox2Keys = []
 def getBox2Key(app):
-    box2Keys =list(app.mama.keys())
-    for currBox2Key in box2Keys:
+    for currBox2Key in app.mama:
         if currBox2Key != app.practiceKey and currBox2Key not in seenBox2Keys:
             seenBox2Keys.append(currBox2Key)
             return currBox2Key
 
 seenBox3Keys = []
 def getBox3Key(app):
-    box3Keys = list(app.jyozu.keys())
-    for currBox3Key in box3Keys:
+    for currBox3Key in app.jyozu:
         seenBox3Keys.append(currBox3Key)
         return currBox3Key
 
@@ -43,7 +33,7 @@ def getQuestionType():
     testingType = 1
     return testingType
 
-def getAnswerChoices():
+def getAnswerChoices(app):
     #Question Type 1
     characterChoices = list(character_dict.values())
     characterPronunciations = list()
@@ -52,10 +42,11 @@ def getAnswerChoices():
             romanji = characterChoices[row][col]
             if len(romanji) == 1:
                 characterPronunciations.append(romanji)
-    return random.sample(characterPronunciations, k=3)
+    if app.practiceKey not in characterPronunciations:
+        return random.sample(characterPronunciations, k=3)
 #Once practice Mode is finished/ on Transition screen, 
 # user will seen what they got wrong and what they got right in the end
-def getSummary(app):
+def getSummary(app,canvas):
     return app.ima, app.mama, app.jyozu
 ################################################################
 #Determining Correctness
@@ -73,30 +64,18 @@ def storeCorrectIncorrect(questionCorrect,app):
             if (app.practiceKey in app.ima and 
                 app.practiceKey not in app.mama and 
                 app.practiceKey not in app.jyozu):
-                #print(app.prevFlashCard)
-                #Initial FlashCard
-                #if app.cardsToDo == 5:
                 app.mama.add(app.practiceKey)
                 app.ima.remove(app.practiceKey)
                 print(f' True box 1 to box 2 {app.mama}')
                 print(app.mama)
-                #Other FlashCards
-                # else:
-                #     lookingFor = overall_dict[app.practiceKey]
-                #     answer = lookingFor[0]
-                #     app.mama[answer] = answerChoice
+                print(app.ima)
             #Criteria to get to box 3 from box 2
             elif (app.practiceKey not in app.ima and 
                     app.practiceKey in app.mama and 
                     app.practiceKey not in app.jyozu):
-                    #if app.cardsToDo == 5:
                     app.jyozu.add(app.practiceKey)
                     app.mama.remove(app.practiceKey)
                     print(f' True box 2 to box 3 {app.jyozu}')
-                    # else:
-                    #     lookingFor = overall_dict[app.practiceKey]
-                    #     answer = lookingFor[0]
-                    #     app.jyozu[answer] = answerChoice
             elif (app.practiceKey not in app.ima and 
                     app.practiceKey not in app.mama
                     and app.practiceKey in app.jyozu):
@@ -113,15 +92,9 @@ def storeCorrectIncorrect(questionCorrect,app):
             if (app.practiceKey not in app.ima and 
                 app.practiceKey not in app.mama
                 and app.practiceKey in app.jyozu):
-                #Currently not removing anything
-                # if app.cardsToDo == 5:
                 app.mama.add(app.practiceKey)
                 app.jyozu.remove(app.practiceKey)
                 print(f' False Box 2 to 3 {app.mama}')
-                # else:
-                #     lookingFor = overall_dict[app.practiceKey]
-                #     answer = lookingFor[0]
-                #     app.mama[answer] = answerChoice
             #Get into box 1 from box 2
             elif (app.practiceKey not in app.ima and 
                 app.practiceKey in app.mama and 
@@ -130,10 +103,6 @@ def storeCorrectIncorrect(questionCorrect,app):
                     app.ima.add(app.practiceKey)
                     app.mama.remove(app.practiceKey)
                     print(f' False Box 1 to 2 {app.ima}')
-                # else:
-                #     lookingFor = overall_dict[app.practiceKey]
-                #     answer = lookingFor[0]
-                #     app.ima[answer] = answerChoice
             #Lower Character & vocab levels
             elif (app.practiceKey in app.ima and 
                 app.practiceKey not in app.mama and 
@@ -161,9 +130,6 @@ def getPracticeHiraganaOrVocab(app, randomKey):
         seenFlashCards[hiraganaOrVocab] = vocabValue
         del toBePracticed[hiraganaOrVocab] 
 
-######################################################################
-#The question in question
-#######################################################################
 def drawAnswerChoices(app,canvas):
     randomChoice1 = app.listOfPossibleChoices[0]
     randomChoice2 = app.listOfPossibleChoices[1]
@@ -256,9 +222,9 @@ def drawAnswerChoices(app,canvas):
         canvas.create_text(app.cx,app.cy*1.75,
                             text = 'Press e to Input Your Answer', 
                             fill ='black')
-###########################################################################
-#Pressed
-###########################################################################
+'''
+Pressed
+'''
 def practiceMode_keyPressed(app,event):
     if (event.key == 'p'):
         app.paused = not app.paused
@@ -266,24 +232,48 @@ def practiceMode_keyPressed(app,event):
         app.phase = 'start'
     elif event.key == 'Right':
         app.currQuestionType = getQuestionType()  
-        if len(app.ima) == len(app.prevFlashCard.keys()):
+        if app.ima != set() and app.cardsPracticed <= 5:
             app.practiceKey = getPreviousKey(app)
         else: #THESE TIMES MAY CHANGE
-            if (app.ima != set() and app.timeTaken <= 1 or app.mama == set() and
-                app.jyozu == set()): #Box1
-
-                app.practiceKey = getBox1Key(app)
-                
-            elif (app.mama != set() and 1 < app.timeTaken >= 1.5 or 
-                app.ima == set() and app.jyozu == set()):
-                app.practiceKey = getBox2Key(app)
-            elif (app.jyozu != set() and 1.5 < app.timeTaken >= 2.01 or 
-                app.mama == set() and app.ima == set()):
-                app.practiceKey = getBox3Key(app)
-            elif app.ima == set() and app.mama == set() and app.jyozu == set():
-                app.finishedQuestion = True
+            if app.timeTaken < 1:#Box1 preference
+                if app.ima != set():
+                    app.practiceKey = getBox1Key(app)
+                elif app.ima == set() and app.mama != set():
+                    app.practiceKey = getBox2Key(app)
+                elif (app.ima == set() and app.mama == set() and
+                     app.jyozu != set()):
+                     app.practiceKey = getBox3Key(app)
+                else:
+                    app.cardsToDo = 0
+                    app.finishedQuestion = True
+            if 1.01 < app.timeTaken <= 2.5: #Box 2 preference
+                if app.mama != set():
+                    app.practiceKey = getBox2Key(app)
+                elif app.mama == set() and app.jyozu != set():
+                    app.practiceKey = getBox3Key(app)
+                elif (app.mama == set() and app.jyozu == set() and 
+                    app.ima != set()):
+                    app.practiceKey = getBox1Key(app)
+                else:
+                    app.cardsToDo = 0
+                    app.finishedQuestion = True      
+            if app.timeTaken >= 2.51: #Box 3 preference
+                if app.jyozu != set():
+                    app.practiceKey = getBox3Key(app)
+                elif app.jyozu == set() and app.mama != set():
+                    app.practiceKey = getBox2Key(app)
+                elif (app.jyozu == set() and app.mama == set() and 
+                    app.ima != set()):
+                    app.practiceKey = getBox1Key(app)
+                else:
+                    app.cardsToDo = 0
+                    app.finishedQuestion = True
+                    
+            else:
                 app.cardsToDo = 0
-        app.listOfPossibleChoices = getAnswerChoices()        
+                app.finishedQuestion = True
+                
+        app.listOfPossibleChoices = getAnswerChoices(app)        
         app.option1Chosen = False
         app.option2Chosen = False
         app.option3Chosen = False
@@ -304,7 +294,7 @@ def practiceMode_keyPressed(app,event):
     if event.key == 's': 
         app.currQuestionType = getQuestionType()  
         app.practiceKey = getPreviousKey(app)
-        app.listOfPossibleChoices = getAnswerChoices()
+        app.listOfPossibleChoices = getAnswerChoices(app)
         realTarget = overall_dict[app.practiceKey]
         #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
         app.listOfPossibleChoices.insert(randrange(
@@ -314,8 +304,6 @@ def practiceMode_keyPressed(app,event):
         app.makeFlashCard = True
         app.startQuestion = True
         app.finishedQuestion = False
-    elif event.key == 'w':
-        app.listOfPossibleChoices = getAnswerChoices()  
     elif event.key == 'e':
         app.userAnswer = app.getUserInput('Please Type in Best Answer')
         app.wantInput = True
@@ -349,7 +337,7 @@ def practice_mousePressed(app,event):
         elif event.y: #Click Next/Finished
             app.currQuestionType = getQuestionType()  
             getPreviousKey(app)
-            app.listOfPossibleChoices = getAnswerChoices()
+            app.listOfPossibleChoices = getAnswerChoices(app)
             realTarget = app.practiceFlashCard.backText
             #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
             app.listOfPossibleChoices.insert(randrange(
@@ -410,30 +398,6 @@ def modifiedAnswerQuestion(app):
                             modifiedIsCorrect(answerValue,userAnswer,app)
         elif defaultTimeLimit == 0:
             app.showMessage("Time's Up! Please Press Right to Continue")
-        # else:
-        #     if defaultTimeLimit > 0:
-        #             if app.wantInput == True:
-        #                 if app.userAnswer == None:
-        #                     app.wantInput = False
-        #                 else:
-        #                     userAnswer = app.userAnswer
-        #                     modifiedIsCorrect(answer, userAnswer, app)
-        #     else:
-        #         if answer in app.listOfPossibleChoices:
-        #             if app.option1Chosen == True:
-        #                 userAnswer  = app.listOfPossibleChoices[0]
-        #                 modifiedIsCorrect(answer,userAnswer,app)
-        #             elif app.option2Chosen == True:
-        #                 userAnswer = app.listOfPossibleChoices[1]
-        #                 modifiedIsCorrect(answer,userAnswer,app)
-        #             elif app.option3Chosen == True:
-        #                 userAnswer = app.listOfPossibleChoices[2]
-        #                 modifiedIsCorrect(answer,userAnswer,app)
-        #             elif app.option4Chosen == True:
-        #                 userAnswer = app.listOfPossibleChoices[3]
-        #                 modifiedIsCorrect(answer,userAnswer,app)
-        #         elif defaultTimeLimit == 0:
-        #             app.showMessage("Time's Up! Please Press Right to Continue")
     elif app.currQuestionType == 2: #vocab to romanji
         pass
     elif app.currQuestionType == 3: #romanji to vocab
@@ -459,12 +423,12 @@ def practice_timerFired(app):
                     endTime = time.time()
                     app.timeTaken = endTime - startTime
                     print(app.timeTaken)
-        if  (app.finishedQuestion == True and app.cardsToDo == 0):
+        if (app.finishedQuestion == True and app.cardsToDo == 0):
             app.phase = 'transition'
 
-###########################################################################
-#Drawings
-###########################################################################
+'''
+Drawings
+'''
 def drawAnswerChoices(app,canvas):
     randomChoice1 = app.listOfPossibleChoices[0]
     randomChoice2 = app.listOfPossibleChoices[1]
@@ -589,9 +553,3 @@ def practiceModeRedrawAll(app,canvas):
         drawNextButton(app,canvas)  
     if app.finishedQuestion == True and app.cardsToDo == 0:
         drawFinishButton(app,canvas)
-    #If time difference is in some range, draw that card from box 2 or 3
-    #Box 1, First five from learning mode that is the first time seeing and 
-    # anything wrong from box 2
-    #if app.ima != dict() and 30 <= app.timeTaken >= 40:
-        #drawPracticeCard (Where will app.practice key come from?)
-    #elif

@@ -115,18 +115,21 @@ def learningMode_keyPressed(app,event):
         app.makeFlashCard = False
 
 def learningMode_mousePressed(app,event):
-    #Determines whether a card needs to be flip
-    if app.width >= event.x and event.y >= app.height:
-            app.showMessage("Clicked!")
-            app.isFlipped = not app.isFlipped
+    if app.cx//1.1 <= event.x >= app.cx//2.2:
+        if app.cx*1.45 <= event.y >= app.cy*1.6:
+            if app.prevFlashCard != dict():
+                app.prevCard = getPreviousKey(app)
+                print(app.prevCard)
+                print(app.prevFlashCard)
+                app.isBackKeyPressed = True
+                app.makeOldFlashCard = True
     #Fix parameters
-    if (app.cardsToLearn > 0 and app.width//4 <= event.x and 
-        event.x >= app.width//6 and app.height//10 <= event.y and 
-        event.y >= app.height//6):
-        app.makeNewCard = True
-        app.cardsLearned += 1
-        if app.cardsToLearn != 0:
-            app.cardsToLearn -= 1
+    if app.cardsToLearn > 0 and app.cx*1.3 <= event.x >= 1.7:
+        if app.cx*1.45 <= event.y >= app.cy*1.6:
+            app.makeNewCard = True
+            app.cardsLearned += 1
+            if app.cardsToLearn != 0:
+                app.cardsToLearn -= 1
     elif (app.cardsToLearn == 0 and app.width//4 <= event.x and 
         event.x >= app.width//6 and app.height//10 <= event.y and 
         event.y >= app.height//5):
@@ -154,12 +157,10 @@ def increasingBackCard(app):
             app.backcy += 100
         elif app.frontcx == app.width//2 and app.frontcy == app.height//2:
             app.isGrowing = False
-
 def learning_timerFired(app):
 
     if app.isFlipped == True:
         '''
-        #"flipping flashCard"
         Things look smaller and text/icons look zoomed out
         goes slow but there is then a "jump" to make the card look
         squeezed in horizontally
@@ -183,8 +184,6 @@ def learning_timerFired(app):
         if app.newKey not in app.prevFlashCard:
             app.prevFlashCard[app.newKey] = overall_dict[app.newKey]
         getHiraganaOrVocab(app,app.newKey)
-
-        
 '''
 Drawings
 '''
@@ -225,6 +224,10 @@ def drawLetsTryitButton(app,canvas):
                         font = 'Arial',  text = "Let's Try it!", fill = 'black')
 
 def learningModeRedrawAll(app,canvas):
+    canvas.create_text(app.cx, app.cy//2, font = 'Arial 15', 
+                text = "Use Up/Down Arrow Keys to Flip Card!")
+    canvas.create_text(app.cx, app.cy//1.7, font = 'Arial 15', 
+                text = "Click Next/Press the Right Arrow Key to Move Forward!")             
     if toBeLearned == dict():
         canvas.create_text(app.cx,app.cy, font = 'Arial 20',
         text = "Congrats! You have learned Everything! Press l to Practice!", 
@@ -239,6 +242,8 @@ def learningModeRedrawAll(app,canvas):
             app.prevCard != None):
             drawPrevCard(app,canvas)
         if app.cardsLearned >= 1 and app.prevFlashCard != dict():
+            canvas.create_text(app.cx, app.cy//1.5, font = 'Arial 15', 
+                text = "Click Back/Press the Left Arrow Key to Move Forward!")
             drawBackButton(app,canvas)
         if app.cardsToLearn == 0:
             drawLetsTryitButton(app,canvas)
