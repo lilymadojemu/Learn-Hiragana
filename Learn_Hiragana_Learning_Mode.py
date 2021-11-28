@@ -69,7 +69,7 @@ def learningMode_keyPressed(app,event):
     elif event.key == 'Right':
         if (app.cardsToLearn <= 5 and app.cardsToLearn != 0 and 
             app.cardsToLearn > 0):
-             if 0 < app.cardsToLearn <= 5:
+             if app.cardsToLearn <= 4:
                 app.newKey = getRandomKey()
                 app.currSession[app.newKey] = overall_dict[app.newKey]
                 app.isContinueKeyPressed = True
@@ -83,9 +83,8 @@ def learningMode_keyPressed(app,event):
                 for index,currKey in enumerate(app.seenPreviousCardKeys):
                     goingThrough = app.seenPreviousCardKeys[::-1]
                     if index + 1 < len(goingThrough):
-                        nextKey = goingThrough[index + 1]
+                        nextKey = goingThrough[index + 2]
                         print(app.seenPreviousCardKeys[::-1])
-                        print(app.seenPreviousCardKeys)
                         print(nextKey)
                         print(app.prevCard)
                         if (nextKey != app.prevCard):
@@ -102,6 +101,7 @@ def learningMode_keyPressed(app,event):
         if app.prevFlashCard != dict():
             app.prevCard = getPreviousKey(app)
             print(app.prevCard)
+            print(app.prevFlashCard)
             app.isBackKeyPressed = True
             app.makeOldFlashCard = True
     elif event.key == 'l':
@@ -218,7 +218,7 @@ def learningModeRedrawAll(app,canvas):
         fill = 'black')
     else: #Learning Cards
         drawNextButton(app,canvas)
-        if  app.isContinueKeyPressed == False and app.cardsToLearn == 5:
+        if  app.isContinueKeyPressed == False and app.cardsToLearn == 4:
             app.flashCard.drawFlashCard(canvas,app)
         if app.isContinueKeyPressed == True and toBeLearned != dict():
             drawNewCard(app,canvas)             
