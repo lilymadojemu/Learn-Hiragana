@@ -13,10 +13,8 @@ class FlashCard(object):
         #After Flipping
         self.newFront = backText
         self.newBack = frontText
-        
-        #Key its based on
+
     def drawFlashCard(self, canvas, app):
-  
         canvas.create_text(app.cx//3, app.cy//5.5,font = 'Arial',
     text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
                             fill = 'black')
@@ -116,37 +114,6 @@ class FlashCard(object):
                         text = f"{self.frontText}", 
                         fill = 'dark orchid')
 
-
-# #What is a flip, like a blink/flash, will need another background for back
-# #Understanding from https://www.youtube.com/watch?v=kvd6i1mXec8
-# #from https://coderedirect.com/questions/124487/simple-animation-using-tkinter
-#     def blinkSmallerLearning(self,app):
-#         #Make app.cx and app.cy smaller until it reaches the center
-#         # app.cx = app.width//2
-#         # app.cy = app.height//2
-#         if app.isFlipped == True:
-#             #if app.cx < app.width//4 and app.cy < app.height//4:
-#                 app.cx -= 1
-#                 app.cy -= 1
-#                 #self.drawFlashCard.config(app.cx,app.cy, font = 'Arial 15')
-#                 #self.after(1, self.blinkSmallerLearning(app))
-#             #elif app.cx == app.width//4 and app.cy == app.height//4:
-#                # self.blinkDefaultLearning(app)
-#     def blinkDefaultLearning(self,app):
-#         if app.cx == app.width//4 and app.cy == app.height//4:
-#             app.cx += 1
-#             app.cy += 1
-#             self.drawFlashCard.config(app.cx,app.cy, font = 'Arial 20')
-#             self.after(1,self.blinkDefaultLearning(app))
-
-#     def animatePractice(self,app):
-#         app.cx = app.width//2
-#         app.cy = app.height//2
-#         if app.cx <= app.width and app.cy <= app.height:
-#             app.cx -= 1
-#             app.cy -= 1
-#             self.drawTimedFlashCard(app.cx,app.cy)
-#             self.after(10,self.animatePractice)
     def getMeaning(self, word, app):
         if word in app.bigDictionary:
             return app.bigDictionary[word]

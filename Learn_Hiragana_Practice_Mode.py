@@ -68,7 +68,6 @@ def storeCorrectIncorrect(questionCorrect,app):
     questionType = app.currQuestionType
     if questionType == 1:
         if questionCorrect == True:
-            
             #No correct answers in box 1
             #Criteria to get to box 2 from box 1
             if (app.practiceKey in app.ima and 
@@ -79,6 +78,7 @@ def storeCorrectIncorrect(questionCorrect,app):
                 #if app.cardsToDo == 5:
                 app.mama.add(app.practiceKey)
                 app.ima.remove(app.practiceKey)
+                print(f' True box 1 to box 2 {app.mama}')
                 print(app.mama)
                 #Other FlashCards
                 # else:
@@ -92,7 +92,7 @@ def storeCorrectIncorrect(questionCorrect,app):
                     #if app.cardsToDo == 5:
                     app.jyozu.add(app.practiceKey)
                     app.mama.remove(app.practiceKey)
-                    print(app.jyozu)
+                    print(f' True box 2 to box 3 {app.jyozu}')
                     # else:
                     #     lookingFor = overall_dict[app.practiceKey]
                     #     answer = lookingFor[0]
@@ -100,12 +100,12 @@ def storeCorrectIncorrect(questionCorrect,app):
             elif (app.practiceKey not in app.ima and 
                     app.practiceKey not in app.mama
                     and app.practiceKey in app.jyozu):
+                    print(f'True Increase {app.jyozu}')
                     if app.practiceKey in hiraganaList:
                         app.characterLevel += 1
                     elif app.practiceKey in vocabList:
                         app.vocabLevel += 1
             else:
-                print(app.mama)
                 app.showMessage('Question Correct storing error')
         #Currently not removing anything
         elif questionCorrect == False:
@@ -117,6 +117,7 @@ def storeCorrectIncorrect(questionCorrect,app):
                 # if app.cardsToDo == 5:
                 app.mama.add(app.practiceKey)
                 app.jyozu.remove(app.practiceKey)
+                print(f' False Box 2 to 3 {app.mama}')
                 # else:
                 #     lookingFor = overall_dict[app.practiceKey]
                 #     answer = lookingFor[0]
@@ -128,6 +129,7 @@ def storeCorrectIncorrect(questionCorrect,app):
                 #if app.cardsToDo == 5:
                     app.ima.add(app.practiceKey)
                     app.mama.remove(app.practiceKey)
+                    print(f' False Box 1 to 2 {app.ima}')
                 # else:
                 #     lookingFor = overall_dict[app.practiceKey]
                 #     answer = lookingFor[0]
@@ -136,6 +138,7 @@ def storeCorrectIncorrect(questionCorrect,app):
             elif (app.practiceKey in app.ima and 
                 app.practiceKey not in app.mama and 
                 app.practiceKey  not in app.jyozu):
+                print(f' False decrease {app.jyozu}')
                 if app.practiceKey in hiraganaList:
                     app.characterLevel -= 1
                 elif app.practiceKey in vocabList:
@@ -260,34 +263,31 @@ def practiceMode_keyPressed(app,event):
     if (event.key == 'p'):
         app.paused = not app.paused
     elif event.key == 'q':
-        app.showMessage("All your progress will be lost!")
         app.phase = 'start'
     elif event.key == 'Right':
         app.currQuestionType = getQuestionType()  
-        if app.ima == app.prevFlashCard or app.cardsToDo != 0:
+        if len(app.ima) == len(app.prevFlashCard.keys()):
             app.practiceKey = getPreviousKey(app)
         else: #THESE TIMES MAY CHANGE
-            if (app.ima != set() and app.timeTaken <= 3 or app.mama == set() and
+            if (app.ima != set() and app.timeTaken <= 1 or app.mama == set() and
                 app.jyozu == set()): #Box1
+
                 app.practiceKey = getBox1Key(app)
-            elif (app.mama != set() and app.timeTaken >=6 or 
+                
+            elif (app.mama != set() and 1 < app.timeTaken >= 1.5 or 
                 app.ima == set() and app.jyozu == set()):
                 app.practiceKey = getBox2Key(app)
-            elif (app.jyozu != set() and app.timeTaken >= 8 or 
+            elif (app.jyozu != set() and 1.5 < app.timeTaken >= 2.01 or 
                 app.mama == set() and app.ima == set()):
                 app.practiceKey = getBox3Key(app)
             elif app.ima == set() and app.mama == set() and app.jyozu == set():
                 app.finishedQuestion = True
                 app.cardsToDo = 0
-            else:
-                app.finishedQuestion = True
-                app.cardsToDo = 0
-
+        app.listOfPossibleChoices = getAnswerChoices()        
         app.option1Chosen = False
         app.option2Chosen = False
         app.option3Chosen = False
         app.option4Chosen = False
-        app.listOfPossibleChoices = getAnswerChoices()
         if app.practiceKey != None:
             realTarget = overall_dict[app.practiceKey]
         #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
@@ -305,7 +305,6 @@ def practiceMode_keyPressed(app,event):
         app.currQuestionType = getQuestionType()  
         app.practiceKey = getPreviousKey(app)
         app.listOfPossibleChoices = getAnswerChoices()
-        print(app.practiceKey)
         realTarget = overall_dict[app.practiceKey]
         #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
         app.listOfPossibleChoices.insert(randrange(
@@ -388,7 +387,6 @@ def modifiedAnswerQuestion(app):
         app.finishedQuestion == False):
         values = overall_dict[app.practiceKey]
         answerValue = values[0]
-        print(answerValue)
         if defaultTimeLimit > 0:
                 if app.wantInput == True:
                     if app.userAnswer == None:
@@ -454,12 +452,13 @@ def practice_timerFired(app):
                 startTime = time.time()
                 modifiedAnswerQuestion(app)
                 app.baseProblemTime -= 1
-                endTime = time.time()
-                app.timeTaken = endTime - startTime
-                print(app.timeTaken)
                 if app.baseProblemTime == 0:
                     app.startQuestion = False
                     app.finishedQuestion = True
+                if app.finishedQuestion == True:
+                    endTime = time.time()
+                    app.timeTaken = endTime - startTime
+                    print(app.timeTaken)
         if  (app.finishedQuestion == True and app.cardsToDo == 0):
             app.phase = 'transition'
 
@@ -574,14 +573,12 @@ def drawFinishButton(app,canvas):
     canvas.create_text(app.cx,app.cy//5, font = 'Arial', text = "Finish", 
                         fill = 'azure4')
 def drawPracticeCard(app,canvas):
-    #FlashCard info.
     practiceFlashCard = FlashCard(app.practiceKey, overall_dict[app.practiceKey])
     practiceFlashCard.drawTimedFlashCard1(canvas, app)
     canvas.create_text(app.cx, app.cy*1.2, font = 'Arial 15', 
     text ="Please Select/Input the Best Answer", fill = 'black')
 
 def practiceModeRedrawAll(app,canvas):
-    print(app.prevFlashCard)
     canvas.create_text(app.cx,app.cy, font = 'Arial 20',
                         text = 'Press s to Start!')
     if (app.makeFlashCard == True and app.cardsToDo > 0 and 

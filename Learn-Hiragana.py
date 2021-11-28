@@ -88,7 +88,7 @@ def appStarted(app):
     app.practiceKey = getPreviousKey(app)
     app.practiceValue = None
     #time alloted to answer each question during practice phase
-    app.baseProblemTime = 30
+    app.baseProblemTime = 15
     app.timeTaken = 0    
     #During Practice stage, refers to time limit user is given to select answer
     app.currQuestionType = 0
@@ -120,6 +120,7 @@ def appStarted(app):
     app.darkSettingsBackground = app.loadImage('darkSettings.jpg')
     app.lightLearningBackground = app.loadImage('lightLearn.jpg')
     app.darkLearningBackground = app.loadImage('darkLearn.jpg')
+    app.timerDelay = 1000
     #Testing
     app.messages = ['appStarted']
 
