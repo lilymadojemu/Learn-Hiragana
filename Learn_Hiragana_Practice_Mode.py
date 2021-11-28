@@ -16,6 +16,20 @@ toBePracticed = copy.deepcopy(overall_dict)
 ###############################################################################
 #Getting Things
 ###############################################################################
+
+prevSet = set()
+#Gets Each Previous Key in the dictionary for the current session
+def getPracticeKey(app): #Will be made for practice context
+    prevCurrKeyList = list(app.currSession.keys())
+    reversedList = prevCurrKeyList[::-1]
+    for prevKey in range(len(reversedList[::1])):
+        if (reversedList[prevKey] != app.prevCard and 
+            reversedList[prevKey] not in prevSet):
+            prevSet.add(reversedList[prevKey])
+            print(f'The card coming from {app.prevCard}')
+            print(f'The Next Card I should see {reversedList[prevKey]}')
+            return reversedList[prevKey]
+
 seenBox1Keys = []
 def getBox1Key(app):
     for currBox1Key in app.ima:
@@ -313,7 +327,7 @@ def practiceMode_keyPressed(app,event):
             app.startQuestion = True
             app.finishedQuestion = False
         else:
-            print('this shit is none')
+            print('this is none')
     elif event.key == 'e':
         app.userAnswer = app.getUserInput('Please Type in Best Answer')
         app.wantInput = True

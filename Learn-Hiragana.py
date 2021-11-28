@@ -17,10 +17,10 @@ from Settings_Screen import*
 import time, random
 
 def appStarted(app):
-    listOfKeys = list(overall_dict.keys())
-    possibleKey = random.choice(listOfKeys)
-    listofHiragana = list(character_dict.keys())
-    charaKey = random.choice(listofHiragana)
+    # listOfKeys = list(overall_dict.keys())
+    # possibleKey = random.choice(listOfKeys)
+    # listofHiragana = list(character_dict.keys())
+    # charaKey = random.choice(listofHiragana)
     #Initial phase 
     app.phase = "start"
     app.cx = app.width//2
@@ -72,6 +72,10 @@ def appStarted(app):
     app.isShrinking = False
     app.isFrontShown = True
     app.isBackShown = False
+    app.timesBackKeyPressed = 0
+    '''
+    Current Session is being looked at twice 
+    '''
     #Practice Phase      
     #Leitner System
     #Japanese words for now, middle/fine, and good
@@ -84,8 +88,8 @@ def appStarted(app):
     #Number of flashcards that will appear in practice phase
     app.cardsToDo = 10   
     app.cardsPracticed = 0
-    app.practiceFlashCard = FlashCard(charaKey, character_dict[charaKey])
-    app.practiceKey = getPreviousKey(app)
+    #app.practiceFlashCard = FlashCard(charaKey, character_dict[charaKey])
+    app.practiceKey = getPracticeKey(app)
     app.practiceValue = None
     #time alloted to answer each question during practice phase
     app.baseProblemTime = 15
