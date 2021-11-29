@@ -3,7 +3,6 @@ Contains all classes that will be used
 '''
 from Populate_Values import*
 from cmu_112_graphics import*
-''' In Learning Phase'''
 
 class FlashCard(object):
     def __init__(self, frontText, backText):
@@ -25,7 +24,6 @@ class FlashCard(object):
             if app.isFlipped == False:
                 canvas.create_image(app.cx, app.cy, 
                             image=ImageTk.PhotoImage(app.image1))   
-                #Exact Placement to be changed
                 #The Hiragana Character
                 canvas.create_text(app.textcx,app.textcy,
                                 font = 'Arial 20',
@@ -35,7 +33,6 @@ class FlashCard(object):
             elif app.isFlipped == True:
                 canvas.create_image(app.cx, app.cy, 
                             image=ImageTk.PhotoImage(app.image2))       
-            
                 # if app.isShrinking == True and app.isGrowing == False:
                 #     canvas.create_image(app.frontcx, app.frontcy, 
                 #                 image=ImageTk.PhotoImage(app.image1))   
@@ -52,8 +49,6 @@ class FlashCard(object):
                     #Reach certain point before overlaying\
                 romanji = self.backText[0]
                 pronunciation = self.backText[1]    
-
-                #The Pronunciation of Hiragana Character
                 # if app.isBackShown == True:
                 canvas.create_text(app.textcx,app.textcy,
                                         font =('Helvetica','20','bold')
@@ -102,13 +97,13 @@ class FlashCard(object):
                             image=ImageTk.PhotoImage(app.image1))               
         canvas.create_text(app.cx//3.3, app.cy//2,font = 'Arial 15',
     text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
-                            fill = 'black')
-        canvas.create_text(app.cx*1.5, app.cy//2,font = 'Arial 15 ',
-                            text = f"Cards Left:{app.cardsToDo}", 
-                            fill = 'black')
+                            fill = 'dark slate blue')
+        # canvas.create_text(app.cx*1.5, app.cy//2,font = 'Arial 15 ',
+        #                     text = f"Cards Left:{app.cardsToDo}", 
+        #                     fill = 'dark slate blue')
         canvas.create_text(app.cx, app.cy//3,font = 'Arial 15',
                             text = f"Time Limit:{app.baseProblemTime}", 
-                            fill = 'black')
+                            fill = 'dark slate blue')
         canvas.create_text(app.textcx,app.textcy,
                         font = 'Arial 20',
                         text = f"{self.frontText}", 

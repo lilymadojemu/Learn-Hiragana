@@ -19,19 +19,37 @@ def learning_appStarted(app):
 def getRandomKey():
     randomKey = random.choice(modifyListOfKeys)
     return randomKey
-
-prevSet = set()
 #Gets Each Previous Key in the dictionary for the current session
 def getPreviousKey(app):
     prevCurrKeyList = list(app.currSession.keys())
     reversedList = prevCurrKeyList[::-1]
     for prevKey in range(len(reversedList[::1])):
         if (reversedList[prevKey] != app.prevCard and 
-            reversedList[prevKey] not in prevSet):
-            prevSet.add(reversedList[prevKey])
+            reversedList[prevKey] not in app.prevSet):
+            app.prevSet.add(reversedList[prevKey])
+            if reversedList[prevKey] in app.seenDrawn:
+                    app.seenDrawn.remove(reversedList[prevKey])
             print(f'The card coming from {app.prevCard}')
             print(f'The Next Card I should see {reversedList[prevKey]}')
             return reversedList[prevKey]
+
+def getNextKeyFromPrevious(app):
+    currListKeys = list(app.currSession.keys())
+    futurePreviousSession = currListKeys[::-1]
+    print(f'Cards That have been seen curr:{currListKeys}')
+    print(f'Cards That have been seen curr reversed:{futurePreviousSession}')
+    for redrawCard in range(len(currListKeys)):
+        #if app.prevCard != None and currListKeys[redrawCard] != None:
+        currPreviousIndex = currListKeys.index(app.prevCard)
+        print(currPreviousIndex)
+        if (currListKeys[redrawCard] == currListKeys[currPreviousIndex + 1] and 
+            currListKeys[redrawCard] != app.prevCard):
+            app.seenDrawn.add(currListKeys[redrawCard])
+            if currListKeys[redrawCard] in app.prevSet:
+                app.prevSet.remove(currListKeys[redrawCard])
+            return currListKeys[redrawCard]
+
+
 
 #Stores the Hiragana Characters or Vocabulary words into dictionaries
 def getHiraganaOrVocab(app,randomKey):
@@ -54,20 +72,17 @@ def getHiraganaOrVocab(app,randomKey):
             hiraganaOrVocab in toBeLearned):
             modifyListOfKeys.remove(hiraganaOrVocab)
             del toBeLearned[hiraganaOrVocab] 
-
 '''
 Pressed
 '''
 def learningMode_keyPressed(app,event):
-    if event.key == 'q':
-        app.phase = 'start'
     #flips front of flash card to back
     #flips back to front    
-    elif event.key == 'Up' or event.key == 'Down':
+    if event.key == 'Up' or event.key == 'Down':
         app.isFlipped = not app.isFlipped
     #Move to new card, populate next card
     elif event.key == 'Right':
-        if app.cardsLearned < 5:
+        if app.cardsLearned <= 5:
             app.newKey = getRandomKey()
             getHiraganaOrVocab(app,app.newKey)
             print(f'New Key {app.newKey}')
@@ -78,22 +93,17 @@ def learningMode_keyPressed(app,event):
             app.cardsLearned += 1
             app.cardsToLearn -= 1
         else:
-            currListKeys = list(app.currSession.keys())
-            print(f'Cards That have been seen curr:{currListKeys}')
-            futurePreviousSession = currListKeys[::-1]
-            print(f'Cards That have been seen curr reversed:{futurePreviousSession}')
-            for redrawCard in range(len(futurePreviousSession[1::])):
-                currPreviousIndex = futurePreviousSession.index(app.prevCard)
-                if (futurePreviousSession[currPreviousIndex + 1] == 
-                    futurePreviousSession[redrawCard] and 
-                    futurePreviousSession[redrawCard] != None):
-                    app.newKey = futurePreviousSession[redrawCard]
-                    if futurePreviousSession[redrawCard] in prevSet:
-                        prevSet.remove(futurePreviousSession[redrawCard])
-                    print(f'I made it to redraw {app.newKey}')
-                    app.isContinueKeyPressed = True
-                    app.makeFlashCard = True
-                    
+            #Don't go out of bounds!
+            if len(app.prevSet) <= 5:
+                app.newKey = getNextKeyFromPrevious(app)
+                print(f'I made it to redraw {app.newKey}')
+                print(f'The previous {app.prevCard}')
+                app.isContinueKeyPressed = True
+                app.isBackKeyPressed = False
+                app.makeOldFlashCard = False
+                app.makeFlashCard = True
+                app.prevCard = app.newKey
+   
     #Move to previous card
     elif event.key == 'Left':
         print(f'Current Session Normal {list(app.currSession.keys())}')
@@ -102,7 +112,7 @@ def learningMode_keyPressed(app,event):
         #Skip first thing when revesed
         app.timesBackKeyPressed += 1
         print(f'current previous card {app.prevCard}')
-        if app.prevFlashCard != dict() and len(prevSet) != 5:        
+        if app.prevFlashCard != dict() and len(app.prevSet) != 5:        
             # if app.timesBackKeyPressed == 1:
             #     app.prevCard = app.newKey
             #current and new current should not be the same 
@@ -248,7 +258,7 @@ def learningModeRedrawAll(app,canvas):
             drawPrevCard(app,canvas)
         if app.cardsLearned >= 1 and app.prevFlashCard != dict():
             canvas.create_text(app.cx, app.cy//1.5, font = 'Arial 15', 
-                text = "Click Back/Press the Left Arrow Key to Move Back!")
+                    text = "Click Back/Press the Left Arrow Key to Move Back!")
             drawBackButton(app,canvas)
         if app.cardsToLearn == 0:
             drawLetsTryitButton(app,canvas)

@@ -6,23 +6,20 @@ from Learn_Hiragana_Practice_Mode import*
 
 def transition_mousePressed(app,event):
     if app.cx//1.25 <= event.x and app.cx*1.25:
-        if app.cy*1.1 <= event.y <= app.cy*1.2:
+        if app.cy*1.1 <= event.y <= app.cy//1.01:
+            app.phase = 'learning'
+            app.cardsLearned = 0
+            app.cardsToLearn = 5
+            app.makeFlashCard = False
+        elif app.cy*1.1 <= event.y <= app.cy*1.2:
             app.phase = 'practice'
             app.baseProblemTime = 15
             app.finishedQuestion = False
             app.startQuestion = False 
-            app.cardsToDo = 10
             app.makeFlashCard = False
         elif app.cy*1.1 <= event.y <= app.cy*1.3:
             app.phase = 'start'
 
-def transition_keyPressed(app,event):
-    if event.key == 'o':
-        getSummary()
-    elif event.key == 'right':
-        app.phase = 'practice'
-    elif event.key == 'left':
-        app.phase = 'start'
 
 def drawExitButton(app,canvas):
     canvas.create_rectangle(app.cx//1.25,
@@ -40,7 +37,17 @@ def drawContinueButton(app,canvas):
                             app.cy*1.1, 
                             fill = 'LemonChiffon4')
     canvas.create_text(app.cx,app.cy*1.15,font = 'Arial 20', 
-                        text = "Continue", fill = 'black')
+                        text = "Practice", fill = 'black')
+
+def drawLearningButton(app,canvas):
+    canvas.create_rectangle(app.cx//1.25,
+                            app.cy//1.01,
+                            app.cx*1.25,
+                            app.cy*1.1, 
+                            fill = 'MistyRose2')
+    canvas.create_text(app.cx,app.cy*1.05,font = 'Arial 20', 
+                        text = "Learn", fill = 'black')
+
 def getSummary(app,canvas):
     canvas.create_text(app.cx, app.cy//1.3, font = 'Arial 15', 
                         text =f"Novice: {app.ima}", fill = 'dark slate blue')
@@ -55,5 +62,7 @@ def transitionScreenRedrawAll(app,canvas):
     canvas.create_text(app.cx, app.cy//3, font = 'Arial 20', 
                     text = "Here's Your Progress So Far:")
     getSummary(app,canvas)
+    drawLearningButton(app,canvas)
     drawExitButton(app,canvas)
     drawContinueButton(app,canvas)
+

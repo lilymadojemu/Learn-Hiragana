@@ -166,7 +166,7 @@ def practiceMode_keyPressed(app,event):
                     app.practiceKey = getBox2Key(app)
                     print(f'From app.mama {app.practiceKey}')  
                 else:
-                    app.cardsToDo = 0
+                    #app.cardsToDo = 0
                     app.finishedQuestion = True         
         app.listOfPossibleChoices = getAnswerChoices(app)        
         if app.practiceKey != None:
@@ -179,8 +179,8 @@ def practiceMode_keyPressed(app,event):
             app.startQuestion = True
             app.finishedQuestion = False
             app.isContinueKeyPressed = True
-            if app.cardsToDo != 0:
-                app.cardsToDo -= 1
+            # if app.cardsToDo != 0:
+            #     app.cardsToDo -= 1
         # else:
         #     app.finishedQuestion = True
         #     app.cardsToDo = 0
@@ -199,6 +199,8 @@ def practiceMode_keyPressed(app,event):
             app.makeFlashCard = True
             app.startQuestion = True
             app.finishedQuestion = False
+    elif event.key == 't':
+        app.phase = 'transition'
     elif event.key == 'e':
         app.userAnswer = app.getUserInput('Please Type in Best Answer')
         app.wantInput = True
@@ -244,7 +246,7 @@ def practice_mousePressed(app,event):
                     elif app.mama == set() and app.jyozu != set():
                         app.practiceKey = getBox3Key(app)
                     else:
-                        app.cardsToDo = 0
+                        #app.cardsToDo = 0
                         app.finishedQuestion = True      
                 elif app.timeTaken >= 2.51: 
                     if app.jyozu != set():#Box 3 preference
@@ -252,10 +254,10 @@ def practice_mousePressed(app,event):
                     elif app.mama != set() and app.jyozu == set(): #Box 2 preference
                         app.practiceKey = getBox2Key(app)
                     else:
-                        app.cardsToDo = 0
+                        #app.cardsToDo = 0
                         app.finishedQuestion = True        
-            
-                app.cardsToDo = 0
+            else:
+                #app.cardsToDo = 0
                 app.finishedQuestion = True
             app.listOfPossibleChoices = getAnswerChoices(app)        
             app.option1Chosen = False
@@ -272,9 +274,9 @@ def practice_mousePressed(app,event):
                 app.makeFlashCard = True
                 app.startQuestion = True
                 app.finishedQuestion = False
-                app.isContinueKeyPressed = True
-                if app.cardsToDo != 0:
-                    app.cardsToDo -= 1
+                # app.isContinueKeyPressed = True
+                # if app.cardsToDo != 0:
+                #     app.cardsToDo -= 1
 
 def modifiedIsCorrect(targetAnswer, answerChoice, app):
     correctMessages = ["That's Correct!", "You're the best!", 
@@ -350,8 +352,8 @@ def practice_timerFired(app):
                     endTime = time.time()
                     app.timeTaken = endTime - startTime
                     print(app.timeTaken)
-        if (app.finishedQuestion == True and app.cardsToDo == 0):
-            app.phase = 'transition'
+        # if (app.finishedQuestion == True and app.cardsToDo == 0):
+        #     app.phase = 'transition'
 '''
 Drawings
 '''
@@ -466,14 +468,15 @@ def drawPracticeCard(app,canvas):
     text ="Please Select/Input the Best Answer", fill = 'black')
 
 def practiceModeRedrawAll(app,canvas):
-    if app.startQuestion == False and app.cardsToDo == 10:
+    canvas.create_text(app.cx,app.cy//3, font = 'Arial 15',
+                        text = "Press t at any time to see your progress!")
+    if app.startQuestion == False:
         canvas.create_text(app.cx,app.cy, font = 'Arial 20',
                             text = 'Press s to Start!')
-    if (app.makeFlashCard == True and app.cardsToDo > 0 and 
-        app.practiceKey != None):
+    if (app.makeFlashCard == True and app.practiceKey != None):
         drawPracticeCard(app,canvas) 
         drawAnswerChoices(app,canvas)  
-    if app.finishedQuestion == True and app.cardsToDo > 0:
+    if app.finishedQuestion == True:
         drawNextButton(app,canvas)  
     # elif app.finishedQuestion == True and app.cardsToDo == 0:
     #     drawFinishButton(app,canvas)
