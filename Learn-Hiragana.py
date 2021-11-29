@@ -82,6 +82,8 @@ def appStarted(app):
     app.ima = set() #Box 1
     app.mama = set() #Box 2, set contains what the "target answer"
     app.jyozu = set() #Box 3
+    app.prevSet = set()
+    app.seenDrawn = set()
     #Level of vocab/ Character knowledge
     app.characterLevel = 0
     app.vocabLevel = 0  
@@ -143,18 +145,14 @@ def mousePressed(app,event):
 def keyPressed(app,event):
     if event.key == 'Enter':
         app.phase = 'learning'
+    elif event.key == 't':
+        app.phase = 'transition'
+    elif event.key == 'c':
+        app.phase = 'settings'    
     elif app.phase == 'practice':
         practiceMode_keyPressed(app,event)
     elif app.phase == 'learning':
         learningMode_keyPressed(app,event)
-    elif event.key == 't':
-        app.phase = 'transition'
-    elif event.key == 'c':
-        app.phase = 'settings'
-    elif app.phase == 'transition':
-        transition_keyPressed(app,event)
-    elif app.phase == 'settings':
-       settings_keyPressed(app,event)
     if event.key == 'q':
         app.phase = 'start'
 
