@@ -85,14 +85,11 @@ def appStarted(app):
     #Level of vocab/ Character knowledge
     app.characterLevel = 0
     app.vocabLevel = 0  
-    #Number of flashcards that will appear in practice phase
-    app.cardsToDo = 10   
+    app.cardsToDo = 10#Number of flashcards that will appear in practice phase
     app.cardsPracticed = 0
-    #app.practiceFlashCard = FlashCard(charaKey, character_dict[charaKey])
-    app.practiceKey = getPracticeKey(app)
+    app.practiceKey = None
     app.practiceValue = None
-    #time alloted to answer each question during practice phase
-    app.baseProblemTime = 15
+    app.baseProblemTime = 15 #time alloted to answer each question during practice phase
     app.timeTaken = 0    
     #During Practice stage, refers to time limit user is given to select answer
     app.currQuestionType = 0
@@ -100,8 +97,11 @@ def appStarted(app):
     app.wantInput = False
     app.startQuestion = False
     app.finishedQuestion = False
-    app.seenPreviousCardKeys = list(app.prevFlashCard.keys())
-    app.notSeenPreviousCardKeys = list()
+    # app.seenPreviousCardKeys = list(app.prevFlashCard.keys())
+    # app.notSeenPreviousCardKeys = list()
+    app.seenBox1Keys = list()
+    app.seenBox2Keys = []
+    app.seenBox3Keys = []
     #answer Choices
     app.option1Chosen = False
     app.option2Chosen = False

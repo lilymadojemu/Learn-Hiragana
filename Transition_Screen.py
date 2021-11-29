@@ -7,7 +7,12 @@ from Learn_Hiragana_Practice_Mode import*
 def transition_mousePressed(app,event):
     if app.cx//1.25 <= event.x and app.cx*1.25:
         if app.cy*1.1 <= event.y <= app.cy*1.2:
-            app.phase = 'learning'
+            app.phase = 'practice'
+            app.baseProblemTime = 15
+            app.finishedQuestion = False
+            app.startQuestion = False 
+            app.cardsToDo = 10
+            app.makeFlashCard = False
         elif app.cy*1.1 <= event.y <= app.cy*1.3:
             app.phase = 'start'
 
