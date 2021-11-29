@@ -17,8 +17,8 @@ from Settings_Screen import*
 import time, random
 
 def appStarted(app):
-    #Initial phase 
     app.phase = "start"
+    #measurements
     app.cx = app.width//2
     app.cy = app.height//2
     app.frontcx = app.width//2
@@ -27,26 +27,21 @@ def appStarted(app):
     app.backcy = app.height//2
     app.textcx = app.width//2
     app.textcy = app.height//2
-    #Important/Good to have
-    #Overall dictionary with hiragana and vocab 
-    app.bigDictionary = overall_dict
-    #Stagnant list of all hiragana characters
-    app.hiraganaList = hiraganaList
-    #Overall vocabulary Dictionary
-    app.vocabularyDictionary = vocabulary_dict    
-    #Overall character dictionary
-    app.characterDictionary = character_dict
+
+    #Important
+    app.bigDictionary = overall_dict #Overall dictionary with hiragana and vocab 
+    app.hiraganaList = hiraganaList#Stagnant list of all hiragana characters
+    app.vocabularyDictionary = vocabulary_dict #Overall vocabulary Dictionary   
+    app.characterDictionary = character_dict #Overall character dictionary
     #Takes in all of the flashcards a user has seen Overall
     app.seenFlashCards = dict()
-    #Overall hiragana flashcards user has seen
-    app.seenHiraganaFlashCards = dict()
-    # #Overall vocabulary flashcards user has seen
-    app.seenVocabFlashCards = dict()
+    app.seenHiraganaFlashCards = dict()#Overall hiragana flashcards user has seen
+    app.seenVocabFlashCards = dict()#Overall vocabulary flashcards user has seen
     app.prevFlashCard= dict()
     app.currSession = dict()
+
     #Learning Phase    
-    #Checks if a "continue key" right) has been pressed to
-    # move on to next Flashcard
+    #Checks if a "continue key" has been pressed to move on to next Flashcard
     app.isContinueKeyPressed = False
     #Checks if "back key" (left) has been pressed to go to a previous card
     app.isBackKeyPressed = False
@@ -54,24 +49,15 @@ def appStarted(app):
     app.image2 = app.loadImage('flashcardBack.jpg')
     app.makeOldFlashCard = False 
     app.makeFlashCard = False
-    #app.firstKey = getRandomKey()   
-   # app.flashCard = FlashCard(app.firstKey,overall_dict[app.firstKey])
     app.newKey = getRandomKey()  
     app.prevCard = None
-    #app.alreadyOn = None
-    #Checks/Determines if a card has been flipped or not
-    app.isFlipped = False
-    #Number of flashcards that will appear in learning stage
-    app.cardsToLearn = 5
+    app.isFlipped = False #Checks/Determines if a card has been flipped or not
+    app.cardsToLearn = 5#Number of flashcards that will appear in learning stage
     app.cardsLearned = 0
-    app.isGrowing = False
-    app.isShrinking = False
-    app.isFrontShown = True
-    app.isBackShown = False
-    #app.timesBackKeyPressed = 0
     '''
     Current Session is being looked at twice 
     '''
+
     #Practice Phase      
     #Leitner System
     #Japanese words for now, middle/fine, and good
@@ -87,9 +73,7 @@ def appStarted(app):
     app.cardsToDo = 10 #Number of flashcards that will appear in practice phase
     app.cardsPracticed = 0
     app.practiceKey = None
-    #app.practiceValue = None
-    app.baseProblemTime = 15 #time alloted to answer each question during practice phase
-    #app.timeTaken = 0    
+    app.baseProblemTime = 15 #time alloted to answer each question during practice phase  
     app.currQuestionType = 0
     app.paused = False
     app.wantInput = False
@@ -98,8 +82,8 @@ def appStarted(app):
     # app.seenPreviousCardKeys = list(app.prevFlashCard.keys())
     # app.notSeenPreviousCardKeys = list()
     app.seenBox1Keys = list()
-    app.seenBox2Keys = []
-    app.seenBox3Keys = []
+    app.seenBox2Keys = list()
+    app.seenBox3Keys = list()
     #answer Choices
     app.option1Chosen = False
     app.option2Chosen = False
@@ -107,11 +91,14 @@ def appStarted(app):
     app.option4Chosen = False
     app.listOfPossibleChoices = list()
     app.userAnswer = None
+
     #Review Mode
     app.reviewKey = None
     app.reviewBox1 = set()
     app.reviewBox2 = set()
     app.reviewBox3 = set()
+    app.toBeReviewed = dict()
+
     #Extras 
     app.lightMode = True
     app.darkMode = False
@@ -213,9 +200,7 @@ def redrawAll(app,canvas):
 
 
 def timerFired(app): 
-    if app.phase == 'learning':
-         learning_timerFired(app)
-    elif app.phase == 'practice':
+    if app.phase == 'practice':
         practice_timerFired(app)
     elif app.phase == 'review':
         review_timerFired(app)

@@ -22,16 +22,36 @@ def getRandomKey():
 #Gets Each Previous Key in the dictionary for the current session
 def getPreviousKey(app):
     prevCurrKeyList = list(app.currSession.keys())
-    reversedList = prevCurrKeyList[::-1]
-    for prevKey in range(len(reversedList[::1])):
-        if (reversedList[prevKey] != app.prevCard and 
-            reversedList[prevKey] not in app.prevSet):
-            app.prevSet.add(reversedList[prevKey])
-            if reversedList[prevKey] in app.seenDrawn:
-                    app.seenDrawn.remove(reversedList[prevKey])
-            print(f'The card coming from {app.prevCard}')
-            print(f'The Next Card I should see {reversedList[prevKey]}')
-            return reversedList[prevKey]
+    reversedList = prevCurrKeyList
+    for prevKey in range(len(reversedList)):
+        if app.prevCard == None and app.prevSet == set():
+            app.prevCard = app.newKey
+        elif app.prevCard != None and reversedList[prevKey] != None:
+            currPreviousIndex = reversedList.index(app.prevCard)
+            if reversedList[currPreviousIndex - 1] != None:
+                if reversedList[currPreviousIndex - 1] not in app.prevSet:
+                    app.prevSet.add(reversedList[currPreviousIndex - 1])
+                return reversedList[currPreviousIndex - 1]
+        # if (reversedList[prevKey] != app.prevCard and 
+        #     reversedList[prevKey] not in app.prevSet):
+        #     print(app.prevSet)
+        #     app.prevSet.add(reversedList[prevKey])
+        #     if reversedList[prevKey] in app.seenDrawn:
+        #             app.seenDrawn.remove(reversedList[prevKey])
+        #     print(f'The card coming from {app.prevCard}')
+        #     print(f'The Next Card I should see {reversedList[prevKey]}')
+        #     return reversedList[prevKey]
+        
+            
+
+        #For when in prevSet and I need it
+        # elif (reversedList[prevKey] != app.prevCard and 
+        #     app.prevCard in app.prevSet and
+        #     reversedList[prevKey] in app.prevSet):
+        #     print(app.prevSet)
+        #     app.prevSet.remove(app.prevCard)
+        #     app.prevSet.remove(reversedList[prevKey])
+        #     return reversedList[prevKey]
 
 def getNextKeyFromPrevious(app):
     currListKeys = list(app.currSession.keys())
@@ -39,17 +59,19 @@ def getNextKeyFromPrevious(app):
     print(f'Cards That have been seen curr:{currListKeys}')
     print(f'Cards That have been seen curr reversed:{futurePreviousSession}')
     for redrawCard in range(len(currListKeys)):
-        #if app.prevCard != None and currListKeys[redrawCard] != None:
-        currPreviousIndex = currListKeys.index(app.prevCard)
-        print(currPreviousIndex)
-        if (currListKeys[redrawCard] == currListKeys[currPreviousIndex + 1] and 
-            currListKeys[redrawCard] != app.prevCard):
-            #removing and appending directly from list
-
-            app.seenDrawn.add(currListKeys[redrawCard])
-            if currListKeys[redrawCard] in app.prevSet:
-                app.prevSet.remove(currListKeys[redrawCard])
-            return currListKeys[redrawCard]
+        if app.prevCard != None and currListKeys[redrawCard] != None:
+            currPreviousIndex = currListKeys.index(app.prevCard)
+            # if (currListKeys[redrawCard] == currListKeys[currPreviousIndex + 1] 
+            #     and currListKeys[redrawCard] != app.prevCard):
+            #     if currListKeys[redrawCard] in app.prevSet:
+            #         app.prevSet.remove(currListKeys[redrawCard])
+            #     #removing and appending directly from list
+            #     print(f'Next {app.prevSet}')
+            #     app.seenDrawn.add(currListKeys[redrawCard])
+            if currListKeys[currPreviousIndex + 1] != None:
+                if currListKeys[currPreviousIndex + 1] in app.prevSet:
+                    app.prevSet.remove(currListKeys[currPreviousIndex + 1])
+                return currListKeys[currPreviousIndex + 1]
 
 #During intermediate times slightly off information is saved
 
@@ -82,8 +104,7 @@ def learningMode_keyPressed(app,event):
     #flips back to front    
     if event.key == 'Up' or event.key == 'Down':
         app.isFlipped = not app.isFlipped
-    #Move to new card, populate next card
-    elif event.key == 'Right':
+    elif event.key == 'Right':#Move to new card
         if app.cardsLearned < 5:
             app.newKey = getRandomKey()
             getHiraganaOrVocab(app,app.newKey)
@@ -105,35 +126,33 @@ def learningMode_keyPressed(app,event):
                 app.makeOldFlashCard = False
                 app.makeFlashCard = True
                 app.prevCard = app.newKey
-   
-    #Move to previous card
-    elif event.key == 'Left':
-        print(f'Current Session Normal {list(app.currSession.keys())}')
-        currSession = list(app.currSession.keys())
-        print(f'Current Session reversed {currSession[::-1]}')
-        #Skip first thing when revesed
-        app.timesBackKeyPressed += 1
-        print(f'current previous card {app.prevCard}')
-        if app.prevFlashCard != dict() and len(app.prevSet) != 5:        
-            # if app.timesBackKeyPressed == 1:
-            #     app.prevCard = app.newKey
-            #current and new current should not be the same 
-            app.prevCard = getPreviousKey(app)
-            print(f'New current previous card {app.prevCard}')
-            print('Current Previous Card and New current previous card not same')
-            if app.prevCard != None:
-                print(f'Pressed Left for {app.prevCard}')
-                print(app.prevFlashCard)
-                app.isBackKeyPressed = True
-                app.makeOldFlashCard = True
-
+    elif event.key == 'Left':#Move to previous card
+        if app.cardsLearned == 5:
+            print(f'Current Session Normal {list(app.currSession.keys())}')
+            currSession = list(app.currSession.keys())
+            print(f'Current Session reversed {currSession[::-1]}')
+            #Skip first thing when revesed
+            print(f'current previous card {app.prevCard}')
+            if app.prevFlashCard != dict() and len(app.prevSet) != 5:        
+                #current and new current should not be the same 
+                app.prevCard = getPreviousKey(app)
+                print(f'New current previous card {app.prevCard}')
+                if app.prevCard != None and app.newKey != app.prevCard:
+                    print(f'Pressed Left for {app.prevCard}')
+                    print(app.prevFlashCard)
+                    app.isBackKeyPressed = True
+                    app.makeOldFlashCard = True
     elif event.key == 'l':
         for seen in app.prevFlashCard:
             app.ima.add(seen)
         print(f"current seen for box 1 {app.ima}")
         app.phase = 'practice'
         app.makeFlashCard = False
-
+    elif event.key == 'f':
+        if app.newKey != None and app.newKey not in app.toBeReviewed: 
+            app.toBeReviewed[app.newKey] = overall_dict[app.newKey]
+            print(app.toBeReviewed)
+        
 def learningMode_mousePressed(app,event):
     if app.cx//1.1 <= event.x >= app.cx//2.2:
         if app.cx*1.45 <= event.y >= app.cy*1.6:
@@ -154,50 +173,6 @@ def learningMode_mousePressed(app,event):
         event.x >= app.width//6 and app.height//10 <= event.y and 
         event.y >= app.height//5):
         app.showMessage('Are you ready to practice?\n Press l to Continue!')
-'''        
-Flipping
-'''     
-#What is a flip, like a blink/flash, will need another background for back
-#Understanding from https://www.youtube.com/watch?v=kvd6i1mXec8
-#Idea from https://coderedirect.com/questions/124487/simple-animation-using-tkinter
-def decreasingFrontCard(app):
-    app.isShrinking = True 
-    if app.isShrinking == True:
-        if app.frontcx == app.width//2 and app.frontcy == app.height//2:
-            app.frontcx -= 100
-            app.frontcy -= 100
-        elif app.frontcx == app.width//6 and app.frontcy == app.height//6:
-            app.isShrinking = False
-            app.isGrowing = True
-
-def increasingBackCard(app):
-    if app.isGrowing == True and app.isShrinking == False:
-        if app.frontcx != app.width//2 and app.frontcy !=app.height//2:
-            app.backcx += 100
-            app.backcy += 100
-        elif app.frontcx == app.width//2 and app.frontcy == app.height//2:
-            app.isGrowing = False
-def learning_timerFired(app):
-
-    if app.isFlipped == True:
-        '''
-        Things look smaller and text/icons look zoomed out
-        goes slow but there is then a "jump" to make the card look
-        squeezed in horizontally
-        Once it gets to that point of looking squeezed, there is a change of 
-        what text is on the card and its size and it grows bigger
-
-        Split up flash card (front and back)
-        The front card needs to decrease to a certain point (but not completely)
-        the back card will then be created and overlay whateva went on with 
-        front card
-
-        More of an illusion than actual flipping
-        Only need to decrease once and increase once
-        '''
-        pass
-        # decreasingFrontCard(app)
-        # increasingBackCard(app)
 
 '''
 Drawings
@@ -243,10 +218,12 @@ def learningModeRedrawAll(app,canvas):
             canvas.create_text(app.cx,app.cy, font = 'Arial 20', 
             text = "Press the Right Arrow Key to Begin!")
     elif app.cardsLearned >= 1:
-        canvas.create_text(app.cx, app.cy//2, font = 'Arial 15', 
+        canvas.create_text(app.cx, app.cy//3, font = 'Arial 15', 
                     text = "Use Up/Down Arrow Keys to Flip Card!")
-        canvas.create_text(app.cx, app.cy//1.7, font = 'Arial 15', 
-                text = "Click Next/Press the Right Arrow Key to Move Forward!")             
+        canvas.create_text(app.cx, app.cy//2.4, font = 'Arial 15', 
+                text = "Click Next/Press the Right Arrow Key to Move Forward!")  
+        canvas.create_text(app.cx, app.cy//2, font = 'Arial 15', 
+                text = "Press f to favorite a card!", fill = 'black')                       
     if toBeLearned == dict():
         canvas.create_text(app.cx,app.cy, font = 'Arial 20',
         text = "Congrats! You have learned Everything! Press l to Practice!", 
@@ -258,8 +235,8 @@ def learningModeRedrawAll(app,canvas):
         if (app.isBackKeyPressed == True and toBeLearned != dict() and 
             app.prevCard != None):
             drawPrevCard(app,canvas)
-        if app.cardsLearned >= 1 and app.prevFlashCard != dict():
-            canvas.create_text(app.cx, app.cy//1.5, font = 'Arial 15', 
+        if app.cardsLearned == 5 and app.prevFlashCard != dict():
+            canvas.create_text(app.cx, app.cy//1.7, font = 'Arial 15', 
                     text = "Click Back/Press the Left Arrow Key to Move Back!")
             drawBackButton(app,canvas)
         if app.cardsToLearn == 0:
