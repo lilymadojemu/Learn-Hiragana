@@ -29,12 +29,12 @@ def drawLetsLearnButton(app,canvas):
                         fill = 'MistyRose2')
 
 #End will be a button that goes to profile select
-def drawProfileSelectButton(app,canvas):
+def drawReviewButton(app,canvas):
     canvas.create_rectangle(app.cx//2,app.cy//4, app.cx*1.5, app.cy//6, 
                             fill = 'papaya whip')
     canvas.create_text(app.cx,app.cy//5,
                         font = 'Arial 15',  
-                        text = "New User *Coming Soon*",
+                        text = "Review",
                         fill = 'plum')
 
 #Where user will be able to edit things, like default number of cards, etc. 
@@ -53,5 +53,5 @@ def startScreenRedrawall(app,canvas):
                         text = "Let's Learn Hiragana!", 
                         fill = 'navajo white')
     drawLetsLearnButton(app,canvas)
-    drawProfileSelectButton(app,canvas)
+    drawReviewButton(app,canvas)
     drawSettingsButton(app,canvas)

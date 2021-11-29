@@ -9,7 +9,7 @@ from cmu_112_graphics import *
 from Populate_Values import *
 from Classes import *
 from Start_Screen import *
-from User_Profile_Select_Screen import *
+from Review_Mode import *
 from Learn_Hiragana_Learning_Mode import *
 from Learn_Hiragana_Practice_Mode import *
 from Transition_Screen import *
@@ -17,10 +17,6 @@ from Settings_Screen import*
 import time, random
 
 def appStarted(app):
-    # listOfKeys = list(overall_dict.keys())
-    # possibleKey = random.choice(listOfKeys)
-    # listofHiragana = list(character_dict.keys())
-    # charaKey = random.choice(listofHiragana)
     #Initial phase 
     app.phase = "start"
     app.cx = app.width//2
@@ -58,11 +54,11 @@ def appStarted(app):
     app.image2 = app.loadImage('flashcardBack.jpg')
     app.makeOldFlashCard = False 
     app.makeFlashCard = False
-    app.firstKey = getRandomKey()   
-    app.flashCard = FlashCard(app.firstKey,overall_dict[app.firstKey])
+    #app.firstKey = getRandomKey()   
+   # app.flashCard = FlashCard(app.firstKey,overall_dict[app.firstKey])
     app.newKey = getRandomKey()  
     app.prevCard = None
-    app.alreadyOn = None
+    #app.alreadyOn = None
     #Checks/Determines if a card has been flipped or not
     app.isFlipped = False
     #Number of flashcards that will appear in learning stage
@@ -72,7 +68,7 @@ def appStarted(app):
     app.isShrinking = False
     app.isFrontShown = True
     app.isBackShown = False
-    app.timesBackKeyPressed = 0
+    #app.timesBackKeyPressed = 0
     '''
     Current Session is being looked at twice 
     '''
@@ -88,13 +84,12 @@ def appStarted(app):
     #Level of vocab/ Character knowledge
     app.characterLevel = 0
     app.vocabLevel = 0  
-    app.cardsToDo = 10#Number of flashcards that will appear in practice phase
+    app.cardsToDo = 10 #Number of flashcards that will appear in practice phase
     app.cardsPracticed = 0
     app.practiceKey = None
-    app.practiceValue = None
+    #app.practiceValue = None
     app.baseProblemTime = 15 #time alloted to answer each question during practice phase
-    app.timeTaken = 0    
-    #During Practice stage, refers to time limit user is given to select answer
+    #app.timeTaken = 0    
     app.currQuestionType = 0
     app.paused = False
     app.wantInput = False
@@ -112,8 +107,11 @@ def appStarted(app):
     app.option4Chosen = False
     app.listOfPossibleChoices = list()
     app.userAnswer = None
-    #Users
-    app.userProfiles = dict()
+    #Review Mode
+    app.reviewKey = None
+    app.reviewBox1 = set()
+    app.reviewBox2 = set()
+    app.reviewBox3 = set()
     #Extras 
     app.lightMode = True
     app.darkMode = False
@@ -126,6 +124,8 @@ def appStarted(app):
     app.darkSettingsBackground = app.loadImage('darkSettings.jpg')
     app.lightLearningBackground = app.loadImage('lightLearn.jpg')
     app.darkLearningBackground = app.loadImage('darkLearn.jpg')
+    app.lightReviewBackground = app.loadImage('reviewLight.jpg')
+    app.darkReviewBackground = app.loadImage('reviewDark.jpg')
     app.timerDelay = 1000
 #mousePressed of different phases
 def mousePressed(app,event):
@@ -137,8 +137,8 @@ def mousePressed(app,event):
         practice_mousePressed(app,event)
     elif app.phase == 'transition':
         transition_mousePressed(app,event)
-    elif app.phase == 'profileselect':
-        userSelect_mousePressed(app,event)
+    elif app.phase == 'review':
+        review_mousePressed(app,event)
     elif app.phase == 'settings':
         settings_mousePressed(app,event)
 
@@ -154,6 +154,8 @@ def keyPressed(app,event):
         practiceMode_keyPressed(app,event)
     elif app.phase == 'learning':
         learningMode_keyPressed(app,event)
+    elif app.phase == 'review':
+        reviewMode_keyPressed(app,event)
     if event.key == 'q':
         app.phase = 'start'
 
@@ -190,8 +192,15 @@ def redrawAll(app,canvas):
             canvas.create_image(app.width//2, app.height//2, 
                         image=ImageTk.PhotoImage(app.darkTransitionBackground))
             transitionScreenRedrawAll(app,canvas)
-    elif app.phase == 'profileselect':
-        userProfileRedrawAll(app,canvas)
+    elif app.phase == 'review':
+        if app.lightMode == True:
+            canvas.create_image(app.width//2, app.height//2, 
+                        image=ImageTk.PhotoImage(app.lightReviewBackground))
+            reviewModeRedrawAll(app,canvas)
+        elif app.darkMode == True:
+            canvas.create_image(app.width//2, app.height//2, 
+                        image=ImageTk.PhotoImage(app.darkReviewBackground))
+            reviewModeRedrawAll(app,canvas)
     elif app.phase == 'settings':
         if app.lightMode == True:
             canvas.create_image(app.width//2, app.height//2, 
@@ -208,6 +217,8 @@ def timerFired(app):
          learning_timerFired(app)
     elif app.phase == 'practice':
         practice_timerFired(app)
+    elif app.phase == 'review':
+        review_timerFired(app)
 
 def letsLearnHiragana():
     runApp(width = 800, height = 800)

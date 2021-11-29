@@ -12,6 +12,10 @@ toBePracticed = copy.deepcopy(overall_dict)
 '''
 Getting Things
 '''
+#Determines if len(app.jyozu) is a factor of 5 and adjusts number of cards in
+#learn mode accordingly
+def isFactor(app): pass
+
 def getBox1Key(app):
     for currBox1Key in app.ima:
         # if currBox1Key != app.practiceKey:
@@ -159,15 +163,13 @@ def practiceMode_keyPressed(app,event):
         if app.ima != set():#Box 1
             app.practiceKey = getBox1Key(app)
             print(f'From app.ima {app.practiceKey}')
-        if app.ima == set():
-            # if app.timeTaken <= 2.5: 
+        if app.ima == set(): 
                 if app.mama != set():#Box 2 preference
                     app.practiceKey = getBox2Key(app)
                     print(f'From app.mama {app.practiceKey}')
                 elif (app.mama == set() and app.jyozu != set()):
                     app.practiceKey = getBox3Key(app)
                     print(f'From app.jyozu {app.practiceKey}')
-            #elif app.timeTaken >= 2.51: 
                 elif app.jyozu != set():#Box 3 preference
                     app.practiceKey = getBox3Key(app)
                     print(f'From app.jyozu {app.practiceKey}')
@@ -175,7 +177,6 @@ def practiceMode_keyPressed(app,event):
                     app.practiceKey = getBox2Key(app)
                     print(f'From app.mama {app.practiceKey}')  
                 else:
-                    #app.cardsToDo = 0
                     app.finishedQuestion = True         
         app.listOfPossibleChoices = getAnswerChoices(app)        
         if app.practiceKey != None:
@@ -256,7 +257,6 @@ def practice_mousePressed(app,event):
                     elif app.mama == set() and app.jyozu != set():
                         app.practiceKey = getBox3Key(app)
                     else:
-                        #app.cardsToDo = 0
                         app.finishedQuestion = True      
                 elif app.timeTaken >= 2.51: 
                     if app.jyozu != set():#Box 3 preference
@@ -264,10 +264,8 @@ def practice_mousePressed(app,event):
                     elif app.mama != set() and app.jyozu == set(): #Box 2 preference
                         app.practiceKey = getBox2Key(app)
                     else:
-                        #app.cardsToDo = 0
                         app.finishedQuestion = True        
             else:
-                #app.cardsToDo = 0
                 app.finishedQuestion = True
             app.listOfPossibleChoices = getAnswerChoices(app)        
             app.option1Chosen = False
@@ -362,8 +360,11 @@ def practice_timerFired(app):
                     endTime = time.time()
                     app.timeTaken = endTime - startTime
                     print(app.timeTaken)
-        # if (app.finishedQuestion == True and app.cardsToDo == 0):
-        #     app.phase = 'transition'
+        # if (len(app.jyozu) is a factor of five, and 
+        #     app.characterLevel >= len(app.jyozu) and
+        #     app.vocabLevel >= len(app.jyozu)):
+        #     app.cardsToLearn = app.cardsToLearn*5
+
 '''
 Drawings
 '''
@@ -463,14 +464,14 @@ def drawNextButton(app,canvas):
     canvas.create_text(app.cx,app.cy//2, font = 'Arial', text = "Next", 
                         fill = 'DeepSkyBlue2')
 
-def drawFinishButton(app,canvas):
-    canvas.create_rectangle(app.cx//1.2,
-                            app.cy*1.2,
-                            app.cx*1.2,
-                            app.cy//3, 
-                            fill = 'pale violet red')
-    canvas.create_text(app.cx,app.cy, font = 'Arial', text = "Finish", 
-                        fill = 'azure4')
+# def drawFinishButton(app,canvas):
+#     canvas.create_rectangle(app.cx//1.2,
+#                             app.cy*1.2,
+#                             app.cx*1.2,
+#                             app.cy//3, 
+#                             fill = 'pale violet red')
+#     canvas.create_text(app.cx,app.cy, font = 'Arial', text = "Finish", 
+#                         fill = 'azure4')
 def drawPracticeCard(app,canvas):
     practiceFlashCard = FlashCard(app.practiceKey, overall_dict[app.practiceKey])
     practiceFlashCard.drawTimedFlashCard1(canvas, app)
