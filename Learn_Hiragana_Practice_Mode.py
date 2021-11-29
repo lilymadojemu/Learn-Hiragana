@@ -20,15 +20,16 @@ def getBox1Key(app):
 
 def getBox2Key(app):
     for currBox2Key in app.mama:
-        # if (currBox2Key != app.practiceKey):
-        #     #app.seenBox2Keys.append(currBox2Key)
             return currBox2Key
-
-
 def getBox3Key(app):
-    for currBox3Key in app.jyozu:
-        #app.seenBox3Keys.append(currBox3Key)
-        return currBox3Key
+    box3Keys = app.jyozu
+    for currBox3Key in box3Keys:
+        if app.practiceKey != currBox3Key and currBox3Key not in app.justSeen:
+            app.justSeen.add(currBox3Key)
+            return currBox3Key
+        elif( currBox3Key in app.justSeen and 
+            len(app.justSeen) == len(app.currSession.keys())):
+            app.justSeen = set()
 
 def getQuestionType():
     randomQuestionType = random.randint(1,4)
@@ -39,13 +40,21 @@ def getAnswerChoices(app):
     #Question Type 1
     characterChoices = list(character_dict.values())
     characterPronunciations = list()
+    vocabChoices = list(vocabulary_dict.values())
+    vocabPronunciations = list()
     for row in range(len(characterChoices)):
         for col in range(len(characterChoices[0])):
             romanji = characterChoices[row][col]
             if len(romanji) == 1:
                 characterPronunciations.append(romanji)
-    #if app.practiceKey not in characterPronunciations:
-    return random.sample(characterPronunciations, k=3)
+    for vocabRow in range(len(vocabChoices)):
+        for vocabCol in range(len(vocabChoices[0])):
+            vocab = vocabChoices[vocabRow][vocabCol]
+            if len(vocab) == 1:
+                vocabPronunciations.append(vocab)
+    overallPronunciations = characterPronunciations +  vocabPronunciations
+    if app.practiceKey not in overallPronunciations:
+        return random.sample(overallPronunciations, k=3)
 
 '''
 Determining Correctness
@@ -190,15 +199,16 @@ def practiceMode_keyPressed(app,event):
         if app.ima != None:
             app.practiceKey = getBox1Key(app)
             app.listOfPossibleChoices = getAnswerChoices(app)
-            realTarget = overall_dict[app.practiceKey]
-            #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
-            app.listOfPossibleChoices.insert(randrange(
-                            len(app.listOfPossibleChoices)+1),realTarget[0])  
-            app.baseProblemTime = 15
-            #app.timeTaken = 0
-            app.makeFlashCard = True
-            app.startQuestion = True
-            app.finishedQuestion = False
+            if app.practiceKey != None:
+                realTarget = overall_dict[app.practiceKey]
+                #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
+                app.listOfPossibleChoices.insert(randrange(
+                                len(app.listOfPossibleChoices)+1),realTarget[0])  
+                app.baseProblemTime = 15
+                #app.timeTaken = 0
+                app.makeFlashCard = True
+                app.startQuestion = True
+                app.finishedQuestion = False
     elif event.key == 't':
         app.phase = 'transition'
     elif event.key == 'e':
@@ -468,7 +478,7 @@ def drawPracticeCard(app,canvas):
     text ="Please Select/Input the Best Answer", fill = 'black')
 
 def practiceModeRedrawAll(app,canvas):
-    canvas.create_text(app.cx,app.cy//3, font = 'Arial 15',
+    canvas.create_text(app.cx,app.cy//1.1, font = 'Arial 15',
                         text = "Press t at any time to see your progress!")
     if app.startQuestion == False:
         canvas.create_text(app.cx,app.cy, font = 'Arial 20',

@@ -44,12 +44,14 @@ def getNextKeyFromPrevious(app):
         print(currPreviousIndex)
         if (currListKeys[redrawCard] == currListKeys[currPreviousIndex + 1] and 
             currListKeys[redrawCard] != app.prevCard):
+            #removing and appending directly from list
+
             app.seenDrawn.add(currListKeys[redrawCard])
             if currListKeys[redrawCard] in app.prevSet:
                 app.prevSet.remove(currListKeys[redrawCard])
             return currListKeys[redrawCard]
 
-
+#During intermediate times slightly off information is saved
 
 #Stores the Hiragana Characters or Vocabulary words into dictionaries
 def getHiraganaOrVocab(app,randomKey):
@@ -82,7 +84,7 @@ def learningMode_keyPressed(app,event):
         app.isFlipped = not app.isFlipped
     #Move to new card, populate next card
     elif event.key == 'Right':
-        if app.cardsLearned <= 5:
+        if app.cardsLearned < 5:
             app.newKey = getRandomKey()
             getHiraganaOrVocab(app,app.newKey)
             print(f'New Key {app.newKey}')

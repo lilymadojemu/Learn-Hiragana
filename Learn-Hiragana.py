@@ -84,6 +84,7 @@ def appStarted(app):
     app.jyozu = set() #Box 3
     app.prevSet = set()
     app.seenDrawn = set()
+    app.justSeen = set()
     #Level of vocab/ Character knowledge
     app.characterLevel = 0
     app.vocabLevel = 0  
