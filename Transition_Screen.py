@@ -11,12 +11,19 @@ def transition_mousePressed(app,event):
             app.cardsLearned = 0
             app.cardsToLearn = 5
             app.makeFlashCard = False
-        elif app.cy*1.1 <= event.y <= app.cy*1.2:
+        elif app.cy*1.1 <= event.y <= app.cy*1.2: #might take out
             app.phase = 'practice'
             app.baseProblemTime = 15
             app.finishedQuestion = False
             app.startQuestion = False 
             app.makeFlashCard = False
+            if app.wantInput == True:
+                app.wantInput = False
+            app.currQuestionType = getQuestionType()
+            app.option1Chosen = False
+            app.option2Chosen = False
+            app.option3Chosen = False
+            app.option4Chosen = False  
         elif app.cy*1.1 <= event.y <= app.cy*1.3:
             app.phase = 'start'
 
