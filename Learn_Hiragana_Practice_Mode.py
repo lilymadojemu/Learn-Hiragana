@@ -14,7 +14,10 @@ Getting Things
 '''
 #Determines if len(app.jyozu) is a factor of 5 and adjusts number of cards in
 #learn mode accordingly
-def isFactor(app): pass
+def isFactor(app): 
+    if len(app.jyozu) % 5 == 0:
+        return True
+    return False
 
 def getBox1Key(app):
     for currBox1Key in app.ima:
@@ -360,10 +363,10 @@ def practice_timerFired(app):
                     endTime = time.time()
                     app.timeTaken = endTime - startTime
                     print(app.timeTaken)
-        # if (len(app.jyozu) is a factor of five, and 
-        #     app.characterLevel >= len(app.jyozu) and
-        #     app.vocabLevel >= len(app.jyozu)):
-        #     app.cardsToLearn = app.cardsToLearn*5
+        if (isFactor(app) == True and app.characterLevel >= len(app.jyozu) 
+            and app.vocabLevel >= len(app.jyozu)):
+            print(app.cardsToLearn)
+            app.cardsToLearn = app.cardsToLearn*5
 
 '''
 Drawings

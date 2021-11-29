@@ -6,13 +6,18 @@ from Learn_Hiragana_Practice_Mode import*
 
 def transition_mousePressed(app,event):
     if app.cx//1.25 <= event.x and app.cx*1.25:
-        if app.cy*1.1 <= event.y <= app.cy//1.01:
+        if app.cy//1.01 <= event.y <= app.cy*1.1:
+            #Last Card is Drawn
+            print('Clicked L')
             app.phase = 'learning'
-            app.cardsLearned = 0
-            app.cardsToLearn = 5
+            app.makeOldFlashCard = False 
             app.makeFlashCard = False
+            app.newKey = getRandomKey()  
+            app.prevCard = None
+            app.isFlipped = False
+            app.isContinueKeyPressed = False
         elif app.cy*1.1 <= event.y <= app.cy*1.2: #might take out
-            for seen in app.toBeReview:
+            for seen in app.toBeReviewed:
                 app.reviewBox1.add(seen)
             app.phase = 'review'
             app.baseProblemTime = 15
