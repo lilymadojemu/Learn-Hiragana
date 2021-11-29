@@ -1,6 +1,6 @@
 '''
 At end of practice mode, allows the user to go back to the menu and leave, or
-continue practicing
+review of difficult cards
 '''
 from Learn_Hiragana_Practice_Mode import*
 
@@ -12,7 +12,9 @@ def transition_mousePressed(app,event):
             app.cardsToLearn = 5
             app.makeFlashCard = False
         elif app.cy*1.1 <= event.y <= app.cy*1.2: #might take out
-            app.phase = 'practice'
+            for seen in app.toBeReview:
+                app.reviewBox1.add(seen)
+            app.phase = 'review'
             app.baseProblemTime = 15
             app.finishedQuestion = False
             app.startQuestion = False 
@@ -37,14 +39,14 @@ def drawExitButton(app,canvas):
     canvas.create_text(app.cx,app.cy*1.25,
                         font = 'Arial 20', text = "Exit", fill = 'black')
 
-def drawContinueButton(app,canvas):
+def drawReviewButton(app,canvas):
     canvas.create_rectangle(app.cx//1.25,
                             app.cy*1.2,
                             app.cx*1.25,
                             app.cy*1.1, 
                             fill = 'LemonChiffon4')
     canvas.create_text(app.cx,app.cy*1.15,font = 'Arial 20', 
-                        text = "Practice", fill = 'black')
+                        text = "Review", fill = 'black')
 
 def drawLearningButton(app,canvas):
     canvas.create_rectangle(app.cx//1.25,
@@ -71,5 +73,5 @@ def transitionScreenRedrawAll(app,canvas):
     getSummary(app,canvas)
     drawLearningButton(app,canvas)
     drawExitButton(app,canvas)
-    drawContinueButton(app,canvas)
+    drawReviewButton(app,canvas)
 
