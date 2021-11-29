@@ -132,7 +132,8 @@ def mousePressed(app,event):
 #Houses the key presses of all phases
 def keyPressed(app,event):
     if event.key == 'Enter':
-        app.phase = 'learning'
+        if app.phase == 'start':
+            app.phase = 'learning'
     elif event.key == 't':
         app.phase = 'transition'
     elif event.key == 'c':
