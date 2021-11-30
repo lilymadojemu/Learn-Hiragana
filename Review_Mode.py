@@ -81,8 +81,15 @@ def reviewMode_keyPressed(app,event):
     if event.key == 'p':
         app.paused = not app.paused
     elif event.key == 'u':
-        del app.toBeReviewed[app.reviewKey]
+        if app.finishedQuestion == True:
+            if app.reviewKey in app.reviewBox1:
+                app.reviewBox1.remove(app.reviewKey)
+            elif app.reviewKey in app.reviewBox2:
+                app.reviewBox2.remove(app.reviewKey)
+            elif app.reviewKey in app.reviewBox3:
+                app.reviewBox3.remove(app.reviewKey) 
     elif event.key == 'Right':
+        del app.toBeReviewed[app.reviewKey]   
         if app.wantInput == True:
             app.wantInput = False
         app.currQuestionType = getQuestionType()
@@ -293,13 +300,15 @@ def reviewModeRedrawAll(app,canvas):
         if app.startQuestion == False:
             canvas.create_text(app.cx,app.cy, font = 'Arial 20',
                                 text = 'Press s to Start!')
-        if (app.makeFlashCard == True and app.reviewKey != None):
+        if (app.makeFlashCard == True and app.reviewKey != None and 
+            app.toBeReviewed != dict()):
             drawReviewCard(app,canvas)
             drawAnswerChoices(app,canvas)  
-        if app.finishedQuestion == True:
+        if (app.finishedQuestion == True and app.reviewKey != None and 
+            app.toBeReviewed != dict):
             drawNextButton(app,canvas)  
     else:
-        canvas.create_text(app.cx,app.cy, font = ('Arial, 20, bold'),
+        canvas.create_text(app.cx,app.cy, font = ('Arial','20','bold'),
                         text = "There are No Words to Review!")
-        canvas.create_text(app.cx,app.cy*1.5, font = ('Arial, 20, bold'),
+        canvas.create_text(app.cx,app.cy*1.5, font = ('Arial','20','bold'),
                         text = "Press q to return to start menu")

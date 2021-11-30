@@ -3,10 +3,8 @@ from Learn_Hiragana_Learning_Mode import*
 from Populate_Values import*
 from random import randrange
 
-#Practice is unlimitied (BUT!) Transition screen will come up every few cards
+#Practice is unlimitied (BUT!) Transition screen can be triggered at anytime
 #to give users opporunity to end session and see progress
-def practice_appStarted(app):
-    pass
 practiceHiraganaAndVocab = list(overall_dict.keys())
 toBePracticed = copy.deepcopy(overall_dict)
 '''
@@ -39,8 +37,8 @@ def getBox3Key(app):
 
 def getQuestionType():
     randomQuestionType = random.randint(1,4)
-    testingType = 1
-    return testingType
+    baseType = 1
+    return baseType
 
 def getAnswerChoices(app):
     #Question Type 1
@@ -59,7 +57,9 @@ def getAnswerChoices(app):
             if len(vocab) == 1:
                 vocabPronunciations.append(vocab)
     overallPronunciations = characterPronunciations + vocabPronunciations
+    print(overallPronunciations)
     randomPronunications = random.sample(overallPronunciations, k=3)
+    print(randomPronunications)
     if app.practiceKey not in randomPronunications:
         return randomPronunications
 
@@ -69,7 +69,6 @@ Determining Correctness
 def storeCorrectIncorrect(questionCorrect,app):
     #Question Type 1
     answerChoice = app.userAnswer
-    print(answerChoice)
     questionType = app.currQuestionType
     if questionType == 1:
         if questionCorrect == True:
@@ -137,6 +136,7 @@ def practiceMode_keyPressed(app,event):
         app.paused = not app.paused
     elif event.key == 'q':
         app.phase = 'start'
+
     elif event.key == 'Right':
         if app.wantInput == True:
             app.wantInput = False
@@ -226,41 +226,42 @@ def practice_mousePressed(app,event):
         if app.cy//2.5 <= event.y <= app.cy//1.8:
             print('Next is clicked')
              #Click Next/Finished
-            app.currQuestionType = getQuestionType()  
-            if app.ima != set():#Box 1
-                app.practiceKey = getBox1Key(app)
-            if app.ima == set():
-                if app.timeTaken <= 2.5: 
-                    if app.mama != set():#Box 2 preference
-                        app.practiceKey = getBox2Key(app)
-                    elif app.mama == set() and app.jyozu != set():
-                        app.practiceKey = getBox3Key(app)
-                    else:
-                        app.finishedQuestion = True      
-                elif app.timeTaken >= 2.51: 
-                    if app.jyozu != set():#Box 3 preference
-                        app.practiceKey = getBox3Key(app)
-                    elif app.mama != set() and app.jyozu == set(): #Box 2 preference
-                        app.practiceKey = getBox2Key(app)
-                    else:
-                        app.finishedQuestion = True        
-            else:
-                app.finishedQuestion = True
-            app.listOfPossibleChoices = getAnswerChoices(app)        
+            if app.wantInput == True:
+                app.wantInput = False
+            app.currQuestionType = getQuestionType()
             app.option1Chosen = False
             app.option2Chosen = False
             app.option3Chosen = False
-            app.option4Chosen = False
+            app.option4Chosen = False  
+            if app.ima != set():#Box 1
+                app.practiceKey = getBox1Key(app)
+                print(f'From app.ima {app.practiceKey}')
+            if app.ima == set(): 
+                    if app.mama != set():#Box 2 preference
+                        app.practiceKey = getBox2Key(app)
+                        print(f'From app.mama {app.practiceKey}')
+                    elif (app.mama == set() and app.jyozu != set()):
+                        app.practiceKey = getBox3Key(app)
+                        print(f'From app.jyozu {app.practiceKey}')
+                    elif app.jyozu != set():#Box 3 preference
+                        app.practiceKey = getBox3Key(app)
+                        print(f'From app.jyozu {app.practiceKey}')
+                    elif app.mama != set() and app.jyozu == set(): #Box 2 preference
+                        app.practiceKey = getBox2Key(app)
+                        print(f'From app.mama {app.practiceKey}')  
+                    else:
+                        app.finishedQuestion = True         
+            app.listOfPossibleChoices = getAnswerChoices(app)        
             if app.practiceKey != None:
                 realTarget = overall_dict[app.practiceKey]
             #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
                 app.listOfPossibleChoices.insert(randrange(
-                                len(app.listOfPossibleChoices)+1),realTarget[0]) 
-                app.baseProblemTime = 30
-                app.timeTaken = 0
+                                    len(app.listOfPossibleChoices)+1),realTarget[0]) 
+                app.baseProblemTime = 15
                 app.makeFlashCard = True
                 app.startQuestion = True
                 app.finishedQuestion = False
+                app.isContinueKeyPressed = True
 
 def modifiedIsCorrect(targetAnswer, answerChoice, app):
     correctMessages = ["That's Correct!", "You're the best!", 
@@ -326,16 +327,11 @@ def practice_timerFired(app):
     if app.paused == False:
         if (app.startQuestion == True and app.finishedQuestion == False and 
                 app.currQuestionType == 1 and app.makeFlashCard == True):
-                startTime = time.time()
                 modifiedAnswerQuestion(app)
                 app.baseProblemTime -= 1
                 if app.baseProblemTime == 0:
                     app.startQuestion = False
                     app.finishedQuestion = True
-                if app.finishedQuestion == True:
-                    endTime = time.time()
-                    app.timeTaken = endTime - startTime
-                    print(app.timeTaken)
         if (isFactor(app) == True and len(app.jyozu) >= 5 and
             app.characterLevel >= len(app.jyozu) 
             and app.vocabLevel >= len(app.jyozu) 
@@ -351,96 +347,63 @@ def drawAnswerChoices(app,canvas):
     randomChoice2 = app.listOfPossibleChoices[1]
     randomChoice3 = app.listOfPossibleChoices[2]
     randomChoice4 = app.listOfPossibleChoices[3]
-    if app.lightMode == True:
-        canvas.create_rectangle(app.cx*1.5,
-                                app.cy*1.3,
-                                app.cx//2,
-                                app.cy*1.4, 
-                                fill = 'light goldenrod')
-        canvas.create_text(app.cx,app.cy*1.35,text = f'1 {randomChoice1}', 
-        fill ='black' )
-        #Option 2
-        canvas.create_rectangle(app.cx*1.5,
-                                app.cy*1.4,
-                                app.cx//2,
-                                app.cy*1.5, 
-                                fill = 'plum')
-        canvas.create_text(app.cx,app.cy*1.45,text = f'2 {randomChoice2}', 
-        fill ='black' )
-        #Option 3
-        canvas.create_rectangle(app.cx*1.5,
-                                app.cy*1.5,
-                                app.cx//2,
-                                app.cy*1.6,
-                                fill = 'lemon chiffon')
-        canvas.create_text(app.cx,app.cy*1.55, text = f'3 {randomChoice3}', 
-        fill ='black' )
-        #Option 4
-        canvas.create_rectangle(app.cx*1.5,
-                                app.cy*1.6,
-                                app.cx//2,
-                                app.cy*1.7,
-                                fill = 'honeydew2')
-        canvas.create_text(app.cx,app.cy*1.65, text = f'4 {randomChoice4}', 
-        fill ='black')
-        canvas.create_rectangle(app.cx*1.5,
-                                app.cy*1.7,
-                                app.cx//2,
-                                app.cy*1.8,
-                                fill = 'snow')
-        canvas.create_text(app.cx,app.cy*1.75,
-                            text = 'Press e to Input Your Answer', 
-                            fill ='black')
-    elif app.darkMode == True:
-        canvas.create_rectangle(app.cx*1.5,
-                                app.cy*1.3,
-                                app.cx//2,
-                                app.cy*1.4, 
-                                fill = 'pale violet red')
-        canvas.create_text(app.cx,app.cy//12,text = f'{randomChoice1}', 
-        fill ='black' )
-        #Option 2
-        canvas.create_rectangle(app.cx*1.5,
-                                app.cy*1.4,
-                                app.cx//2,
-                                app.cy*1.5, 
-                                fill = 'dark orange')
-        canvas.create_text(app.cx//2,app.cy//12,text = f'{randomChoice2}', 
-        fill ='black' )
-        #Option 3  
-        canvas.create_rectangle(app.cx*1.5,
-                                app.cy*1.5,
-                                app.cx//2,
-                                app.cy*1.6,
-                                fill = 'maroon')
-        canvas.create_text(app.cx//2,app.cy//12,text = f'{randomChoice3}', 
-        fill ='black' )
-        #Option 4
-        canvas.create_rectangle(app.cx*1.5,
-                                app.cy*1.6,
-                                app.cx//2,
-                                app.cy*1.7,
-                                fill = 'dark goldenrod')
-        canvas.create_text(app.cx//2,app.cy//12, text = f'{randomChoice4}', 
-        fill ='black')
-        #Input
-        canvas.create_rectangle(app.cx*1.5,
-                                app.cy*1.7,
-                                app.cx//2,
-                                app.cy*1.8,
-                                fill = 'rosy brown')
-        canvas.create_text(app.cx,app.cy*1.75,
-                            text = 'Press e to Input Your Answer', 
-                            fill ='black')
+    canvas.create_rectangle(app.cx*1.5,
+                            app.cy*1.3,
+                            app.cx//2,
+                            app.cy*1.4, 
+                            fill = 'light goldenrod')
+    canvas.create_text(app.cx,app.cy*1.35,text = f'1 {randomChoice1}', 
+    fill ='black' )
+    #Option 2
+    canvas.create_rectangle(app.cx*1.5,
+                            app.cy*1.4,
+                            app.cx//2,
+                            app.cy*1.5, 
+                            fill = 'plum')
+    canvas.create_text(app.cx,app.cy*1.45,text = f'2 {randomChoice2}', 
+    fill ='black' )
+    #Option 3
+    canvas.create_rectangle(app.cx*1.5,
+                            app.cy*1.5,
+                            app.cx//2,
+                            app.cy*1.6,
+                            fill = 'lemon chiffon')
+    canvas.create_text(app.cx,app.cy*1.55, text = f'3 {randomChoice3}', 
+    fill ='black' )
+    #Option 4
+    canvas.create_rectangle(app.cx*1.5,
+                            app.cy*1.6,
+                            app.cx//2,
+                            app.cy*1.7,
+                            fill = 'honeydew2')
+    canvas.create_text(app.cx,app.cy*1.65, text = f'4 {randomChoice4}', 
+    fill ='black')
+    canvas.create_rectangle(app.cx*1.5,
+                            app.cy*1.7,
+                            app.cx//2,
+                            app.cy*1.8,
+                            fill = 'snow')
+    canvas.create_text(app.cx,app.cy*1.75,
+                        text = 'Press e to Input Your Answer', 
+                        fill ='black')
 
 def drawNextButton(app,canvas):
-    canvas.create_rectangle(app.cx//1.2,
-                            app.cy//2.5,
-                            app.cx*1.2,
-                            app.cy//1.8, 
-                            fill = 'honeydew2')
-    canvas.create_text(app.cx,app.cy//2, font = 'Arial', text = "Next", 
-                        fill = 'DeepSkyBlue2')
+    if app.lightMode == True:
+        canvas.create_rectangle(app.cx//1.2,
+                                app.cy//2.5,
+                                app.cx*1.2,
+                                app.cy//1.8, 
+                                fill = 'honeydew2')
+        canvas.create_text(app.cx,app.cy//2, font = 'Arial', text = "Next", 
+                            fill = 'DeepSkyBlue2')
+    elif app.darkMode == True:
+        canvas.create_rectangle(app.cx//1.2,
+                                app.cy//2.5,
+                                app.cx*1.2,
+                                app.cy//1.8, 
+                                fill = 'slate gray')
+        canvas.create_text(app.cx,app.cy//2, font = 'Arial', text = "Next", 
+                            fill = 'antique white')
 def drawPracticeCard(app,canvas):
     practiceFlashCard = FlashCard(app.practiceKey, overall_dict[app.practiceKey])
     practiceFlashCard.drawTimedFlashCard1(canvas, app)
@@ -449,10 +412,11 @@ def drawPracticeCard(app,canvas):
 
 def practiceModeRedrawAll(app,canvas):
     canvas.create_text(app.cx,app.cy//1.1, font = 'Arial 15',
-                        text = "Press t at any time to see your progress!")
+                        text = "Press t at any time to see your progress!",
+                        fill = 'ghost white')
     if app.startQuestion == False:
         canvas.create_text(app.cx,app.cy, font = 'Arial 20',
-                            text = 'Press s to Start!')
+                            text = 'Press s to Start!', fill = 'ghost white')
     if (app.makeFlashCard == True and app.practiceKey != None):
         drawPracticeCard(app,canvas) 
         drawAnswerChoices(app,canvas)  

@@ -29,16 +29,12 @@ def appStarted(app):
     app.textcy = app.height//2
 
     #Important
-    # app.bigDictionary = overall_dict #Overall dictionary with hiragana and vocab 
-    # app.hiraganaList = hiraganaList#Stagnant list of all hiragana characters
-    # app.vocabularyDictionary = vocabulary_dict #Overall vocabulary Dictionary   
-    # app.characterDictionary = character_dict #Overall character dictionary
-    #Takes in all of the flashcards a user has seen Overall
     app.seenFlashCards = dict()
     app.seenHiraganaFlashCards = dict()#Overall hiragana flashcards user has seen
     app.seenVocabFlashCards = dict()#Overall vocabulary flashcards user has seen
     app.prevFlashCard= dict()
     app.currSession = dict()
+    app.currSessionKeys = list(app.currSession.keys())
 
     #Learning Phase    
     #Checks if a "continue key" has been pressed to move on to next Flashcard
@@ -54,7 +50,8 @@ def appStarted(app):
     app.isFlipped = False #Checks/Determines if a card has been flipped or not
     app.cardsToLearn = 5#Number of flashcards that will appear in learning stage
     app.cardsLearned = 0
-
+    app.isFavorite = False
+    app.unfavorite = False
     #Practice       
     #Leitner System
     #Japanese words for now, middle/fine, and good
@@ -151,7 +148,7 @@ def redrawAll(app,canvas):
         startScreenRedrawall(app,canvas)
     elif app.phase == 'learning':
         if app.lightMode == True:
-            canvas.create_image(app.width//2, app.height//2, 
+            canvas.create_image(app.width//4, app.height//2, 
                             image=ImageTk.PhotoImage(app.lightLearningBackground))
             learningModeRedrawAll(app,canvas)
         elif app.darkMode == True:

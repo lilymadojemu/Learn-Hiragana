@@ -1,21 +1,20 @@
 '''
-Contains all classes that will be used
+Contains FlashCard Class
 '''
 from Populate_Values import*
 from cmu_112_graphics import*
 
 class FlashCard(object):
     def __init__(self, frontText, backText):
-        #Before Flipping
         self.frontText = frontText
         self.backText = backText
 
     def drawFlashCard(self, canvas, app):
-        canvas.create_text(app.cx//3, app.cy//5.5,font = 'Arial',
+        canvas.create_text(app.cx//3, app.cy//5.5,font =('Arial','15','bold'),
     text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
-                            fill = 'black')
-        canvas.create_text(app.cx*1.3, app.cy//6,font = 'Arial',
-        text = f"Cards Left:{app.cardsToLearn}", fill = 'black')
+                            fill = "ghost white")
+        canvas.create_text(app.cx*1.3, app.cy//6, font =('Arial','15','bold'),
+        text = f"Cards Left:{app.cardsToLearn}", fill = "ghost white")
         #Hiragana
         if self.frontText in hiraganaList:
             if app.isFlipped == False:
@@ -76,23 +75,17 @@ class FlashCard(object):
         canvas.create_image(app.cx, app.cy, 
                             image=ImageTk.PhotoImage(app.image1))  
         if app.phase == 'practice':             
-            canvas.create_text(app.cx//3.3, app.cy//2,font = 'Arial 15',
+            canvas.create_text(app.cx//3.3, app.cy//2,font =('Arial','15','bold'),
         text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
                                 fill = 'dark slate blue')
-            canvas.create_text(app.cx*1.5, app.cy//2,font = 'Arial 15 ',
+            canvas.create_text(app.cx*1.5, app.cy//2,font =('Arial','15','bold'),
                             text = f"Time Limit:{app.baseProblemTime}", 
                             fill = 'dark slate blue')
         elif app.phase == 'review':
-            canvas.create_text(app.cx, app.cy//2,font = 'Arial 15 ',
+            canvas.create_text(app.cx, app.cy//2,font =('Arial','15','bold'),
                             text = f"Time Limit:{app.baseProblemTime}", 
                             fill = 'dark slate blue')
         canvas.create_text(app.textcx,app.textcy,
                         font = 'Arial 20',
                         text = f"{self.frontText}", 
                         fill = 'dark orchid')
-
-    # def getMeaning(self, word, app):
-    #     if word in app.bigDictionary:
-    #         return app.bigDictionary[word]
-    #     else:
-    #         app.showMessage("Sorry, we don't have that word\nPress d to add it or q to quit!")
