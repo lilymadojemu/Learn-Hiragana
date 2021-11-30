@@ -75,16 +75,14 @@ def learningMode_keyPressed(app,event):
     elif event.key == 'u':
         app.isFavorite = False
         app.unfavorite = True
-        if app.reviewKey in app.reviewBox1:
-            app.reviewBox1.remove(app.reviewKey)
-        elif app.reviewKey in app.reviewBox2:
-            app.reviewBox2.remove(app.reviewKey)
-        elif app.reviewKey in app.reviewBox3:
-            app.reviewBox3.remove(app.reviewKey)
+        if app.cardsLearned <= app.cardsToLearn:
+            del app.toBeReviewed[app.newKey]
+        else:
+            del app.toBeReviewed[app.prevCard]
     elif event.key == 'Right':#Move to new card
         app.isFavorite = False
         app.unfavorite = False
-        if app.cardsLearned == len(app.currSessionKeys):
+        if app.cardsLearned <= 5:
             app.newKey = getRandomKey()
             getHiraganaOrVocab(app,app.newKey)
             app.currSession[app.newKey] = overall_dict[app.newKey]
@@ -103,7 +101,7 @@ def learningMode_keyPressed(app,event):
                 app.makeFlashCard = True
                 app.prevCard = app.newKey
     elif event.key == 'Left':#Move to previous card
-        if app.cardsLearned == len(app.currSessionKeys):
+        if app.cardsLearned == 5:
             print(len(app.currSessionKeys))
             if app.prevFlashCard != dict() and len(app.prevSet) != 5:        
                 app.prevCard = getPreviousKey(app)
