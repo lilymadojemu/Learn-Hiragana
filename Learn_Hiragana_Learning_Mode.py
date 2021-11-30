@@ -41,10 +41,11 @@ def getNextKeyFromPrevious(app):
     for redrawCard in range(len(currListKeys)):
         if app.prevCard != None and currListKeys[redrawCard] != None:
             currPreviousIndex = currListKeys.index(app.prevCard)
-            if currListKeys[currPreviousIndex + 1] != None:
-                if currListKeys[currPreviousIndex + 1] in app.prevSet:
-                    app.prevSet.remove(currListKeys[currPreviousIndex + 1])
-                return currListKeys[currPreviousIndex + 1]
+            if len(currListKeys) <= 5 and currPreviousIndex + 1 < 5:
+                if currListKeys[currPreviousIndex + 1] != None:
+                    if currListKeys[currPreviousIndex + 1] in app.prevSet:
+                        app.prevSet.remove(currListKeys[currPreviousIndex + 1])
+                    return currListKeys[currPreviousIndex + 1]
 #Stores the Hiragana Characters or Vocabulary words into dictionaries
 def getHiraganaOrVocab(app,randomKey):
     hiraganaOrVocab = randomKey
@@ -86,6 +87,7 @@ def learningMode_keyPressed(app,event):
             app.cardsToLearn -= 1
         else:
             #Don't go out of bounds!
+            currList = list(app.currSession.keys())
             if len(app.prevSet) <= 5:
                 app.newKey = getNextKeyFromPrevious(app)
                 # print(f'I made it to redraw {app.newKey}')
@@ -197,7 +199,8 @@ def learningModeRedrawAll(app,canvas):
         fill = 'black')
     else: #Learning Cards
         drawNextButton(app,canvas)
-        if app.isContinueKeyPressed == True and toBeLearned != dict():
+        if (app.isContinueKeyPressed == True and app.newKey != None and 
+            toBeLearned != dict()):
             drawNewCard(app,canvas)             
         if (app.isBackKeyPressed == True and toBeLearned != dict() and 
             app.prevCard != None):
@@ -206,5 +209,5 @@ def learningModeRedrawAll(app,canvas):
             canvas.create_text(app.cx, app.cy//1.7, font = 'Arial 15', 
                     text = "Click Back/Press the Left Arrow Key to Move Back!")
             drawBackButton(app,canvas)
-        if app.cardsToLearn == 0:
+        if app.cardsToLearn == 0 and app.cardsLearned == 5:
             drawLetsTryitButton(app,canvas)

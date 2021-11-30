@@ -16,16 +16,18 @@ def transition_mousePressed(app,event):
             app.prevCard = None
             app.isFlipped = False
             app.isContinueKeyPressed = False
-        elif app.cy*1.1 <= event.y <= app.cy*1.2: #might take out
+            app.cardsLearned = 0
+        elif app.cy*1.1 <= event.y <= app.cy*1.2:
             for seen in app.toBeReviewed:
                 app.reviewBox1.add(seen)
             app.phase = 'review'
+            app.currQuestionType = 0
+            app.paused = False
             app.baseProblemTime = 15
             app.finishedQuestion = False
             app.startQuestion = False 
             app.makeFlashCard = False
-            if app.wantInput == True:
-                app.wantInput = False
+            app.wantInput = False
             app.currQuestionType = getQuestionType()
             app.option1Chosen = False
             app.option2Chosen = False
