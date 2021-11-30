@@ -6,11 +6,6 @@ def settings_mousePressed(app,event):
         elif app.cy*1.1 <= event.y <= app.cy*1.2:
             app.lightMode = not app.lightMode
             app.darkMode = not app.darkMode
-        elif app.cy*1.2 <= event.y <= app.cy*1.3:
-            app.cardsToLearn = int(
-    app.getUserInput('Type number of cards for Learning Mode (between 1 - 20)'))
-
-
 
 def drawLightModeButton(app,canvas):
     canvas.create_rectangle(app.cx//1.5,
@@ -19,7 +14,8 @@ def drawLightModeButton(app,canvas):
                             app.cy*1.1,   
                             fill = 'blanched almond')
     canvas.create_text(app.cx*1.05,app.cy*1.05,
-                        font = 'Arial 15',  text = "Light Mode", 
+                        font = ('Arial', '15', 'bold'), 
+                        text = "Light Mode", 
                         fill = 'deep sky blue')
 
 def drawDarkModeButton(app,canvas):
@@ -28,17 +24,9 @@ def drawDarkModeButton(app,canvas):
                             app.cx*1.4,
                             app.cy*1.1,  
                             fill = 'blue violet')
-    canvas.create_text(app.cx*1.05,app.cy*1.15,font = 'Arial 15', 
-                        text = "Dark Mode", fill = 'black')
-
-def drawChangeDefaultLearningButton(app,canvas):
-    canvas.create_rectangle(app.cx//1.5,
-                            app.cy*1.3,
-                            app.cx*1.4,
-                            app.cy*1.2, 
-                            fill = 'peach puff')
-    canvas.create_text(app.cx*1.05, app.cy*1.25,font = 'Arial 15', 
-                        text = "Change Default Learning Cards", fill = 'black')
+    canvas.create_text(app.cx*1.05,app.cy*1.15,font = ('Arial', '15', 'bold'), 
+                        text = "Dark Mode", 
+                        fill = 'black')
 
 def settings_redrawAll(app,canvas):
     if app.lightMode == True:
@@ -55,4 +43,3 @@ def settings_redrawAll(app,canvas):
                             fill = 'papaya whip')
     drawLightModeButton(app,canvas)
     drawDarkModeButton(app,canvas)
-    drawChangeDefaultLearningButton(app,canvas)

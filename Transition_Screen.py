@@ -10,6 +10,10 @@ def transition_mousePressed(app,event):
             #Last Card is Drawn
             print('Clicked L')
             app.phase = 'learning'
+            app.currSession = dict()
+            app.currSessionKeys = list(app.currSession.keys())
+            app.unfavorite = False
+            app.isFavorite = False
             app.makeOldFlashCard = False 
             app.makeFlashCard = False
             app.newKey = getRandomKey()  

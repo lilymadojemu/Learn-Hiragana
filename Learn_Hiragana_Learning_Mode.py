@@ -36,8 +36,6 @@ def getPreviousKey(app):
 def getNextKeyFromPrevious(app):
     currListKeys = list(app.currSession.keys())
     futurePreviousSession = currListKeys[::-1]
-    # print(f'Cards That have been seen curr:{currListKeys}')
-    # print(f'Cards That have been seen curr reversed:{futurePreviousSession}')
     for redrawCard in range(len(currListKeys)):
         if app.prevCard != None and currListKeys[redrawCard] != None:
             currPreviousIndex = currListKeys.index(app.prevCard)
@@ -70,13 +68,23 @@ def getHiraganaOrVocab(app,randomKey):
 '''
 Pressed
 '''
-def learningMode_keyPressed(app,event):
-    #flips front of flash card to back
-    #flips back to front    
+def learningMode_keyPressed(app,event):   
     if event.key == 'Up' or event.key == 'Down':
         app.isFlipped = not app.isFlipped
+
+    elif event.key == 'u':
+        app.isFavorite = False
+        app.unfavorite = True
+        if app.reviewKey in app.reviewBox1:
+            app.reviewBox1.remove(app.reviewKey)
+        elif app.reviewKey in app.reviewBox2:
+            app.reviewBox2.remove(app.reviewKey)
+        elif app.reviewKey in app.reviewBox3:
+            app.reviewBox3.remove(app.reviewKey)
     elif event.key == 'Right':#Move to new card
-        if app.cardsLearned < 5:
+        app.isFavorite = False
+        app.unfavorite = False
+        if app.cardsLearned == len(app.currSessionKeys):
             app.newKey = getRandomKey()
             getHiraganaOrVocab(app,app.newKey)
             app.currSession[app.newKey] = overall_dict[app.newKey]
@@ -87,27 +95,18 @@ def learningMode_keyPressed(app,event):
             app.cardsToLearn -= 1
         else:
             #Don't go out of bounds!
-            currList = list(app.currSession.keys())
-            if len(app.prevSet) <= 5:
+            if len(app.prevSet) <= len(app.currSessionKeys):
                 app.newKey = getNextKeyFromPrevious(app)
-                # print(f'I made it to redraw {app.newKey}')
-                # print(f'The previous {app.prevCard}')
                 app.isContinueKeyPressed = True
                 app.isBackKeyPressed = False
                 app.makeOldFlashCard = False
                 app.makeFlashCard = True
                 app.prevCard = app.newKey
     elif event.key == 'Left':#Move to previous card
-        if app.cardsLearned == 5:
-           # print(f'Current Session Normal {list(app.currSession.keys())}')
-            currSession = list(app.currSession.keys())
-            #print(f'Current Session reversed {currSession[::-1]}')
-            #Skip first thing when revesed
-           # print(f'current previous card {app.prevCard}')
+        if app.cardsLearned == len(app.currSessionKeys):
+            print(len(app.currSessionKeys))
             if app.prevFlashCard != dict() and len(app.prevSet) != 5:        
-                #current and new current should not be the same 
                 app.prevCard = getPreviousKey(app)
-                #print(f'New current previous card {app.prevCard}')
                 if app.prevCard != None and app.newKey != app.prevCard:
                     app.isBackKeyPressed = True
                     app.makeOldFlashCard = True
@@ -118,8 +117,16 @@ def learningMode_keyPressed(app,event):
         app.cardsToLearn = 5
         app.makeFlashCard = False
     elif event.key == 'f':
-        if app.newKey != None and app.newKey not in app.toBeReviewed: 
+        app.unfavorite = False
+        if (app.newKey != None and app.newKey not in app.toBeReviewed
+            and app.cardsToLearn != 0): 
+            app.isFavorite = True
             app.toBeReviewed[app.newKey] = overall_dict[app.newKey]
+            print(app.toBeReviewed)
+        if(app.prevCard != None and app.prevCard not in app.toBeReviewed
+            and app.cardsLearned == len(app.currSessionKeys)):
+            app.isFavorite = True
+            app.toBeReviewed[app.prevCard] = overall_dict[app.prevCard]
             print(app.toBeReviewed)
         
 def learningMode_mousePressed(app,event):
@@ -169,34 +176,68 @@ def drawNextButton(app,canvas):
                             app.cy*1.45,
                             app.cx*1.3,
                             app.cy*1.6, 
-                            fill = 'pale violet red')
+                            fill = 'violet red')
     canvas.create_text(app.cx*1.5,app.cy*1.5,
                         font = 'Arial',  text = "Next", fill = 'black')
 #Initiate Practice Mode
 def drawLetsTryitButton(app,canvas):
-    canvas.create_rectangle(app.cx*1.7,
-                            app.cy*1.45,
-                            app.cx*1.3,
-                            app.cy*1.6, 
-                            fill = 'cadet blue')
+    if app.lightMode == True:
+        canvas.create_rectangle(app.cx*1.7,
+                                app.cy*1.45,
+                                app.cx*1.3,
+                                app.cy*1.6, 
+                                fill = 'cadet blue')
+    elif app.darkMode == True:
+        canvas.create_rectangle(app.cx*1.7,
+                                app.cy*1.45,
+                                app.cx*1.3,
+                                app.cy*1.6, 
+                                fill = 'SlateGray4')
     canvas.create_text(app.cx*1.5,app.cy*1.5,
                         font = 'Arial',  text = "Let's Try it!", fill = 'black')
 
 def learningModeRedrawAll(app,canvas):
     if app.cardsLearned == 0:
-            canvas.create_text(app.cx,app.cy, font = 'Arial 20', 
-            text = "Press the Right Arrow Key to Begin!")
+            canvas.create_text(app.cx,app.cy, font =('Helvetica','20','bold'), 
+            text = "Press the Right Arrow Key to Begin!", fill = "ghost white")
     elif app.cardsLearned >= 1:
-        canvas.create_text(app.cx, app.cy//3, font = 'Arial 15', 
-                    text = "Use Up/Down Arrow Keys to Flip Card!")
-        canvas.create_text(app.cx, app.cy//2.4, font = 'Arial 15', 
-                text = "Click Next/Press the Right Arrow Key to Move Forward!")  
-        canvas.create_text(app.cx, app.cy//2, font = 'Arial 15', 
-                text = "Press f to favorite a card!", fill = 'black')                       
+        canvas.create_text(app.cx, app.cy//3, font =('Arial','15','bold'), 
+                    text = "Use Up/Down Arrow Keys to Flip Card!",
+                    fill = "ghost white")
+        canvas.create_text(app.cx, app.cy//2.4, font =('Arial','15','bold'), 
+                text = "Click Next/Press the Right Arrow Key to Move Forward!",
+                fill = "ghost white")  
+        canvas.create_text(app.cx, app.cy//2, font =('Arial','15','bold'), 
+                text = "Press f to favorite a card!", fill = "ghost white") 
+
+    if app.toBeReviewed != dict():
+        canvas.create_text(app.cx,app.cy*1.35, font =('Arial','15','bold'),
+                        text = "Press u to unfavorite a word",
+                        fill = "ghost white") 
+        if(app.isFavorite == True and app.cardsToLearn > 0 and
+            app.newKey != None and app.newKey in app.toBeReviewed):
+            canvas.create_text(app.cx,app.cy*1.4, font =('Arial','15','bold'),
+                            text = f"{app.newKey} has been favorited",
+                            fill = "ghost white")     
+        elif(app.isFavorite == False and app.cardsToLearn > 0 and
+             app.newKey == None): 
+            canvas.create_text(app.cx,app.cy*1.4, font =('Arial','15','bold'),
+                            text = f"{app.newKey} has been unfavorited",
+                            fill = "ghost white")   
+        elif(app.isFavorite == True and app.cardsToLearn == 0 and
+             app.prevCard in app.toBeReviewed): 
+            canvas.create_text(app.cx,app.cy*1.4, font =('Arial','15','bold'),
+                            text = f"{app.prevCard} has been unfavorited",
+                            fill = "ghost white")   
+        elif(app.isFavorite == True and app.cardsToLearn == 0 and
+             app.prevCard not in app.toBeReviewed and app.prevCard != None): 
+            canvas.create_text(app.cx,app.cy*1.4, font =('Arial','15','bold'),
+                            text = f"{app.prevCard} has been favorited",
+                            fill = "ghost white")  
     if toBeLearned == dict():
-        canvas.create_text(app.cx,app.cy, font = 'Arial 20',
+        canvas.create_text(app.cx,app.cy, font = ('Arial','20','bold'),
         text = "Congrats! You have learned Everything! Press l to Practice!", 
-        fill = 'black')
+        fill = "ghost white")
     else: #Learning Cards
         drawNextButton(app,canvas)
         if (app.isContinueKeyPressed == True and app.newKey != None and 
@@ -206,8 +247,9 @@ def learningModeRedrawAll(app,canvas):
             app.prevCard != None):
             drawPrevCard(app,canvas)
         if app.cardsToLearn == 0 and app.prevFlashCard != dict():
-            canvas.create_text(app.cx, app.cy//1.7, font = 'Arial 15', 
-                    text = "Click Back/Press the Left Arrow Key to Move Back!")
+            canvas.create_text(app.cx, app.cy//1.7, font =('Arial','15','bold'), 
+                    text = "Click Back/Press the Left Arrow Key to Move Back!",
+                     fill = "ghost white")
             drawBackButton(app,canvas)
         if app.cardsToLearn == 0 and app.cardsLearned == 5:
             drawLetsTryitButton(app,canvas)
