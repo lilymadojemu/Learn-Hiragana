@@ -48,7 +48,7 @@ def appStarted(app):
     app.newKey = getRandomKey()  
     app.prevCard = None
     app.isFlipped = False #Checks/Determines if a card has been flipped or not
-    app.cardsToLearn = 5#Number of flashcards that will appear in learning stage
+    app.cardsToLearn = app.newNum #Number of flashcards that will appear in learning stage
     app.cardsLearned = 0
     app.isFavorite = False
     app.unfavorite = False
@@ -64,7 +64,6 @@ def appStarted(app):
     #Level of vocab/ Character knowledge
     app.characterLevel = 0
     app.vocabLevel = 0  
-    app.cardsToDo = 10 #Number of flashcards that will appear in practice phase
     app.cardsPracticed = 0
     app.practiceKey = None
     app.baseProblemTime = 15 #time alloted to answer each question during practice phase  
@@ -76,6 +75,7 @@ def appStarted(app):
     app.seenBox1Keys = list()
     app.seenBox2Keys = list()
     app.seenBox3Keys = list()
+    app.newNum = 5 #New number for app.cardsToLearn when increased
     #answer Choices
     app.option1Chosen = False
     app.option2Chosen = False
