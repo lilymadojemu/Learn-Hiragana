@@ -21,13 +21,12 @@ def isFactor(app):
 
 def getBox1Key(app):
     for currBox1Key in app.ima:
-        # if currBox1Key != app.practiceKey:
-        #     #app.seenBox1Keys.append(currBox1Key)
             return currBox1Key
 
 def getBox2Key(app):
     for currBox2Key in app.mama:
             return currBox2Key
+
 def getBox3Key(app):
     box3Keys = app.jyozu
     for currBox3Key in box3Keys:
@@ -59,9 +58,10 @@ def getAnswerChoices(app):
             vocab = vocabChoices[vocabRow][vocabCol]
             if len(vocab) == 1:
                 vocabPronunciations.append(vocab)
-    overallPronunciations = characterPronunciations +  vocabPronunciations
-    if app.practiceKey not in overallPronunciations:
-        return random.sample(overallPronunciations, k=3)
+    overallPronunciations = characterPronunciations + vocabPronunciations
+    randomPronunications = random.sample(overallPronunciations, k=3)
+    if app.practiceKey not in randomPronunications:
+        return randomPronunications
 
 '''
 Determining Correctness
@@ -107,8 +107,6 @@ def storeCorrectIncorrect(questionCorrect,app):
             if (app.practiceKey not in app.ima and 
                 app.practiceKey not in app.mama
                 and app.practiceKey in app.jyozu):
-                # if len(app.seenBox2Keys) == 5:
-                #     app.seenBox2Keys = list()
                 app.mama.add(app.practiceKey)
                 app.jyozu.remove(app.practiceKey)
                 print(f' False Box 2 to 3 {app.mama}')
@@ -116,8 +114,6 @@ def storeCorrectIncorrect(questionCorrect,app):
             elif (app.practiceKey not in app.ima and 
                 app.practiceKey in app.mama and 
                 app.practiceKey not in app.jyozu):
-                # if len(app.seenBox1Keys) == 5:
-                #     app.seenBox1Keys = list()
                 app.ima.add(app.practiceKey)
                 app.mama.remove(app.practiceKey)
                 print(f' False Box 1 to 2 {app.ima}')
@@ -132,21 +128,7 @@ def storeCorrectIncorrect(questionCorrect,app):
                     app.vocabLevel -= 1
             else:
                 app.showMessage('Question Incorrect storing error')
-#Storing
-def getPracticeHiraganaOrVocab(app, randomKey):
-    hiraganaOrVocab = randomKey
-    if hiraganaOrVocab in hiraganaList:
-        hiraganaValue = overall_dict[hiraganaOrVocab]
-        app.prevFlashCard[hiraganaOrVocab] = hiraganaValue 
-        seenHiraganaFlashCards[hiraganaOrVocab] = hiraganaValue 
-        seenFlashCards[hiraganaOrVocab] = hiraganaValue 
-        del toBePracticed[hiraganaOrVocab]      
-    elif hiraganaOrVocab in vocabList:
-        vocabValue = overall_dict[hiraganaOrVocab]
-        app.prevFlashCard[hiraganaOrVocab] = vocabValue
-        seenVocabFlashCards[hiraganaOrVocab] = vocabValue
-        seenFlashCards[hiraganaOrVocab] = vocabValue
-        del toBePracticed[hiraganaOrVocab] 
+
 '''
 Pressed
 '''
@@ -192,11 +174,6 @@ def practiceMode_keyPressed(app,event):
             app.startQuestion = True
             app.finishedQuestion = False
             app.isContinueKeyPressed = True
-            # if app.cardsToDo != 0:
-            #     app.cardsToDo -= 1
-        # else:
-        #     app.finishedQuestion = True
-        #     app.cardsToDo = 0
 
     if event.key == 's': 
         app.currQuestionType = getQuestionType()  
@@ -209,7 +186,6 @@ def practiceMode_keyPressed(app,event):
                 app.listOfPossibleChoices.insert(randrange(
                                 len(app.listOfPossibleChoices)+1),realTarget[0])  
                 app.baseProblemTime = 15
-                #app.timeTaken = 0
                 app.makeFlashCard = True
                 app.startQuestion = True
                 app.finishedQuestion = False
@@ -285,9 +261,6 @@ def practice_mousePressed(app,event):
                 app.makeFlashCard = True
                 app.startQuestion = True
                 app.finishedQuestion = False
-                # app.isContinueKeyPressed = True
-                # if app.cardsToDo != 0:
-                #     app.cardsToDo -= 1
 
 def modifiedIsCorrect(targetAnswer, answerChoice, app):
     correctMessages = ["That's Correct!", "You're the best!", 
@@ -363,10 +336,12 @@ def practice_timerFired(app):
                     endTime = time.time()
                     app.timeTaken = endTime - startTime
                     print(app.timeTaken)
-        if (isFactor(app) == True and app.characterLevel >= len(app.jyozu) 
-            and app.vocabLevel >= len(app.jyozu)):
+        if (isFactor(app) == True and len(app.jyozu) >= 5 and
+            app.characterLevel >= len(app.jyozu) 
+            and app.vocabLevel >= len(app.jyozu) 
+            and app.cardsToLearn <= len(overall_dict)):
             print(app.cardsToLearn)
-            app.cardsToLearn = app.cardsToLearn*5
+            app.cardsToLearn = app.cardsToLearn + 5
 
 '''
 Drawings
@@ -466,15 +441,6 @@ def drawNextButton(app,canvas):
                             fill = 'honeydew2')
     canvas.create_text(app.cx,app.cy//2, font = 'Arial', text = "Next", 
                         fill = 'DeepSkyBlue2')
-
-# def drawFinishButton(app,canvas):
-#     canvas.create_rectangle(app.cx//1.2,
-#                             app.cy*1.2,
-#                             app.cx*1.2,
-#                             app.cy//3, 
-#                             fill = 'pale violet red')
-#     canvas.create_text(app.cx,app.cy, font = 'Arial', text = "Finish", 
-#                         fill = 'azure4')
 def drawPracticeCard(app,canvas):
     practiceFlashCard = FlashCard(app.practiceKey, overall_dict[app.practiceKey])
     practiceFlashCard.drawTimedFlashCard1(canvas, app)
@@ -492,5 +458,3 @@ def practiceModeRedrawAll(app,canvas):
         drawAnswerChoices(app,canvas)  
     if app.finishedQuestion == True:
         drawNextButton(app,canvas)  
-    # elif app.finishedQuestion == True and app.cardsToDo == 0:
-    #     drawFinishButton(app,canvas)

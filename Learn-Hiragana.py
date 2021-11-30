@@ -14,7 +14,7 @@ from Learn_Hiragana_Learning_Mode import *
 from Learn_Hiragana_Practice_Mode import *
 from Transition_Screen import *
 from Settings_Screen import*
-import time, random
+
 
 def appStarted(app):
     app.phase = "start"
@@ -29,10 +29,10 @@ def appStarted(app):
     app.textcy = app.height//2
 
     #Important
-    app.bigDictionary = overall_dict #Overall dictionary with hiragana and vocab 
-    app.hiraganaList = hiraganaList#Stagnant list of all hiragana characters
-    app.vocabularyDictionary = vocabulary_dict #Overall vocabulary Dictionary   
-    app.characterDictionary = character_dict #Overall character dictionary
+    # app.bigDictionary = overall_dict #Overall dictionary with hiragana and vocab 
+    # app.hiraganaList = hiraganaList#Stagnant list of all hiragana characters
+    # app.vocabularyDictionary = vocabulary_dict #Overall vocabulary Dictionary   
+    # app.characterDictionary = character_dict #Overall character dictionary
     #Takes in all of the flashcards a user has seen Overall
     app.seenFlashCards = dict()
     app.seenHiraganaFlashCards = dict()#Overall hiragana flashcards user has seen
@@ -54,19 +54,16 @@ def appStarted(app):
     app.isFlipped = False #Checks/Determines if a card has been flipped or not
     app.cardsToLearn = 5#Number of flashcards that will appear in learning stage
     app.cardsLearned = 0
-    '''
-    Current Session is being looked at twice 
-    '''
 
-    #Practice Phase      
+    #Practice       
     #Leitner System
     #Japanese words for now, middle/fine, and good
     app.ima = set() #Box 1
     app.mama = set() #Box 2, set contains what the "target answer"
     app.jyozu = set() #Box 3
     app.prevSet = set()
-    app.seenDrawn = set()
     app.justSeen = set()
+    app.justSeenReview = set()
     #Level of vocab/ Character knowledge
     app.characterLevel = 0
     app.vocabLevel = 0  
@@ -79,8 +76,6 @@ def appStarted(app):
     app.wantInput = False
     app.startQuestion = False
     app.finishedQuestion = False
-    # app.seenPreviousCardKeys = list(app.prevFlashCard.keys())
-    # app.notSeenPreviousCardKeys = list()
     app.seenBox1Keys = list()
     app.seenBox2Keys = list()
     app.seenBox3Keys = list()
@@ -134,6 +129,8 @@ def keyPressed(app,event):
     if event.key == 'Enter':
         if app.phase == 'start':
             app.phase = 'learning'
+    elif event.key == 'q':
+        app.phase = 'start'        
     elif event.key == 't':
         app.phase = 'transition'
     elif event.key == 'c':
@@ -144,8 +141,7 @@ def keyPressed(app,event):
         learningMode_keyPressed(app,event)
     elif app.phase == 'review':
         reviewMode_keyPressed(app,event)
-    if event.key == 'q':
-        app.phase = 'start'
+
 
 #The redrawAll's of different phases
 def redrawAll(app,canvas):

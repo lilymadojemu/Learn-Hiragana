@@ -71,7 +71,7 @@ class FlashCard(object):
                                     text = f"{wordRomanji}\n{translation}", 
                                             fill = 'medium aquamarine')
 
-    '''Question1 specific'''
+    '''Question Type 1 specific'''
     def drawTimedFlashCard1(self, canvas, app):
         canvas.create_image(app.cx, app.cy, 
                             image=ImageTk.PhotoImage(app.image1))  
@@ -79,7 +79,11 @@ class FlashCard(object):
             canvas.create_text(app.cx//3.3, app.cy//2,font = 'Arial 15',
         text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
                                 fill = 'dark slate blue')
-        canvas.create_text(app.cx*1.5, app.cy//2,font = 'Arial 15 ',
+            canvas.create_text(app.cx*1.5, app.cy//2,font = 'Arial 15 ',
+                            text = f"Time Limit:{app.baseProblemTime}", 
+                            fill = 'dark slate blue')
+        elif app.phase == 'review':
+            canvas.create_text(app.cx, app.cy//2,font = 'Arial 15 ',
                             text = f"Time Limit:{app.baseProblemTime}", 
                             fill = 'dark slate blue')
         canvas.create_text(app.textcx,app.textcy,
@@ -87,8 +91,8 @@ class FlashCard(object):
                         text = f"{self.frontText}", 
                         fill = 'dark orchid')
 
-    def getMeaning(self, word, app):
-        if word in app.bigDictionary:
-            return app.bigDictionary[word]
-        else:
-            app.showMessage("Sorry, we don't have that word\nPress d to add it or q to quit!")
+    # def getMeaning(self, word, app):
+    #     if word in app.bigDictionary:
+    #         return app.bigDictionary[word]
+    #     else:
+    #         app.showMessage("Sorry, we don't have that word\nPress d to add it or q to quit!")
