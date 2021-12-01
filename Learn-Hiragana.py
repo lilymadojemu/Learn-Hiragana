@@ -126,6 +126,12 @@ def mousePressed(app,event):
 def keyPressed(app,event):
     if event.key == 'Enter':
         if app.phase == 'start':
+            if (isFactor(app) == True and len(app.jyozu) >= app.learnNum and
+                (app.characterLevel >= len(app.jyozu) 
+                or app.vocabLevel >= len(app.jyozu)) 
+                and app.cardsToLearn <= len(overall_dict)):
+                print(app.learNum)
+                app.learnNum += 5
             app.phase = 'learning'
     elif event.key == 'q':
         if app.wantInput == True:
@@ -147,9 +153,13 @@ def keyPressed(app,event):
         app.cardsLearned = 0
         app.cardsToLearn = app.learnNum 
         app.finishedQuestion = False
-        if app.reviewBox1 != set():pass
-        elif app.reviewBox2 != set():pass
-        elif app.reviewBox3 != set():pass
+        if app.toBeReviewed != dict():
+            if app.reviewBox1 != set():
+                app.ima.union(app.reviewBox1)
+            elif app.reviewBox2 != set():
+                app.mama.union(app.reviewBox2)
+            elif app.reviewBox3 != set():
+                app.jyozu.union(app.reviewBox3)
         app.phase = 'start'        
     elif event.key == 't':
         app.startQuestion == False

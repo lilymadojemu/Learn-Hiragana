@@ -93,7 +93,7 @@ def learningMode_keyPressed(app,event):
                 app.prevCard = app.newKey
     elif event.key == 'Left':#Move to previous card
         if app.cardsLearned == app.learnNum:
-            if app.prevFlashCard != dict() and len(app.prevSet) != 5:        
+            if app.prevFlashCard != dict() and len(app.prevSet) != app.learnNum:        
                 app.prevCard = getPreviousKey(app)
                 if app.prevCard != None and app.newKey != app.prevCard:
                     app.isBackKeyPressed = True

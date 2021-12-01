@@ -9,6 +9,12 @@ def transition_mousePressed(app,event):
         if app.cy//1.01 <= event.y <= app.cy*1.1:
             #Last Card is Drawn
             print('Clicked L')
+            if (isFactor(app) == True and len(app.jyozu) >= 5 and
+                (app.characterLevel >= len(app.jyozu) 
+                or app.vocabLevel >= len(app.jyozu)) 
+                and app.cardsToLearn <= len(overall_dict)):
+                print(app.learNum)
+                app.learnNum += 5
             app.phase = 'learning'
             app.currSession = dict()
             app.currSessionKeys = list(app.currSession.keys())

@@ -90,7 +90,7 @@ def storeCorrectIncorrect(questionCorrect,app):
             elif (app.practiceKey not in app.ima and 
                     app.practiceKey in app.mama and 
                     app.practiceKey not in app.jyozu):
-                    
+
                     app.jyozu.add(app.practiceKey)
                     app.mama.remove(app.practiceKey)
                     print(f' True box 2 to box 3 {app.jyozu}')
@@ -180,6 +180,7 @@ def practiceMode_keyPressed(app,event):
             app.finishedQuestion = False
             app.isContinueKeyPressed = True
 
+
     if event.key == 's': 
         app.currQuestionType = getQuestionType()  
         if app.ima != None:
@@ -195,6 +196,12 @@ def practiceMode_keyPressed(app,event):
                 app.startQuestion = True
                 app.finishedQuestion = False
     elif event.key == 't':
+        if (isFactor(app) == True and len(app.jyozu) >= app.learnNum and
+            (app.characterLevel >= len(app.jyozu) 
+            or app.vocabLevel >= len(app.jyozu)) 
+            and app.cardsToLearn <= len(overall_dict)):
+            print(app.learnNum)
+            app.learnNum += 5
         app.phase = 'transition'
     elif event.key == 'e':
         app.userAnswer = app.getUserInput('Please Type in Best Answer')
@@ -332,12 +339,6 @@ def practice_timerFired(app):
                 if app.baseProblemTime == 0:
                     app.startQuestion = False
                     app.finishedQuestion = True
-        if (isFactor(app) == True and len(app.jyozu) >= 5 and
-            (app.characterLevel >= len(app.jyozu) 
-            or app.vocabLevel >= len(app.jyozu)) 
-            and app.cardsToLearn <= len(overall_dict)):
-            print(app.cardsToLearn)
-            app.cardsToLearn = app.learnNum + 5
 
 '''
 Drawings
