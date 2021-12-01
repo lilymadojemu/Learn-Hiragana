@@ -43,8 +43,10 @@ def getQuestionType():
 def getAnswerChoices(app):
     #Question Type 1
     characterChoices = list(character_dict.values())
+    print(characterChoices)
     characterPronunciations = list()
     vocabChoices = list(vocabulary_dict.values())
+    print(vocabChoices)
     vocabPronunciations = list()
     for row in range(len(characterChoices)):
         for col in range(len(characterChoices[0])):
@@ -54,7 +56,9 @@ def getAnswerChoices(app):
     for vocabRow in range(len(vocabChoices)):
         for vocabCol in range(len(vocabChoices[0])):
             vocab = vocabChoices[vocabRow][vocabCol]
-            if len(vocab) == 1:
+            if len(vocab) >= 2:
+                vocabPronunciations.append(vocab)
+            elif len(vocab) == 1 and vocab in vocabList:
                 vocabPronunciations.append(vocab)
     overallPronunciations = characterPronunciations + vocabPronunciations
     print(overallPronunciations)
@@ -337,7 +341,7 @@ def practice_timerFired(app):
             and app.vocabLevel >= len(app.jyozu) 
             and app.cardsToLearn <= len(overall_dict)):
             print(app.cardsToLearn)
-            app.cardsToLearn = app.cardsToLearn + 5
+            app.cardsToLearn = app.learnNum + 5
 
 '''
 Drawings

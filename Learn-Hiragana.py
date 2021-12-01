@@ -1,8 +1,6 @@
 '''
-
 Name: Lily Madojemu
 andrewid: lmadojem
-
 '''
 ''' imports '''
 from cmu_112_graphics import *
@@ -47,11 +45,13 @@ def appStarted(app):
     app.makeFlashCard = False
     app.newKey = getRandomKey()  
     app.prevCard = None
-    app.isFlipped = False #Checks/Determines if a card has been flipped or not
-    app.cardsToLearn = 5#Number of flashcards that will appear in learning stage
+    app.learnNum = 5 #New number for app.cardsToLearn when increased
+    app.isFlipped = False 
+    #Number of flashcards that will appear in learning stage
+    app.cardsToLearn = app.learnNum 
     app.cardsLearned = 0
     app.isFavorite = False
-    app.unfavorite = False
+    app.unFavorite = False
     #Practice       
     #Leitner System
     #Japanese words for now, middle/fine, and good
@@ -64,7 +64,6 @@ def appStarted(app):
     #Level of vocab/ Character knowledge
     app.characterLevel = 0
     app.vocabLevel = 0  
-    app.cardsToDo = 10 #Number of flashcards that will appear in practice phase
     app.cardsPracticed = 0
     app.practiceKey = None
     app.baseProblemTime = 15 #time alloted to answer each question during practice phase  
@@ -76,6 +75,7 @@ def appStarted(app):
     app.seenBox1Keys = list()
     app.seenBox2Keys = list()
     app.seenBox3Keys = list()
+     
     #answer Choices
     app.option1Chosen = False
     app.option2Chosen = False
@@ -94,11 +94,12 @@ def appStarted(app):
     #Extras 
     app.lightMode = True
     app.darkMode = False
+    #All images free to use from unsplash
     app.startBackground = app.loadImage('background.jpg')
     app.lightPracticeBackground = app.loadImage('day.jpg')
     app.darkPracticeBackground = app.loadImage('night.jpg')
     app.transitionBackground = app.loadImage('transition.jpg')
-    app.darkTransitionBackground = app.loadImage('darkConfetti.jpg')
+    app.darkTransitionBackground = app.loadImage('darkTransition.jpg')
     app.lightSettingsBackground = app.loadImage('lightSettings.jpg')
     app.darkSettingsBackground = app.loadImage('darkSettings.jpg')
     app.lightLearningBackground = app.loadImage('lightLearn.jpg')
@@ -110,8 +111,6 @@ def appStarted(app):
 def mousePressed(app,event):
     if app.phase == 'start':
         intro_mousePressed(app,event)
-    elif app.phase == 'learning':
-        learningMode_mousePressed(app,event)
     elif app.phase == 'practice':
         practice_mousePressed(app,event)
     elif app.phase == 'transition':
@@ -127,10 +126,36 @@ def keyPressed(app,event):
         if app.phase == 'start':
             app.phase = 'learning'
     elif event.key == 'q':
+        if app.wantInput == True:
+            app.wantInput = False
+        app.option1Chosen = False
+        app.option2Chosen = False
+        app.option3Chosen = False
+        app.option4Chosen = False
+        app.currSession = dict()
+        app.currSessionKeys = list(app.currSession.keys())
+        app.unfavorite = False
+        app.isFavorite = False
+        app.makeOldFlashCard = False 
+        app.makeFlashCard = False
+        app.newKey = getRandomKey()  
+        app.prevCard = None
+        app.isFlipped = False
+        app.isContinueKeyPressed = False
+        app.cardsLearned = 0
+        app.cardsToLearn = app.learnNum 
+        app.finishedQuestion = False
         app.phase = 'start'        
     elif event.key == 't':
+        app.startQuestion == False
         app.phase = 'transition'
     elif event.key == 'c':
+        if app.wantInput == True:
+            app.wantInput = False
+        app.option1Chosen = False
+        app.option2Chosen = False
+        app.option3Chosen = False
+        app.option4Chosen = False 
         app.phase = 'settings'    
     elif app.phase == 'practice':
         practiceMode_keyPressed(app,event)
