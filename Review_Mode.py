@@ -312,3 +312,14 @@ def reviewModeRedrawAll(app,canvas):
                         text = "There are No Words to Review!")
         canvas.create_text(app.cx,app.cy*1.5, font = ('Arial','20','bold'),
                         text = "Press q to return to start menu")
+
+'''
+
+    elif event.key == 'u':
+        app.isFavorite = False
+        app.unfavorite = True
+        if app.cardsLearned <= app.learnNum:
+            del app.toBeReviewed[app.newKey]
+        else:
+            del app.toBeReviewed[app.prevCard]
+'''

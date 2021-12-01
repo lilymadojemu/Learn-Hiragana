@@ -21,6 +21,7 @@ def transition_mousePressed(app,event):
             app.isFlipped = False
             app.isContinueKeyPressed = False
             app.cardsLearned = 0
+            app.cardsToLearn = app.learnNum
         elif app.cy*1.1 <= event.y <= app.cy*1.2:
             for seen in app.toBeReviewed:
                 app.reviewBox1.add(seen)

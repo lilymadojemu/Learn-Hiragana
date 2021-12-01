@@ -45,12 +45,12 @@ def appStarted(app):
     app.makeFlashCard = False
     app.newKey = getRandomKey()  
     app.prevCard = None
-    app.newNum = 5 #New number for app.cardsToLearn when increased
+    app.learnNum = 5 #New number for app.cardsToLearn when increased
     app.isFlipped = False #Checks/Determines if a card has been flipped or not
-    app.cardsToLearn = app.newNum #Number of flashcards that will appear in learning stage
+    app.cardsToLearn = app.learnNum #Number of flashcards that will appear in learning stage
     app.cardsLearned = 0
     app.isFavorite = False
-    app.unfavorite = False
+    app.unFavorite = False
     #Practice       
     #Leitner System
     #Japanese words for now, middle/fine, and good
@@ -110,8 +110,6 @@ def appStarted(app):
 def mousePressed(app,event):
     if app.phase == 'start':
         intro_mousePressed(app,event)
-    elif app.phase == 'learning':
-        learningMode_mousePressed(app,event)
     elif app.phase == 'practice':
         practice_mousePressed(app,event)
     elif app.phase == 'transition':
@@ -127,10 +125,28 @@ def keyPressed(app,event):
         if app.phase == 'start':
             app.phase = 'learning'
     elif event.key == 'q':
+        if app.wantInput == True:
+            app.wantInput = False
+        app.option1Chosen = False
+        app.option2Chosen = False
+        app.option3Chosen = False
+        app.option4Chosen = False 
         app.phase = 'start'        
     elif event.key == 't':
+        if app.wantInput == True:
+            app.wantInput = False
+        app.option1Chosen = False
+        app.option2Chosen = False
+        app.option3Chosen = False
+        app.option4Chosen = False 
         app.phase = 'transition'
     elif event.key == 'c':
+        if app.wantInput == True:
+            app.wantInput = False
+        app.option1Chosen = False
+        app.option2Chosen = False
+        app.option3Chosen = False
+        app.option4Chosen = False 
         app.phase = 'settings'    
     elif app.phase == 'practice':
         practiceMode_keyPressed(app,event)
