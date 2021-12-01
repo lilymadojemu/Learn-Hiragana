@@ -43,8 +43,10 @@ def getQuestionType():
 def getAnswerChoices(app):
     #Question Type 1
     characterChoices = list(character_dict.values())
+    print(characterChoices)
     characterPronunciations = list()
     vocabChoices = list(vocabulary_dict.values())
+    print(vocabChoices)
     vocabPronunciations = list()
     for row in range(len(characterChoices)):
         for col in range(len(characterChoices[0])):

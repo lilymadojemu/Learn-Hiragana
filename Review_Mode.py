@@ -87,9 +87,9 @@ def reviewMode_keyPressed(app,event):
             elif app.reviewKey in app.reviewBox2:
                 app.reviewBox2.remove(app.reviewKey)
             elif app.reviewKey in app.reviewBox3:
-                app.reviewBox3.remove(app.reviewKey) 
+                app.reviewBox3.remove(app.reviewKey)
+            del app.toBeReviewed[app.reviewKey]   
     elif event.key == 'Right':
-        del app.toBeReviewed[app.reviewKey]   
         if app.wantInput == True:
             app.wantInput = False
         app.currQuestionType = getQuestionType()
@@ -295,15 +295,20 @@ def drawReviewCard(app,canvas):
 
 def reviewModeRedrawAll(app,canvas):
     if app.toBeReviewed != dict():
-        canvas.create_text(app.cx,app.cy//1.1, font = 'Arial 15',
-                        text = "Press u to unfavorite a word")
-        if app.startQuestion == False:
+        if app.startQuestion == False and app.reviewKey == None:
             canvas.create_text(app.cx,app.cy, font = 'Arial 20',
                                 text = 'Press s to Start!')
-        if (app.makeFlashCard == True and app.reviewKey != None and 
-            app.toBeReviewed != dict()):
+        if (app.makeFlashCard == True and
+            app.reviewKey != None and 
+            app.toBeReviewed != dict() and 
+            app.reviewKey in app.toBeReviewed 
+            and (app.reviewKey in app.reviewBox1
+            or  app.reviewKey in app.reviewBox2 or 
+            app.reviewKey in app.reviewBox3)):
             drawReviewCard(app,canvas)
             drawAnswerChoices(app,canvas)  
+            canvas.create_text(app.cx,app.cy//1.4, font = 'Arial 15',
+                        text = "Press u to unfavorite a word")
         if (app.finishedQuestion == True and app.reviewKey != None and 
             app.toBeReviewed != dict):
             drawNextButton(app,canvas)  
@@ -312,14 +317,3 @@ def reviewModeRedrawAll(app,canvas):
                         text = "There are No Words to Review!")
         canvas.create_text(app.cx,app.cy*1.5, font = ('Arial','20','bold'),
                         text = "Press q to return to start menu")
-
-'''
-
-    elif event.key == 'u':
-        app.isFavorite = False
-        app.unfavorite = True
-        if app.cardsLearned <= app.learnNum:
-            del app.toBeReviewed[app.newKey]
-        else:
-            del app.toBeReviewed[app.prevCard]
-'''

@@ -57,15 +57,14 @@ class FlashCard(object):
                         threeWordRomanji = ""
                         for c in range(len(currRomanji)):
                             threeWordRomanji += currRomanji[c]
-                        #if app.isBackShown == True:
-                        canvas.create_text(app.textcx,app.textcy,
+                        canvas.create_text(app.cx,app.cy,
                             font = 'Arial',
                     text = f"{threeWordRomanji}\n{translation1}{translation2}", 
                                         fill = 'medium aquamarine')
                     else:
                         wordRomanji = self.backText[0]
                         translation= self.backText[1]
-                        canvas.create_text(app.textcx,app.textcy,
+                        canvas.create_text(app.cx,app.cy,
                             font = 'Arial',
                                     text = f"{wordRomanji}\n{translation}", 
                                             fill = 'medium aquamarine')
@@ -85,7 +84,7 @@ class FlashCard(object):
             canvas.create_text(app.cx, app.cy//2,font =('Arial','15','bold'),
                             text = f"Time Limit:{app.baseProblemTime}", 
                             fill = 'dark slate blue')
-        canvas.create_text(app.textcx,app.textcy,
+        canvas.create_text(app.cx,app.cy,
                         font = 'Arial 20',
                         text = f"{self.frontText}", 
                         fill = 'dark orchid')

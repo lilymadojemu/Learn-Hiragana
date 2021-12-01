@@ -16,6 +16,8 @@ to enter settings
 
 At Start Menu: Press 'enter' to go into learning mode
 
+Make sure num lock is off when using keypad to answer questions
+
 Inspirations: Christoph-D Japanese Tools:
 https://github.com/Christoph-D/Japanese-Tools Japanese Vocabulary
 Frequency List: http://corpus.leeds.ac.uk/frqc/internet-jp-forms.num

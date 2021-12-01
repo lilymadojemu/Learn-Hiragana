@@ -1,6 +1,6 @@
 from Classes import*
 from Populate_Values import*
-import random, time
+import random
 from random import randrange, sample
 
 modifyListOfKeys = list(overall_dict.keys())
@@ -12,8 +12,6 @@ seenVocabFlashCards = dict()
 '''
 Getting things
 '''
-def learning_appStarted(app):
-    pass
 #Gets a random key from the overall dictionary to be shown in current session
 def getRandomKey():
     randomKey = random.choice(modifyListOfKeys)
@@ -71,8 +69,8 @@ def learningMode_keyPressed(app,event):
     if event.key == 'Up' or event.key == 'Down':
         app.isFlipped = not app.isFlipped
     elif event.key == 'Right':#Move to new card
+        app.isFavorite = False
         if app.cardsLearned < app.learnNum and app.cardsToLearn >= 0:
-            app.isFavorite = False
             app.newKey = getRandomKey()
             if app.newKey != None:
                 getHiraganaOrVocab(app,app.newKey)
@@ -112,7 +110,7 @@ def learningMode_keyPressed(app,event):
             app.toBeReviewed[app.newKey] = overall_dict[app.newKey]
             print(app.toBeReviewed)
         if(app.prevCard != None and app.prevCard not in app.toBeReviewed
-            and app.cardsLearned == len(app.currSessionKeys)):
+            and app.cardsLearned == app.learnNum):
             app.isFavorite = True
             app.toBeReviewed[app.prevCard] = overall_dict[app.prevCard]
             print(app.toBeReviewed)
@@ -164,10 +162,7 @@ def drawLetsTryitButton(app,canvas):
                         font = 'Arial',  text = "Let's Try it!", fill = 'black')
 
 def learningModeRedrawAll(app,canvas):
-    if toBeLearned == dict():
-        canvas.create_text(app.cx,app.cy, font = ('Arial','20','bold'),
-        text = "Congrats! You have learned Everything! Press l to Practice!", 
-        fill = "ghost white")
+
     if app.cardsLearned == 0:
             canvas.create_text(app.cx,app.cy, font =('Helvetica','20','bold'), 
             text = "Press the Right Arrow Key to Begin!", fill = "ghost white")
@@ -190,22 +185,25 @@ def learningModeRedrawAll(app,canvas):
         elif(app.isFavorite == True and app.cardsToLearn == 0): 
             canvas.create_text(app.cx,app.cy*1.4, font =('Arial','15','bold'),
                             text = f"{app.prevCard} has been favorited",
-                            fill = "ghost white")                    
+                            fill = "ghost white")       
+    if toBeLearned == dict():
+        canvas.create_text(app.cx,app.cy, font = ('Arial','20','bold'),
+        text = "Congrats! You have learned Everything! Press l to Practice!", 
+        fill = "ghost white")                                     
 
     else: #Learning Cards
-        drawNextButton(app,canvas)
-        if (app.isContinueKeyPressed == True and app.newKey != None and 
-            toBeLearned != dict()):
-            drawNewCard(app,canvas)             
-        if (app.isBackKeyPressed == True and toBeLearned != dict() and 
-            app.prevCard != None):
-            drawPrevCard(app,canvas)
-        if (app.cardsToLearn == 0 and app.prevFlashCard != dict() and 
-            toBeLearned != dict()):
-            canvas.create_text(app.cx, app.cy//1.7, font =('Arial','15','bold'), 
-                    text = "Click Back/Press the Left Arrow Key to Move Back!",
-                     fill = "ghost white")
-            drawBackButton(app,canvas)
-        if (app.cardsToLearn == 0 and app.cardsLearned == app.learnNum and
-             app.newKey != None and toBeLearned != dict()):
-            drawLetsTryitButton(app,canvas)
+        if app.cardsToLearn < app.learnNum:
+            drawNextButton(app,canvas)
+            if (app.isContinueKeyPressed == True and app.newKey != None and 
+                toBeLearned != dict()):
+                drawNewCard(app,canvas)             
+            if (app.isBackKeyPressed == True and app.prevCard != None):
+                drawPrevCard(app,canvas)
+            if (app.cardsToLearn == 0 and app.prevFlashCard != dict()):
+                canvas.create_text(app.cx, app.cy//1.7, font =('Arial','15','bold'), 
+                        text = "Click Back/Press the Left Arrow Key to Move Back!",
+                        fill = "ghost white")
+                drawBackButton(app,canvas)
+            if (app.cardsToLearn == 0 and app.cardsLearned == app.learnNum and
+                app.newKey != None):
+                drawLetsTryitButton(app,canvas)

@@ -46,8 +46,9 @@ def appStarted(app):
     app.newKey = getRandomKey()  
     app.prevCard = None
     app.learnNum = 5 #New number for app.cardsToLearn when increased
-    app.isFlipped = False #Checks/Determines if a card has been flipped or not
-    app.cardsToLearn = app.learnNum #Number of flashcards that will appear in learning stage
+    app.isFlipped = False 
+    #Number of flashcards that will appear in learning stage
+    app.cardsToLearn = app.learnNum 
     app.cardsLearned = 0
     app.isFavorite = False
     app.unFavorite = False
@@ -98,7 +99,7 @@ def appStarted(app):
     app.lightPracticeBackground = app.loadImage('day.jpg')
     app.darkPracticeBackground = app.loadImage('night.jpg')
     app.transitionBackground = app.loadImage('transition.jpg')
-    app.darkTransitionBackground = app.loadImage('darkConfetti.jpg')
+    app.darkTransitionBackground = app.loadImage('darkTransition.jpg')
     app.lightSettingsBackground = app.loadImage('lightSettings.jpg')
     app.darkSettingsBackground = app.loadImage('darkSettings.jpg')
     app.lightLearningBackground = app.loadImage('lightLearn.jpg')
@@ -130,15 +131,23 @@ def keyPressed(app,event):
         app.option1Chosen = False
         app.option2Chosen = False
         app.option3Chosen = False
-        app.option4Chosen = False 
+        app.option4Chosen = False
+        app.currSession = dict()
+        app.currSessionKeys = list(app.currSession.keys())
+        app.unfavorite = False
+        app.isFavorite = False
+        app.makeOldFlashCard = False 
+        app.makeFlashCard = False
+        app.newKey = getRandomKey()  
+        app.prevCard = None
+        app.isFlipped = False
+        app.isContinueKeyPressed = False
+        app.cardsLearned = 0
+        app.cardsToLearn = app.learnNum 
+        app.finishedQuestion = False
         app.phase = 'start'        
     elif event.key == 't':
-        if app.wantInput == True:
-            app.wantInput = False
-        app.option1Chosen = False
-        app.option2Chosen = False
-        app.option3Chosen = False
-        app.option4Chosen = False 
+        app.startQuestion == False
         app.phase = 'transition'
     elif event.key == 'c':
         if app.wantInput == True:
