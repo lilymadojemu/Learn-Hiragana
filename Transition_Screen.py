@@ -7,15 +7,20 @@ from Learn_Hiragana_Practice_Mode import*
 def transition_mousePressed(app,event):
     if app.cx//1.25 <= event.x and app.cx*1.25:
         if app.cy//1.01 <= event.y <= app.cy*1.1:
-            #Last Card is Drawn
-            print('Clicked L')
-            if (isFactor(app) == True and len(app.jyozu) >= 5 and
-                (app.characterLevel >= len(app.jyozu) 
-                or app.vocabLevel >= len(app.jyozu)) 
-                and app.cardsToLearn <= len(overall_dict)):
-                print(app.learNum)
+            if (isFactor(app) == True and len(app.jyozu) >= app.learnNum and
+            (app.characterLevel >= len(app.jyozu) or app.vocabLevel >= len(app.jyozu)) 
+            and app.cardsToLearn <= len(overall_dict) and 
+            app.cardsToLearn != app.learnNum):
                 app.learnNum += 5
             app.phase = 'learning'
+            if app.wantInput == True:
+                app.wantInput = False
+            app.currQuestionType = getQuestionType()
+            app.option1Chosen = False
+            app.option2Chosen = False
+            app.option3Chosen = False
+            app.option4Chosen = False
+            app.finishedQuestion = False
             app.currSession = dict()
             app.currSessionKeys = list(app.currSession.keys())
             app.unfavorite = False

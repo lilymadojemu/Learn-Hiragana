@@ -110,12 +110,10 @@ def learningMode_keyPressed(app,event):
             and app.cardsToLearn != 0): 
             app.isFavorite = True
             app.toBeReviewed[app.newKey] = overall_dict[app.newKey]
-            print(app.toBeReviewed)
         if(app.prevCard != None and app.prevCard not in app.toBeReviewed
             and app.cardsLearned == app.learnNum):
             app.isFavorite = True
             app.toBeReviewed[app.prevCard] = overall_dict[app.prevCard]
-            print(app.toBeReviewed)
 
 def learningMode_mousePressed(app,event):
     if (app.cardsToLearn == 0 and app.width//4 <= event.x and 

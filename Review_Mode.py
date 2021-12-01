@@ -33,7 +33,6 @@ Determining Correctness
 def storeReviewCorrectIncorrect(questionCorrect,app):
     #Question Type 1
     answerChoice = app.userAnswer
-    print(answerChoice)
     questionType = app.currQuestionType
     if questionType == 1:
         if questionCorrect == True:
@@ -44,19 +43,14 @@ def storeReviewCorrectIncorrect(questionCorrect,app):
                 app.reviewKey  not in app.reviewBox3):
                 app.reviewBox2.add(app.reviewKey )
                 app.reviewBox1.remove(app.reviewKey )
-                print(f' True box 1 to box 2 {app.reviewBox2}')
-                print(f'Box 2 {app.reviewBox2}')
-                print(f"Box 1 {app.reviewBox1}")
             #Criteria to get to box 3 from box 2
             elif (app.reviewKey not in app.reviewBox1 and 
                     app.reviewKey  in app.reviewBox2 and 
                     app.reviewKey  not in app.reviewBox3):
                     app.reviewBox3.add(app.reviewKey )
                     app.reviewBox2.remove(app.reviewKey )
-                    print(f' True box 2 to box 3 {app.reviewBox3}')
-                    print(f"Box 3 {app.reviewBox3}")
-            else:
-                app.showMessage('Question Correct storing error')
+            # else:
+            #     app.showMessage('Question Correct storing error')
         elif questionCorrect == False:
             #Get into box 2 from box 3
             if (app.reviewKey not in app.reviewBox1 and 
@@ -64,16 +58,14 @@ def storeReviewCorrectIncorrect(questionCorrect,app):
                 and app.reviewKey  in app.reviewBox3):
                 app.reviewBox2.add(app.reviewKey )
                 app.reviewBox3.remove(app.reviewKey )
-                print(f' False Box 2 to 3 {app.reviewBox2}')
             #Get into box 1 from box 2
             elif (app.reviewKey not in app.reviewBox1 and 
                 app.reviewKey  in app.reviewBox2 and 
                 app.reviewKey  not in app.reviewBox3):
                 app.reviewBox1 .add(app.reviewKey)
                 app.reviewBox2.remove(app.reviewKey )
-                print(f' False Box 1 to 2 {app.reviewBox1}')
-            else:
-                app.showMessage('Question Incorrect storing error')
+            # else:
+            #     app.showMessage('Question Incorrect storing error')
 '''
 Pressed
 '''
@@ -99,22 +91,17 @@ def reviewMode_keyPressed(app,event):
         app.option4Chosen = False  
         if app.reviewBox1 != set():#Box 1
             app.reviewKey  = getReviewBox1Key(app)
-            print(f'From app.reviewBox1 {app.reviewKey }')
         elif app.reviewBox1 == set(): 
                 #Box 2 preference
                 if app.reviewBox2 != set():
                     app.reviewKey  = getReviewBox2Key(app)
-                    print(f'From app.reviewBox2 {app.reviewKey }')
                 elif (app.reviewBox2 == set() and app.reviewBox3 != set()):
                     app.reviewKey  = getReviewBox3Key(app)
-                    print(f'From app.reviewBox3 {app.reviewKey }')
                 elif app.reviewBox3 != set():#Box 3 preference
                     app.reviewKey  = getReviewBox3Key(app)
-                    print(f'From app.reviewBox3 {app.reviewKey }')
                 #Box 2 preference   
                 elif app.reviewBox2 != set() and app.reviewBox3 == set(): 
                     app.reviewKey  = getReviewBox2Key(app)
-                    print(f'From app.reviewBox2 {app.reviewKey }')  
                 else:
                     app.finishedQuestion = True         
         app.listOfPossibleChoices = getAnswerChoices(app)        
@@ -174,43 +161,6 @@ def review_mousePressed(app,event):
             app.showMessage('ClickedI')
             app.wantInput = True
             app.userAnswer = app.getUserInput('Please Type in Best Answer')
-    elif app.cx//1.2 < event.x < app.cx*1.2:
-        if app.cy//2.5 <= event.y <= app.cy//1.8:
-            print('Next is clicked')
-             #Click Next/Finished
-            app.currQuestionType = getQuestionType()  
-        if app.reviewBox1 != set():#Box 1
-            app.reviewKey  = getReviewBox1Key(app)
-            print(f'From app.reviewBox1 {app.reviewKey }')
-        elif app.reviewBox1 == set(): 
-                if app.reviewBox2 != set():#Box 2 preference
-                    app.reviewKey  = getReviewBox2Key(app)
-                    print(f'From app.reviewBox2 {app.reviewKey }')
-                elif (app.reviewBox2 == set() and app.reviewBox3 != set()):
-                    app.reviewKey  = getReviewBox3Key(app)
-                    print(f'From app.reviewBox3 {app.reviewKey }')
-                elif app.reviewBox3 != set():#Box 3 preference
-                    app.reviewKey  = getReviewBox3Key(app)
-                    print(f'From app.reviewBox3 {app.reviewKey }')
-                elif app.reviewBox2 != set() and app.reviewBox3 == set(): #Box 2 preference
-                    app.reviewKey  = getReviewBox2Key(app)
-                    print(f'From app.reviewBox2 {app.reviewKey }')  
-                else:
-                    app.finishedQuestion = True    
-        app.listOfPossibleChoices = getAnswerChoices(app)        
-        app.option1Chosen = False
-        app.option2Chosen = False
-        app.option3Chosen = False
-        app.option4Chosen = False
-        if app.reviewKey  != None:
-            realTarget = overall_dict[app.reviewKey]
-        #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
-            app.listOfPossibleChoices.insert(randrange(
-                            len(app.listOfPossibleChoices)+1),realTarget[0]) 
-            app.baseProblemTime = 15
-            app.makeFlashCard = True
-            app.startQuestion = True
-            app.finishedQuestion = False
 
 def modifiedIsCorrect(targetAnswer, answerChoice, app):
     correctMessages = ["That's Correct!", "You're the best!", 

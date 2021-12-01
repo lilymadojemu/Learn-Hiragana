@@ -19,13 +19,6 @@ def appStarted(app):
     #measurements
     app.cx = app.width//2
     app.cy = app.height//2
-    app.frontcx = app.width//2
-    app.frontcy = app.height//2
-    app.backcx = app.width//2
-    app.backcy = app.height//2
-    app.textcx = app.width//2
-    app.textcy = app.height//2
-
     #Important
     app.seenFlashCards = dict()
     app.seenHiraganaFlashCards = dict()#Overall hiragana flashcards user has seen
@@ -127,10 +120,10 @@ def keyPressed(app,event):
     if event.key == 'Enter':
         if app.phase == 'start':
             if (isFactor(app) == True and len(app.jyozu) >= app.learnNum and
-                (app.characterLevel >= len(app.jyozu) 
-                or app.vocabLevel >= len(app.jyozu)) 
-                and app.cardsToLearn <= len(overall_dict)):
-                print(app.learNum)
+            (app.characterLevel >= len(app.jyozu) or 
+            app.vocabLevel >= len(app.jyozu)) 
+            and app.cardsToLearn <= len(overall_dict) and 
+            app.cardsToLearn != app.learnNum):
                 app.learnNum += 5
             app.phase = 'learning'
     elif event.key == 'q':

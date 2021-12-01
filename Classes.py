@@ -21,7 +21,7 @@ class FlashCard(object):
                 canvas.create_image(app.cx, app.cy, 
                             image=ImageTk.PhotoImage(app.image1))   
                 #The Hiragana Character
-                canvas.create_text(app.textcx,app.textcy,
+                canvas.create_text(app.cx,app.cy,
                                 font = 'Arial 20',
                                 text = f"{self.frontText}", 
                                 fill = 'dark orchid')
@@ -31,7 +31,7 @@ class FlashCard(object):
                             image=ImageTk.PhotoImage(app.image2))       
                 romanji = self.backText[0]
                 pronunciation = self.backText[1]    
-                canvas.create_text(app.textcx,app.textcy,
+                canvas.create_text(app.cx,app.cy,
                                         font =('Helvetica','20','bold')
                     , text = f"{romanji}\n as in {pronunciation}", 
                     fill = 'medium aquamarine')
@@ -40,7 +40,7 @@ class FlashCard(object):
                 if app.isFlipped == False:
                     canvas.create_image(app.cx, app.cy, 
                             image=ImageTk.PhotoImage(app.image1))
-                    canvas.create_text(app.textcx,app.textcy,
+                    canvas.create_text(app.cx,app.cy,
                                 font = 'Arial 20',
                                 text = f"{self.frontText}", 
                                 fill = 'dark orchid')
