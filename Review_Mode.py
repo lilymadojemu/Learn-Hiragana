@@ -301,7 +301,7 @@ def reviewModeRedrawAll(app,canvas):
             app.reviewKey in app.reviewBox3)):
             drawReviewCard(app,canvas)
             drawAnswerChoices(app,canvas)  
-            canvas.create_text(app.cx,app.cy//1.45, font = 'Arial 15',
+            canvas.create_text(app.cx,app.cy//1.35, font = 'Arial 15',
                         text = "Press u to unfavorite a word")
         if (app.finishedQuestion == True and app.reviewKey != None and 
             app.toBeReviewed != dict):

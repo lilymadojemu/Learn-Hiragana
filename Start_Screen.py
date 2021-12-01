@@ -1,7 +1,16 @@
+from Populate_Values import*
+from Learn_Hiragana_Practice_Mode import*
+
 def intro_mousePressed(app,event):
     if app.cx//2 <= event.x <= app.cx*1.5:
         if app.cy//12 <= event.y <= app.cy//6:
             app.showMessage('Lets Learn Something New Today! ≧◠‿◠≦✌')
+            if (isFactor(app) == True and len(app.jyozu) >= app.learnNum and
+                (app.characterLevel >= len(app.jyozu) 
+                or app.vocabLevel >= len(app.jyozu)) 
+                and app.cardsToLearn <= len(overall_dict)):
+                print(app.learNum)
+                app.learnNum += 5
             app.phase = 'learning'
         elif app.cy//6 <= event.y <= app.cy//4:
             if app.toBeReviewed != dict():
