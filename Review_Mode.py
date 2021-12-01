@@ -215,8 +215,9 @@ def review_mousePressed(app,event):
 def modifiedIsCorrect(targetAnswer, answerChoice, app):
     correctMessages = ["That's Correct!", "You're the best!", 
                             "You're a Hiragana Expert!"]
-    incorrectMessages = ["Sorry, that's incorrect. Click Next/Press Right to Continue.",
-                "Better luck next time! Click Next/Press Right to Continue."]
+    incorrectMessages = ["Sorry, that's incorrect. Press Right to Continue.",
+                "Better luck next time! Press Right to Continue.",
+                "You'll get it one day!"]
     if answerChoice == targetAnswer and app.finishedQuestion == False:
         app.userAnswer = answerChoice
         storeReviewCorrectIncorrect(True, app)
@@ -262,13 +263,6 @@ def modifiedAnswerQuestion(app):
                             modifiedIsCorrect(answerValue,userAnswer,app)
         elif defaultTimeLimit == 0:
             app.showMessage("Time's Up! Please Press Right to Continue")
-    elif app.currQuestionType == 2: #vocab to romanji
-        pass
-    elif app.currQuestionType == 3: #romanji to vocab
-        pass
-    
-    elif app.currQuestionType == 4: #romanji to hiragana
-        pass
     else:
         app.showMessage("Sorry, There has been an error")
 '''
@@ -307,11 +301,13 @@ def reviewModeRedrawAll(app,canvas):
             app.reviewKey in app.reviewBox3)):
             drawReviewCard(app,canvas)
             drawAnswerChoices(app,canvas)  
-            canvas.create_text(app.cx,app.cy//1.4, font = 'Arial 15',
+            canvas.create_text(app.cx,app.cy//1.45, font = 'Arial 15',
                         text = "Press u to unfavorite a word")
         if (app.finishedQuestion == True and app.reviewKey != None and 
             app.toBeReviewed != dict):
-            drawNextButton(app,canvas)  
+            canvas.create_text(app.cx,app.cy//1.5, font = 'Arial 20',
+                            text = 'Press Right Arrow Key to Continue!', 
+                            fill = 'ghost white') 
     else:
         canvas.create_text(app.cx,app.cy, font = ('Arial','20','bold'),
                         text = "There are No Words to Review!")

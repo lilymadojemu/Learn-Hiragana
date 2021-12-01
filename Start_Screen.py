@@ -1,5 +1,5 @@
 def intro_mousePressed(app,event):
-    if app.cx//4 <= event.x <= app.cx//2:
+    if app.cx//2 <= event.x <= app.cx*1.5:
         if app.cy//12 <= event.y <= app.cy//6:
             app.showMessage('Lets Learn Something New Today! ≧◠‿◠≦✌')
             app.phase = 'learning'
@@ -40,6 +40,9 @@ def drawSettingsButton(app,canvas):
 def startScreenRedrawall(app,canvas):
     canvas.create_text(app.cx, app.cy, font = 'Arial 24',  
                         text = "Let's Learn Hiragana!", 
+                        fill = 'navajo white')
+    canvas.create_text(app.cx, app.cy*1.2, font = ('Arial', '24', 'bold'),  
+                        text = "✍(◔◡◔)", 
                         fill = 'navajo white')
     drawLetsLearnButton(app,canvas)
     drawReviewButton(app,canvas)

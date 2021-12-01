@@ -90,6 +90,7 @@ def storeCorrectIncorrect(questionCorrect,app):
             elif (app.practiceKey not in app.ima and 
                     app.practiceKey in app.mama and 
                     app.practiceKey not in app.jyozu):
+                    
                     app.jyozu.add(app.practiceKey)
                     app.mama.remove(app.practiceKey)
                     print(f' True box 2 to box 3 {app.jyozu}')
@@ -211,25 +212,19 @@ def practiceMode_keyPressed(app,event):
 def practice_mousePressed(app,event):
     if app.cx//2 <= event.x <= app.cx*1.5:
         if app.cy*1.3 <= event.y <= app.cy*1.4:
-            app.showMessage('Clicked1')
             app.option1Chosen = True
         elif app.cy*1.4 <= event.y <= app.cy*1.5: 
-            app.showMessage('Clicked2')
             app.option2Chosen = True
         elif app.cy*1.5 <= event.y <= app.cy*1.6: 
-            app.showMessage('Clicked3')
             app.option3Chosen = True
         elif app.cy*1.6 <= event.y <= app.cy*1.7: 
-            app.showMessage('Clicked4')
             app.option4Chosen = True
         elif app.cy*1.7 <= event.y <= app.cy*1.8: 
-            app.showMessage('ClickedI')
-            app.wantInput = True
             app.userAnswer = app.getUserInput('Please Type in Best Answer')
-    elif app.cx//1.2 < event.x < app.cx*1.2:
-        if app.cy//2.5 <= event.y <= app.cy//1.8:
-            print('Next is clicked')
-             #Click Next/Finished
+            app.wantInput = True
+            
+    elif app.cx*1.3 < event.x < app.cx*1.7:
+        if app.cy*1.45 <= event.y <= app.cy*1.6:
             if app.wantInput == True:
                 app.wantInput = False
             app.currQuestionType = getQuestionType()
@@ -270,8 +265,9 @@ def practice_mousePressed(app,event):
 def modifiedIsCorrect(targetAnswer, answerChoice, app):
     correctMessages = ["That's Correct!", "You're the best!", 
                             "You're a Hiragana Expert!"]
-    incorrectMessages = ["Sorry, that's incorrect. Click Next/Press Right to Continue.",
-                "Better luck next time! Click Next/Press Right to Continue."]
+    incorrectMessages = ["Sorry, that's incorrect. Press Right to Continue.",
+                "Better luck next time! Press Right to Continue.",
+                "You'll get it one day!"]
     if answerChoice == targetAnswer and app.finishedQuestion == False:
         app.userAnswer = answerChoice
         storeCorrectIncorrect(True, app)
@@ -337,8 +333,8 @@ def practice_timerFired(app):
                     app.startQuestion = False
                     app.finishedQuestion = True
         if (isFactor(app) == True and len(app.jyozu) >= 5 and
-            app.characterLevel >= len(app.jyozu) 
-            and app.vocabLevel >= len(app.jyozu) 
+            (app.characterLevel >= len(app.jyozu) 
+            or app.vocabLevel >= len(app.jyozu)) 
             and app.cardsToLearn <= len(overall_dict)):
             print(app.cardsToLearn)
             app.cardsToLearn = app.learnNum + 5
@@ -391,23 +387,6 @@ def drawAnswerChoices(app,canvas):
                         text = 'Press e to Input Your Answer', 
                         fill ='black')
 
-def drawNextButton(app,canvas):
-    if app.lightMode == True:
-        canvas.create_rectangle(app.cx//1.2,
-                                app.cy//2.5,
-                                app.cx*1.2,
-                                app.cy//1.8, 
-                                fill = 'honeydew2')
-        canvas.create_text(app.cx,app.cy//2, font = 'Arial', text = "Next", 
-                            fill = 'DeepSkyBlue2')
-    elif app.darkMode == True:
-        canvas.create_rectangle(app.cx//1.2,
-                                app.cy//2.5,
-                                app.cx*1.2,
-                                app.cy//1.8, 
-                                fill = 'slate gray')
-        canvas.create_text(app.cx,app.cy//2, font = 'Arial', text = "Next", 
-                            fill = 'antique white')
 def drawPracticeCard(app,canvas):
     practiceFlashCard = FlashCard(app.practiceKey, overall_dict[app.practiceKey])
     practiceFlashCard.drawTimedFlashCard1(canvas, app)
@@ -425,4 +404,6 @@ def practiceModeRedrawAll(app,canvas):
         drawPracticeCard(app,canvas) 
         drawAnswerChoices(app,canvas)  
     if app.finishedQuestion == True:
-        drawNextButton(app,canvas)  
+        canvas.create_text(app.cx,app.cy//1.5, font = 'Arial 20',
+                            text = 'Press Right Arrow Key to Continue!', 
+                            fill = 'ghost white')  

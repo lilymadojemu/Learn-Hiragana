@@ -100,7 +100,9 @@ def learningMode_keyPressed(app,event):
                     app.makeOldFlashCard = True
     elif event.key == 'l':
         for seen in app.prevFlashCard:
-            app.ima.add(seen)
+            if (seen not in app.ima and seen not in app.mama and 
+                seen not in app.jyozu):
+                app.ima.add(seen)
         app.phase = 'practice'
         app.makeFlashCard = False
     elif event.key == 'f':
@@ -115,6 +117,11 @@ def learningMode_keyPressed(app,event):
             app.toBeReviewed[app.prevCard] = overall_dict[app.prevCard]
             print(app.toBeReviewed)
 
+def learningMode_mousePressed(app,event):
+    if (app.cardsToLearn == 0 and app.width//4 <= event.x and 
+        event.x >= app.width//6 and app.height//10 <= event.y and 
+        event.y >= app.height//5):
+        app.showMessage('Are you ready to practice?\n Press l to Continue!')
 '''
 Drawings
 '''
@@ -171,7 +178,7 @@ def learningModeRedrawAll(app,canvas):
                     text = "Use Up/Down Arrow Keys to Flip Card!",
                     fill = "ghost white")
         canvas.create_text(app.cx, app.cy//2.4, font =('Arial','15','bold'), 
-                text = "Click Next/Press the Right Arrow Key to Move Forward!",
+                text = "Press the Right Arrow Key to Move Forward!",
                 fill = "ghost white")  
         canvas.create_text(app.cx, app.cy//2, font =('Arial','15','bold'), 
                 text = "Press f to favorite a card!", fill = "ghost white") 
@@ -201,7 +208,7 @@ def learningModeRedrawAll(app,canvas):
                 drawPrevCard(app,canvas)
             if (app.cardsToLearn == 0 and app.prevFlashCard != dict()):
                 canvas.create_text(app.cx, app.cy//1.7, font =('Arial','15','bold'), 
-                        text = "Click Back/Press the Left Arrow Key to Move Back!",
+                        text = "Press the Left Arrow Key to Move Back!",
                         fill = "ghost white")
                 drawBackButton(app,canvas)
             if (app.cardsToLearn == 0 and app.cardsLearned == app.learnNum and
