@@ -1,11 +1,23 @@
-# Learn-Hiragana
 CMU 15-112 Term project 
-This is a flashcard manager with the aim of users learning one of the Japanese alphabets, Hiragana, along with basic vocabulary from with those characters.
 
-Credits:
+Name of Project: “Let’s Learn Hiragana!”
+
+Description: “Let’s Learn Hiragana!” is a learning tool based on the Leitner System that, by using flashcards, aims to teach users one of the Japanese writing systems, Hiragana, along with basic vocabulary based on those characters.
+
+Run Project from Learn-Hiragana File
+
+No external libraries need to be installed
+
+Shortcuts:
+Any time:
+Press "q" to return back to start screen
+Press "c" to enter settings
+
+At Start Menu:
+Press 'enter' to go into learning mode
+
+Inspirations:
 Christoph-D Japanese Tools: https://github.com/Christoph-D/Japanese-Tools
 Japanese Vocabulary Frequency List: http://corpus.leeds.ac.uk/frqc/internet-jp-forms.num
 
-Use key shortcuts for smoothest experience
-
-All images used from unsplash
+All images free to use from unsplash

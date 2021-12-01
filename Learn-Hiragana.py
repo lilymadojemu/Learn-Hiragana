@@ -1,8 +1,6 @@
 '''
-
 Name: Lily Madojemu
 andrewid: lmadojem
-
 '''
 ''' imports '''
 from cmu_112_graphics import *
@@ -47,6 +45,7 @@ def appStarted(app):
     app.makeFlashCard = False
     app.newKey = getRandomKey()  
     app.prevCard = None
+    app.newNum = 5 #New number for app.cardsToLearn when increased
     app.isFlipped = False #Checks/Determines if a card has been flipped or not
     app.cardsToLearn = app.newNum #Number of flashcards that will appear in learning stage
     app.cardsLearned = 0
@@ -75,7 +74,7 @@ def appStarted(app):
     app.seenBox1Keys = list()
     app.seenBox2Keys = list()
     app.seenBox3Keys = list()
-    app.newNum = 5 #New number for app.cardsToLearn when increased
+     
     #answer Choices
     app.option1Chosen = False
     app.option2Chosen = False
@@ -94,6 +93,7 @@ def appStarted(app):
     #Extras 
     app.lightMode = True
     app.darkMode = False
+    #All images free to use from unsplash
     app.startBackground = app.loadImage('background.jpg')
     app.lightPracticeBackground = app.loadImage('day.jpg')
     app.darkPracticeBackground = app.loadImage('night.jpg')
