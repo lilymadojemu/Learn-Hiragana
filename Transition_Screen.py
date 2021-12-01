@@ -70,18 +70,38 @@ def drawLearningButton(app,canvas):
                         text = "Learn", fill = 'black')
 
 def getSummary(app,canvas):
-    canvas.create_text(app.cx, app.cy//1.3, font = 'Arial 15', 
-                        text =f"Novice: {app.ima}", fill = 'dark slate blue')
-    canvas.create_text(app.cx, app.cy//1.5, font = 'Arial 15', 
-                    text =f"Intermediate: {app.mama}", fill = 'dark slate blue')
-    canvas.create_text(app.cx, app.cy//1.75, font = 'Arial 15', 
-                    text =f"Master: {app.jyozu}", fill = 'dark slate blue')
+    if app.lightMode == True:
+        canvas.create_text(app.cx, app.cy//1.3, font = 'Arial 15', 
+                            text =f"Novice: {app.ima}", 
+                            fill = 'dark slate blue')
+        canvas.create_text(app.cx, app.cy//1.5, font = 'Arial 15', 
+                        text =f"Intermediate: {app.mama}", 
+                        fill = 'dark slate blue')
+        canvas.create_text(app.cx, app.cy//1.75, font = 'Arial 15', 
+                        text =f"Master: {app.jyozu}", fill = 'dark slate blue')
+    elif app.darkMode == True:
+        canvas.create_text(app.cx, app.cy//1.3, font = 'Arial 15', 
+                            text =f"Novice: {app.ima}", 
+                            fill = 'light goldenrod')
+        canvas.create_text(app.cx, app.cy//1.5, font = 'Arial 15', 
+                        text =f"Intermediate: {app.mama}",
+                        fill = 'light goldenrod')
+        canvas.create_text(app.cx, app.cy//1.75, font = 'Arial 15', 
+                        text =f"Master: {app.jyozu}", 
+                        fill = 'light goldenrod')
 
 def transitionScreenRedrawAll(app,canvas):
-    canvas.create_text(app.cx, app.cy//4, font = 'Arial 20', 
-                    text = "Great Job!")
-    canvas.create_text(app.cx, app.cy//3, font = 'Arial 20', 
-                    text = "Here's Your Progress So Far:")
+    if app.lightMode == True:
+        canvas.create_text(app.cx, app.cy//4, font = 'Arial 20', 
+                        text = "Great Job!")
+        canvas.create_text(app.cx, app.cy//3, font = 'Arial 20', 
+                        text = "Here's Your Progress So Far:")
+    elif app.darkMode == True:
+        canvas.create_text(app.cx, app.cy//4, font = 'Arial 20', 
+                        text = "Great Job!", fill = "ghost white")
+        canvas.create_text(app.cx, app.cy//3, font = 'Arial 20', 
+                        text = "Here's Your Progress So Far:", 
+                        fill = "ghost white")
     getSummary(app,canvas)
     drawLearningButton(app,canvas)
     drawExitButton(app,canvas)
