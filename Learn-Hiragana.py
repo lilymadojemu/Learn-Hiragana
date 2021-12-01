@@ -97,7 +97,7 @@ def appStarted(app):
     #All images free to use from unsplash
     app.startBackground = app.loadImage('background.jpg')
     app.lightPracticeBackground = app.loadImage('day.jpg')
-    app.darkPracticeBackground = app.loadImage('night.jpg')
+    app.darkPracticeBackground = app.loadImage('nightNew.jpg')
     app.transitionBackground = app.loadImage('transition.jpg')
     app.darkTransitionBackground = app.loadImage('darkTransition.jpg')
     app.lightSettingsBackground = app.loadImage('lightSettings.jpg')
@@ -105,12 +105,14 @@ def appStarted(app):
     app.lightLearningBackground = app.loadImage('lightLearn.jpg')
     app.darkLearningBackground = app.loadImage('darkLearn.jpg')
     app.lightReviewBackground = app.loadImage('reviewLight.jpg')
-    app.darkReviewBackground = app.loadImage('reviewDark.jpg')
+    app.darkReviewBackground = app.loadImage('reviewDarkNew.jpg')
     app.timerDelay = 1000
 #mousePressed of different phases
 def mousePressed(app,event):
     if app.phase == 'start':
         intro_mousePressed(app,event)
+    elif app.phase == 'learning':
+        learningMode_mousePressed(app,event)
     elif app.phase == 'practice':
         practice_mousePressed(app,event)
     elif app.phase == 'transition':

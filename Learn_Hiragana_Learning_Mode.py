@@ -115,6 +115,11 @@ def learningMode_keyPressed(app,event):
             app.toBeReviewed[app.prevCard] = overall_dict[app.prevCard]
             print(app.toBeReviewed)
 
+def learningMode_mousePressed(app,event):
+    if (app.cardsToLearn == 0 and app.width//4 <= event.x and 
+        event.x >= app.width//6 and app.height//10 <= event.y and 
+        event.y >= app.height//5):
+        app.showMessage('Are you ready to practice?\n Press l to Continue!')
 '''
 Drawings
 '''

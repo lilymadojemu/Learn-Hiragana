@@ -1,5 +1,5 @@
 '''
-Contains FlashCard Class
+Contains FlashCard Class To Draw A Flashcard
 '''
 from Populate_Values import*
 from cmu_112_graphics import*
@@ -73,17 +73,28 @@ class FlashCard(object):
     def drawTimedFlashCard1(self, canvas, app):
         canvas.create_image(app.cx, app.cy, 
                             image=ImageTk.PhotoImage(app.image1))  
-        if app.phase == 'practice':             
+        if app.phase == 'practice' and app.lightMode == True:             
             canvas.create_text(app.cx//3.3, app.cy//2,font =('Arial','15','bold'),
         text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
                                 fill = 'dark slate blue')
             canvas.create_text(app.cx*1.5, app.cy//2,font =('Arial','15','bold'),
                             text = f"Time Limit:{app.baseProblemTime}", 
                             fill = 'dark slate blue')
-        elif app.phase == 'review':
+        elif app.phase == 'practice' and app.darkMode == True:             
+            canvas.create_text(app.cx//3.3, app.cy//2,font =('Arial','15','bold'),
+        text =f"Hiragana Level:{app.characterLevel}\nVocab Level:{app.vocabLevel}", 
+                                fill = 'firebrick4')
+            canvas.create_text(app.cx*1.5, app.cy//2,font =('Arial','15','bold'),
+                            text = f"Time Limit:{app.baseProblemTime}", 
+                            fill = 'firebrick4')
+        elif app.phase == 'review' and app.lightMode == True:
             canvas.create_text(app.cx, app.cy//2,font =('Arial','15','bold'),
                             text = f"Time Limit:{app.baseProblemTime}", 
                             fill = 'dark slate blue')
+        elif app.phase == 'review' and app.darkMode == True:
+            canvas.create_text(app.cx, app.cy//2,font =('Arial','15','bold'),
+                            text = f"Time Limit:{app.baseProblemTime}", 
+                            fill = 'ghost white')
         canvas.create_text(app.cx,app.cy,
                         font = 'Arial 20',
                         text = f"{self.frontText}", 

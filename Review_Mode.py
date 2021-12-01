@@ -311,7 +311,9 @@ def reviewModeRedrawAll(app,canvas):
                         text = "Press u to unfavorite a word")
         if (app.finishedQuestion == True and app.reviewKey != None and 
             app.toBeReviewed != dict):
-            drawNextButton(app,canvas)  
+            canvas.create_text(app.cx,app.cy//1.5, font = 'Arial 20',
+                            text = 'Press Right Arrow Key to Continue!', 
+                            fill = 'ghost white') 
     else:
         canvas.create_text(app.cx,app.cy, font = ('Arial','20','bold'),
                         text = "There are No Words to Review!")

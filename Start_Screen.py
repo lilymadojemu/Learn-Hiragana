@@ -1,5 +1,5 @@
 def intro_mousePressed(app,event):
-    if app.cx//4 <= event.x <= app.cx//2:
+    if app.cx//2 <= event.x <= app.cx*1.5:
         if app.cy//12 <= event.y <= app.cy//6:
             app.showMessage('Lets Learn Something New Today! ≧◠‿◠≦✌')
             app.phase = 'learning'

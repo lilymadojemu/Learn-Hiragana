@@ -20,6 +20,7 @@ def transition_mousePressed(app,event):
             app.prevCard = None
             app.isFlipped = False
             app.isContinueKeyPressed = False
+            app.startQuestion = False
             app.cardsLearned = 0
             app.cardsToLearn = app.learnNum
         elif app.cy*1.1 <= event.y <= app.cy*1.2:
