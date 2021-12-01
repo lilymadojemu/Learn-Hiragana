@@ -90,6 +90,7 @@ def storeCorrectIncorrect(questionCorrect,app):
             elif (app.practiceKey not in app.ima and 
                     app.practiceKey in app.mama and 
                     app.practiceKey not in app.jyozu):
+                    
                     app.jyozu.add(app.practiceKey)
                     app.mama.remove(app.practiceKey)
                     print(f' True box 2 to box 3 {app.jyozu}')
@@ -219,9 +220,9 @@ def practice_mousePressed(app,event):
         elif app.cy*1.6 <= event.y <= app.cy*1.7: 
             app.option4Chosen = True
         elif app.cy*1.7 <= event.y <= app.cy*1.8: 
-            app.showMessage('ClickedI')
-            app.wantInput = True
             app.userAnswer = app.getUserInput('Please Type in Best Answer')
+            app.wantInput = True
+            
     elif app.cx*1.3 < event.x < app.cx*1.7:
         if app.cy*1.45 <= event.y <= app.cy*1.6:
             if app.wantInput == True:
@@ -264,8 +265,9 @@ def practice_mousePressed(app,event):
 def modifiedIsCorrect(targetAnswer, answerChoice, app):
     correctMessages = ["That's Correct!", "You're the best!", 
                             "You're a Hiragana Expert!"]
-    incorrectMessages = ["Sorry, that's incorrect. Click Next/Press Right to Continue.",
-                "Better luck next time! Click Next/Press Right to Continue."]
+    incorrectMessages = ["Sorry, that's incorrect. Press Right to Continue.",
+                "Better luck next time! Press Right to Continue.",
+                "You'll get it one day!"]
     if answerChoice == targetAnswer and app.finishedQuestion == False:
         app.userAnswer = answerChoice
         storeCorrectIncorrect(True, app)
@@ -331,8 +333,8 @@ def practice_timerFired(app):
                     app.startQuestion = False
                     app.finishedQuestion = True
         if (isFactor(app) == True and len(app.jyozu) >= 5 and
-            app.characterLevel >= len(app.jyozu) 
-            and app.vocabLevel >= len(app.jyozu) 
+            (app.characterLevel >= len(app.jyozu) 
+            or app.vocabLevel >= len(app.jyozu)) 
             and app.cardsToLearn <= len(overall_dict)):
             print(app.cardsToLearn)
             app.cardsToLearn = app.learnNum + 5

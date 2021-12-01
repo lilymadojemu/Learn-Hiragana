@@ -147,6 +147,9 @@ def keyPressed(app,event):
         app.cardsLearned = 0
         app.cardsToLearn = app.learnNum 
         app.finishedQuestion = False
+        if app.reviewBox1 != set():pass
+        elif app.reviewBox2 != set():pass
+        elif app.reviewBox3 != set():pass
         app.phase = 'start'        
     elif event.key == 't':
         app.startQuestion == False

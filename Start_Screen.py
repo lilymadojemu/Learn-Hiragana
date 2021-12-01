@@ -41,6 +41,9 @@ def startScreenRedrawall(app,canvas):
     canvas.create_text(app.cx, app.cy, font = 'Arial 24',  
                         text = "Let's Learn Hiragana!", 
                         fill = 'navajo white')
+    canvas.create_text(app.cx, app.cy*1.2, font = ('Arial', '24', 'bold'),  
+                        text = "✍(◔◡◔)", 
+                        fill = 'navajo white')
     drawLetsLearnButton(app,canvas)
     drawReviewButton(app,canvas)
     drawSettingsButton(app,canvas)
