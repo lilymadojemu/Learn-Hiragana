@@ -1,12 +1,3 @@
-'''
-Where I will dynamically populate word and character values
-Special case with を
-
-#When showing on card, need to look out for this
-print(vocabulary_dict['せんたくをする'])
-
-Finished
-'''
 #Opens the text file pertaining to Hiragana characters
 hiraganaList = []
 #Adapted from: https://www.youtube.com/watch?v=oEbNWXhS_mk

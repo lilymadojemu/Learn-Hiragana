@@ -43,10 +43,8 @@ def getQuestionType():
 def getAnswerChoices(app):
     #Question Type 1
     characterChoices = list(character_dict.values())
-    print(characterChoices)
     characterPronunciations = list()
     vocabChoices = list(vocabulary_dict.values())
-    print(vocabChoices)
     vocabPronunciations = list()
     for row in range(len(characterChoices)):
         for col in range(len(characterChoices[0])):
@@ -61,9 +59,7 @@ def getAnswerChoices(app):
             elif len(vocab) == 1 and vocab in vocabList:
                 vocabPronunciations.append(vocab)
     overallPronunciations = characterPronunciations + vocabPronunciations
-    print(overallPronunciations)
     randomPronunications = random.sample(overallPronunciations, k=3)
-    print(randomPronunications)
     if app.practiceKey not in randomPronunications:
         return randomPronunications
 
@@ -83,28 +79,22 @@ def storeCorrectIncorrect(questionCorrect,app):
                 app.practiceKey not in app.jyozu):
                 app.mama.add(app.practiceKey)
                 app.ima.remove(app.practiceKey)
-                print(f' True box 1 to box 2 {app.mama}')
-                print(f'Box 2 {app.mama}')
-                print(f"Box 1 {app.ima}")
             #Criteria to get to box 3 from box 2
             elif (app.practiceKey not in app.ima and 
                     app.practiceKey in app.mama and 
                     app.practiceKey not in app.jyozu):
-
                     app.jyozu.add(app.practiceKey)
                     app.mama.remove(app.practiceKey)
-                    print(f' True box 2 to box 3 {app.jyozu}')
-                    print(f"Box 3 {app.jyozu}")
+
             elif (app.practiceKey not in app.ima and 
                     app.practiceKey not in app.mama
                     and app.practiceKey in app.jyozu):
-                    print(f'True Increase {app.jyozu}')
                     if app.practiceKey in hiraganaList:
                         app.characterLevel += 1
                     elif app.practiceKey in vocabList:
                         app.vocabLevel += 1
-            else:
-                app.showMessage('Question Correct storing error')
+            # else:
+            #     app.showMessage('Question Correct storing error')
         #Currently not removing anything
         elif questionCorrect == False:
             #Get into box 2 from box 3
@@ -113,25 +103,22 @@ def storeCorrectIncorrect(questionCorrect,app):
                 and app.practiceKey in app.jyozu):
                 app.mama.add(app.practiceKey)
                 app.jyozu.remove(app.practiceKey)
-                print(f' False Box 2 to 3 {app.mama}')
             #Get into box 1 from box 2
             elif (app.practiceKey not in app.ima and 
                 app.practiceKey in app.mama and 
                 app.practiceKey not in app.jyozu):
                 app.ima.add(app.practiceKey)
                 app.mama.remove(app.practiceKey)
-                print(f' False Box 1 to 2 {app.ima}')
             #Lower Character & vocab levels
             elif (app.practiceKey in app.ima and 
                 app.practiceKey not in app.mama and 
                 app.practiceKey  not in app.jyozu):
-                print(f' False decrease {app.jyozu}')
                 if app.practiceKey in hiraganaList and app.characterLevel > 0:
                     app.characterLevel -= 1
                 elif app.practiceKey in vocabList and app.vocabLevel > 0:
                     app.vocabLevel -= 1
-            else:
-                app.showMessage('Question Incorrect storing error')
+            # else:
+            #     app.showMessage('Question Incorrect storing error')
 
 '''
 Pressed
@@ -152,20 +139,15 @@ def practiceMode_keyPressed(app,event):
         app.option4Chosen = False  
         if app.ima != set():#Box 1
             app.practiceKey = getBox1Key(app)
-            print(f'From app.ima {app.practiceKey}')
         if app.ima == set(): 
                 if app.mama != set():#Box 2 preference
                     app.practiceKey = getBox2Key(app)
-                    print(f'From app.mama {app.practiceKey}')
                 elif (app.mama == set() and app.jyozu != set()):
                     app.practiceKey = getBox3Key(app)
-                    print(f'From app.jyozu {app.practiceKey}')
                 elif app.jyozu != set():#Box 3 preference
                     app.practiceKey = getBox3Key(app)
-                    print(f'From app.jyozu {app.practiceKey}')
                 elif app.mama != set() and app.jyozu == set(): #Box 2 preference
                     app.practiceKey = getBox2Key(app)
-                    print(f'From app.mama {app.practiceKey}')  
                 else:
                     app.finishedQuestion = True         
         app.listOfPossibleChoices = getAnswerChoices(app)        
@@ -196,12 +178,6 @@ def practiceMode_keyPressed(app,event):
                 app.startQuestion = True
                 app.finishedQuestion = False
     elif event.key == 't':
-        if (isFactor(app) == True and len(app.jyozu) >= app.learnNum and
-            (app.characterLevel >= len(app.jyozu) 
-            or app.vocabLevel >= len(app.jyozu)) 
-            and app.cardsToLearn <= len(overall_dict)):
-            print(app.learnNum)
-            app.learnNum += 5
         app.phase = 'transition'
     elif event.key == 'e':
         app.userAnswer = app.getUserInput('Please Type in Best Answer')
@@ -229,45 +205,7 @@ def practice_mousePressed(app,event):
         elif app.cy*1.7 <= event.y <= app.cy*1.8: 
             app.userAnswer = app.getUserInput('Please Type in Best Answer')
             app.wantInput = True
-            
-    elif app.cx*1.3 < event.x < app.cx*1.7:
-        if app.cy*1.45 <= event.y <= app.cy*1.6:
-            if app.wantInput == True:
-                app.wantInput = False
-            app.currQuestionType = getQuestionType()
-            app.option1Chosen = False
-            app.option2Chosen = False
-            app.option3Chosen = False
-            app.option4Chosen = False  
-            if app.ima != set():#Box 1
-                app.practiceKey = getBox1Key(app)
-                print(f'From app.ima {app.practiceKey}')
-            if app.ima == set(): 
-                    if app.mama != set():#Box 2 preference
-                        app.practiceKey = getBox2Key(app)
-                        print(f'From app.mama {app.practiceKey}')
-                    elif (app.mama == set() and app.jyozu != set()):
-                        app.practiceKey = getBox3Key(app)
-                        print(f'From app.jyozu {app.practiceKey}')
-                    elif app.jyozu != set():#Box 3 preference
-                        app.practiceKey = getBox3Key(app)
-                        print(f'From app.jyozu {app.practiceKey}')
-                    elif app.mama != set() and app.jyozu == set(): #Box 2 preference
-                        app.practiceKey = getBox2Key(app)
-                        print(f'From app.mama {app.practiceKey}')  
-                    else:
-                        app.finishedQuestion = True         
-            app.listOfPossibleChoices = getAnswerChoices(app)        
-            if app.practiceKey != None:
-                realTarget = overall_dict[app.practiceKey]
-            #from https://stackoverflow.com/questions/2475518/python-how-to-append-elements-to-a-list-randomly
-                app.listOfPossibleChoices.insert(randrange(
-                                    len(app.listOfPossibleChoices)+1),realTarget[0]) 
-                app.baseProblemTime = 15
-                app.makeFlashCard = True
-                app.startQuestion = True
-                app.finishedQuestion = False
-                app.isContinueKeyPressed = True
+
 
 def modifiedIsCorrect(targetAnswer, answerChoice, app):
     correctMessages = ["That's Correct!", "You're the best!", 
