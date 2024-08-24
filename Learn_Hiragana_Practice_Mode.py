@@ -3,8 +3,8 @@ from Learn_Hiragana_Learning_Mode import*
 from Populate_Values import*
 from random import randrange
 
-#Practice is unlimitied (BUT!) Transition screen can be triggered at anytime
-#to give users opporunity to end session and see progress
+#Practice is unlimited (BUT!) Transition screen can be triggered at anytime
+#to give users opportunity to end session and see progress
 practiceHiraganaAndVocab = list(overall_dict.keys())
 toBePracticed = copy.deepcopy(overall_dict)
 '''
