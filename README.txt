@@ -16,6 +16,7 @@ to enter settings
 
 At Start Menu: Press 'enter' to go into learning mode
 
+During Practice and Review Mode: Press P to pause
 Make sure num lock is off when using keypad to answer questions
 
 Inspirations: Christoph-D Japanese Tools:
